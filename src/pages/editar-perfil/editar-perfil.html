@@ -1,0 +1,51 @@
+<ion-content >
+
+  <div padding style="line-height: 7px;">
+    <p>
+      <span style="font-size: 17px;"><b>{{ nomeUsuarioLogado }}</b></span>
+    </p>
+    <p>
+        <span>{{ emailUsuario }}</span>
+    </p>
+    <p>
+        <span style="float: right; color: #999;">Versão {{ versaoApp }}</span>
+    </p>
+  </div>
+
+  <hr class="hr5">
+
+  <div>
+    <button ion-item no-lines (click)="openMeusDadosPage()">
+        <ion-icon ios="ios-person-outline" md="ios-person-outline" item-start color="navBar"></ion-icon>
+            <span style="font-size: 14px;">Editar dados</span>
+    </button>
+    <button ion-item no-lines (click)="openMinhaSenhaPage()" class="custom-background-button-config">
+        <ion-icon ios="ios-lock-outline" md="ios-lock-outline" item-start color="navBar"></ion-icon>
+            <span style="font-size: 14px;">Alterar senha</span>
+    </button>
+    <hr>
+    <button ion-item no-lines (click)="openTermos()" class="custom-background-button-config">
+        <ion-icon ios="ios-list-box-outline" md="ios-list-box-outline" item-start color="navBar"></ion-icon>
+            <span style="font-size: 14px;">Termos de uso</span>
+    </button>
+    <button ion-item no-lines (click)="openPolitica()" class="custom-background-button-config">
+        <ion-icon ios="ios-document-outline" md="ios-document-outline" item-start color="navBar"></ion-icon>
+            <span style="font-size: 14px;">Política de privacidade</span>
+    </button>
+    <button ion-item no-lines (click)="openPoliticaRevenda()" class="custom-background-button-config">
+        <ion-icon ios="ios-sync-outline" md="ios-sync-outline" item-start color="navBar"></ion-icon>
+            <span style="font-size: 14px;">Política de revenda</span>
+    </button>
+
+    <hr class="hr5">
+
+    <p>
+        <button ion-item no-lines (click)="logOut()" class="custom-background-button-config">
+            <ion-icon ios="ios-log-out-outline" md="ios-log-out-outline" item-start color="navBar"></ion-icon>
+                <span style="font-size: 14px;">Sair</span>
+        </button>
+    </p>
+
+  </div>
+
+</ion-content>

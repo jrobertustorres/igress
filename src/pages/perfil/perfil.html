@@ -1,0 +1,62 @@
+<ion-header>
+
+  <ion-navbar color="navBarColor">
+    <ion-title>Perfil</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content class="content-stable">
+
+    <!-- <div padding style="text-align: center;" *ngIf="idUsuario">
+        <div>
+            <span style="color:#000000;text-align: center; font-weight: 500;">
+                Olá {{nomeUsuarioLogado.split(' ')[0]}}, seja bem vindo(a)!
+            </span>
+        </div>
+
+        <div>
+            <span style="color:#000000;text-align: center; font-weight: 500;">Não é você? 
+                <a (click)="logout();" style="text-decoration: underline">Sair</a>
+            </span>
+        </div>
+    </div> -->
+
+    <!-- <div style="margin-top: 10px;" padding *ngIf="!idUsuario"> -->
+    <div style="margin-top: 10px;" padding>
+        <p style="text-align: center">
+            <ion-icon ios="ios-person" md="md-person" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+        </p>
+        
+        <p style="text-align: center;">
+            <span style="color:#484848;">Faça login ou cadastre-se para acessar seus dados</span>
+        </p>
+
+        <ion-grid>
+            <ion-row>
+              <ion-col col-6>
+                  <button ion-button block outline (click)="openLoginPage()" color="navBarColor">ENTRAR</button>
+              </ion-col>
+              <ion-col col-6>
+                  <button ion-button block outline (click)="openMeusDadosPage()" color="navBarColor">CADASTRAR</button>
+              </ion-col>
+            </ion-row>
+        </ion-grid>
+
+    </div>
+    <div class="hr-sect">ou</div>
+
+    <div>
+        <div padding>
+            <button ion-button icon-left block style="background-color: #395692" (click)="doFbLogin()">
+                <ion-icon ios="logo-facebook" md="logo-facebook" class="style-right-icon-facebook"></ion-icon>
+                <span class="span-style">Continuar com FACEBOOK</span>
+            </button>
+        </div>
+    </div>
+
+    <p class="paragrafo-termos">
+        Ao continuar, você concorda com nossos <span class="span-termos" (click)="openModalTermos()">Termos e Condições</span> e com nossa <span class="span-termos" (click)="openModalPolitica()">Política de Privacidade</span>
+    </p>
+
+</ion-content>

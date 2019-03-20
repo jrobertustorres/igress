@@ -1,0 +1,102 @@
+<!-- <ion-header>
+    <ion-navbar color="navBarColor">
+        <ion-title style="text-align: left;">
+            <img height="30" src="assets/imgs/icone.png">
+            iGress
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="openSearchProdutosPage()">
+                <ion-icon ios="ios-search" md="md-search"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header> -->
+
+<ion-header no-border>
+  <ion-navbar transparent>
+      <ion-title style="text-align: left;">
+          <img height="30" src="assets/imgs/icone.png">
+          Igress
+      </ion-title>
+    <ion-buttons end>
+
+      <button ion-button icon-only (click)="openLocationPage()">
+          <ion-icon ios="ios-locate" md="md-locate"></ion-icon>
+      </button>
+
+      <button ion-button icon-only (click)="openSearchProdutosPage()">
+          <ion-icon ios="ios-search" md="md-search"></ion-icon>
+      </button>
+  </ion-buttons>
+  </ion-navbar>
+
+  <div padding>
+      <ion-segment [(ngModel)]="segment" (ionChange)="selectedTabChanged($event)">
+          <ion-segment-button value="destaquesList">
+              Destaques
+          </ion-segment-button>
+          <ion-segment-button value="proximosList">
+              Próximos a mim
+          </ion-segment-button>
+      </ion-segment>
+  </div>
+
+</ion-header>
+
+<ion-content class="content-stable">
+
+  <!-- <p padding><span>Destaques</span></p> -->
+
+  <!-- <ion-slides *ngIf="propagandas && propagandas.length" (ionSlideDidChange)="slideChanged()" autoplay="5000" loop="true" speed="3000">
+      <ion-slide *ngFor="let propaganda of propagandas">
+          <img [src]="sanitizer.bypassSecurityTrustUrl(propaganda.imagem)"  />
+      </ion-slide>
+  </ion-slides> -->
+
+    <!-- <ion-slides style="height: 140px;">
+
+        <ion-slide>
+            <ion-card (click)="openDetalheEventoPage()">
+                <img src="assets/imgs/nin-live.png"/>
+              </ion-card>
+        </ion-slide>
+      
+        <ion-slide>
+            <ion-card>
+                <img src="assets/imgs/badu-live.png"/>
+              </ion-card>
+        </ion-slide>
+      
+        <ion-slide>
+            <ion-card>
+                <img src="assets/imgs/nin-live.png"/>
+              </ion-card>
+        </ion-slide>
+      
+      </ion-slides> -->
+
+
+  <ion-card (click)="openDetalheEventoPage(evento.idEvento)" *ngFor="let evento of dadosEvento">
+    <ion-card-content style="padding: 3px 16px;">
+      <ion-card-title style="line-height: 0.8;">
+        <span style="font-size: 18px;">{{ evento.nomeEvento }}</span>
+      </ion-card-title>
+      <p>
+        <span>{{ evento.cidadeEstadoFormat }}</span><span style="float: right;">{{ evento.dataEventoFormat }}</span>
+      </p>
+    </ion-card-content>
+    <img [src]="sanitizer.bypassSecurityTrustUrl(evento.imagemEvento)"  />
+    <!-- <img src="assets/imgs/badu-live.png"/> -->
+
+    <div style="height: 35px; opacity: 0.7; background: #000; margin-top: -35px; text-align: left;">
+        <!-- <span style="font-size: 18px; color: #fff; margin-left: 10px;">Saladas</span> -->
+        <button ion-button color="light" outline 
+          style="height: 2.6rem; border-color: #ffffff; margin-right: 10px; float: right;" >
+          <span style="font-size: 14px; color: #ffffff;">
+            COMPRAR
+          </span>
+        </button>
+    </div>
+  </ion-card>
+
+</ion-content>

@@ -1,0 +1,52 @@
+<ion-header>
+
+  <ion-navbar color="navBarColor">
+    <ion-title>Fazer Login</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+    <form [formGroup]="loginForm" (ngSubmit)="submeterLogin()">
+
+        <ion-item>
+            <ion-label stacked>E-mail</ion-label>
+            <ion-input formControlName="email" type="email" spellcheck="false" autocapitalize="off"></ion-input>
+        </ion-item>
+        <div *ngIf="(!loginForm.get('email').valid && loginForm.get('email').touched) && !loginForm.get('email').hasError('pattern')" [ngClass]="'class-error-form'">campo obrigatório</div>
+        <div *ngIf="loginForm.get('email').hasError('pattern')" [ngClass]="'class-error-form'">e-mail inválido</div>
+
+        <ion-item>
+            <ion-label stacked>Senha</ion-label>
+            <ion-input formControlName="senha" id="senha" type="text" *ngIf="showPwd" placeholder="Digite sua senha"></ion-input>
+            <ion-input formControlName="senha" id="senha" type="password" *ngIf="!showPwd" placeholder="Digite sua senha"></ion-input>
+            <button icon-only ion-button clear type="button" item-right color="dark" (click)="showPwd=!showPwd">
+                <ion-icon *ngIf="showPwd" name="eye"></ion-icon>
+                <ion-icon *ngIf="!showPwd" name="eye-off"></ion-icon>
+            </button>
+        </ion-item>
+        <div *ngIf="!loginForm.get('senha').valid && loginForm.get('senha').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+
+        <div padding style="text-align: center;">
+            <button ion-button block outline type="submit" color="navBarColor">ENTRAR</button>
+        </div>
+    </form>
+
+    <div class="forgot-pass-style-div">
+        <a (click)="openRecuperarSenhaPage()" class="botao01">Esqueci minha senha</a>
+    </div>
+
+    <!-- <div padding>
+        <p>
+            <span class="span-inscrever">
+                Ainda não tem conta? <span style="float: right;"><strong style="color: #1E7F41;" (click)="goMeusDados()">INSCREVER-SE</strong></span>
+            </span>
+        </p>
+    </div> -->
+
+    <!-- <p class="paragrafo-termos">
+        Ao continuar, você concorda com nossos <span class="span-termos" (click)="openModalTermos()">Termos e Condições</span> e com nossa <span class="span-termos" (click)="openModalPolitica()">Política de Privacidade</span>
+    </p> -->
+
+</ion-content>

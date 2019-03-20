@@ -1,0 +1,24 @@
+<ion-header>
+    <ion-navbar color="navBarColor">
+        <ion-title>
+            Cidades
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button (click)="closeModal()">
+              <ion-icon ios="ios-close" md="md-close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-searchbar (ionInput)="getItems($event)" placeholder="Buscar"></ion-searchbar>
+
+    <ion-item *ngFor="let cidade of cidades">
+        <ion-label style="color: #000">
+            {{cidade.cidade}}
+        </ion-label>
+        <ion-radio value="{{cidade.idCidade}}" (click)="setCidade(cidade.idCidade, cidade.cidade)"></ion-radio>
+    </ion-item>
+
+</ion-content>

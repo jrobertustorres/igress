@@ -1,0 +1,18 @@
+page-detalhe-evento {
+    #flex-container {
+        display: flex;
+        flex-direction: row;
+      }
+      
+      #flex-container > .flex-item {
+        flex: auto;
+      }
+      
+      #flex-container > .raw-item {
+        width: 15rem;
+      }
+      ion-icon {
+        display: inline-block;
+        font-size: 1.5em;
+    }
+}

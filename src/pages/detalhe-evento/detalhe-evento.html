@@ -1,0 +1,137 @@
+<ion-header no-border>
+    <ion-navbar color="navBarColor">
+      <ion-title></ion-title>
+      <ion-buttons end>
+        <button ion-button icon-only (click)="addFavoritos()">
+            <ion-icon ios="ios-heart-outline" md="md-heart-outline"></ion-icon>
+        </button>
+    </ion-buttons>
+    </ion-navbar>
+  </ion-header>
+
+<ion-content>
+
+    <ion-card>
+      <!-- <img src="assets/imgs/nin-live.png"/> -->
+      <img [src]="sanitizer.bypassSecurityTrustUrl(eventoDetalheEntity.imagemEvento)"  />
+    </ion-card>
+
+    <div style="padding-left: 16px;">
+      <span style="font-size: 16px; font-weight: 500;">{{ eventoDetalheEntity.nomeEvento }}</span>
+    </div>
+
+    <div style="padding-left: 16px; display:flex;">
+      <div style="float: left; position: relative;">
+        <span style="float: left; text-align: left">
+          <p>
+            <ion-icon ios="ios-calendar" md="ios-calendar" style="font-size: 25px; margin-right: 10px;"></ion-icon>
+          </p>
+        </span>
+      </div>
+      <div style="float: left; position: relative;">
+        <span style="float: left; text-align: left">
+          <p>
+            {{ eventoDetalheEntity.dataEventoFormat }}<br>
+            {{ eventoDetalheEntity.enderecoFormat }}
+          </p>
+        </span>
+      </div>
+    </div>
+
+    <ion-item-divider color="navBarColor" style="margin-top: 0px;">
+        <span style="color: #fff;">Ingressos</span>
+        <div item-content>
+            <span style="margin-right: 10px;"> R$ 0,00 </span>
+        </div>
+    </ion-item-divider>
+
+    <!-- <ion-list>
+        <ion-item>
+          <h2>ARENA MEIA PROMOCIONAL(COM CARTEIRINHA)</h2>
+          <h3>R$ 40,00 (+ r$ 4,00 TAXA)</h3>
+          <p>Vendas até 30/05/2019</p>
+        </ion-item>
+    </ion-list> -->
+
+    
+    <ion-list>
+        <ion-item text-wrap>
+            
+          <div id="flex-container">
+              <div class="flex-item" id="flex">
+                <span style="font-size: 12px; font-weight: 500;">ARENA MEIA PROMOCIONAL(COM CARTEIRINHA)</span>
+                <p><span style="color: #0c60ee; font-size: 12px;"> R$ 40,00 (+ R$ 4,00 TAXA)</span></p>
+                <p>
+                  <span style="color: #999; font-size: 13px;"> Vendas até 30/05/2019</span>
+                </p>
+                <img src="assets/imgs/qrcode.png" *ngIf="lastViewDetalhe == 'DETALHE'" 
+                  style="float: right; margin-top: -40px; width: 40px; height: auto;" (click)="openModalQrcode()">
+                
+              </div>
+
+              <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == undefined">
+                  <ion-icon name="remove-circle" (click)="subtrairIngresso()"></ion-icon>
+                  <!-- {{currentNumber}} -->
+                  10
+                  <ion-icon name="add-circle" (click)="incrementaIngresso()"></ion-icon>
+              </div>
+
+              <div class="raw-item" id="raw" style="text-align: right; width: 1rem; height: 30px;" *ngIf="lastViewDetalhe == 'DETALHE'">
+                0
+              </div>
+              <!-- <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == 'REVENDA'">
+                <button ion-button icon-only item-end clear round (click)="subtrairProduto();" 
+                  style="width: 10px; height: 20px;">
+                  REVENDER
+                </button>
+              </div> -->
+
+            </div>
+
+        </ion-item>
+
+        <ion-item text-wrap>
+            
+          <div id="flex-container">
+              <div class="flex-item" id="flex">
+                <span style="font-size: 12px; font-weight: 500;">ÁREA VIP 2 LOTE</span>
+                <p><span style="color: #0c60ee; font-size: 12px;"> R$ 80,00 (+ R$ 4,00 TAXA)</span></p>
+                <p><span style="color: #999; font-size: 13px;"> Vendas até 30/05/2019</span></p>
+              </div>
+
+              <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == undefined">
+                  <ion-icon name="remove-circle" (click)="decrement()"></ion-icon>
+                      0
+                      <ion-icon name="add-circle" (click)="increment()"></ion-icon>
+              </div>
+
+          </div>
+
+        </ion-item>
+    </ion-list>
+
+    <div padding>
+        <button ion-button block outline type="submit" color="greenColor" *ngIf="lastViewDetalhe == undefined">COMPRAR INGRESSOS</button>
+        <button ion-button block outline type="submit" color="greenColor" *ngIf="lastViewDetalhe == 'REVENDA'">REVENDER SELECIONADOS</button>
+    </div>
+
+    <div padding class="content-stable">
+      <p>
+        DESCRIÇÃO DO EVENTO
+      </p>
+      <p>
+        {{ eventoDetalheEntity.descricaoEvento }}
+      </p>
+
+    </div>
+    
+    <div padding>
+      <p>
+        SOBRE O PRODUTOR
+      </p>
+      <p>
+        {{ eventoDetalheEntity.descricaoOrganizador }}
+      </p>
+    </div>
+
+</ion-content>

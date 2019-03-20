@@ -1,0 +1,35 @@
+<ion-header>
+
+    <ion-navbar color="navBarColor">
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>
+            Recuperar senha
+        </ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+    <div>
+        <div style="text-align:center; margin-top: 25px;" class="show-list-numbers-and-dots">
+            <p style="color:#000000;">Informe seu e-mail para enviarmos instruções para recuperar sua senha</p>
+        </div>
+    </div>
+
+    <form [formGroup]="recuperarSenhaForm" (ngSubmit)="submeterRecuperarSenha()">
+
+        <ion-item>
+            <ion-label stacked>E-mail</ion-label>
+            <ion-input formControlName="login" [(ngModel)]="usuarioEntity.login" type="email"></ion-input>
+        </ion-item>
+        <div *ngIf="(!recuperarSenhaForm.get('login').valid && recuperarSenhaForm.get('login').touched) && !recuperarSenhaForm.get('login').hasError('pattern')" [ngClass]="'class-error-form'">campo obrigatório</div>
+        <div *ngIf="recuperarSenhaForm.get('login').hasError('pattern')" [ngClass]="'class-error-form'">e-mail inválido</div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button ion-button block outline type="submit" color="navBarColor">ENVIAR</button>
+        </div>
+    </form>
+
+</ion-content>

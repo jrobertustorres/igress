@@ -1,0 +1,43 @@
+<ion-header>
+
+    <ion-navbar color="navBarColor">
+        <ion-title>Alterar senha</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+<!-- <ion-content> -->
+<ion-content padding>
+    <form [formGroup]="minhaSenhaForm" (ngSubmit)="submeterNovaSenha()">
+
+        <ion-item>
+            <ion-label stacked>Senha atual</ion-label>
+            <ion-input formControlName="senha" id="senha" type="text" *ngIf="showPwd" [(ngModel)]="usuarioEntity.senha"></ion-input>
+            <ion-input formControlName="senha" id="senha" type="password" *ngIf="!showPwd" [(ngModel)]="usuarioEntity.senha"></ion-input>
+            <button icon-only ion-button clear type="button" item-right color="dark" (click)="showPwd=!showPwd">
+                <ion-icon *ngIf="showPwd" name="eye"></ion-icon>
+                <ion-icon *ngIf="!showPwd" name="eye-off"></ion-icon>
+            </button>
+            <!-- <ion-input formControlName="senha" id="senha" [(ngModel)]="usuarioEntity.senha" type="password"></ion-input> -->
+        </ion-item>
+        <div *ngIf="!minhaSenhaForm.get('senha').valid && minhaSenhaForm.get('senha').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+
+        <ion-item>
+            <ion-label stacked>Nova senha</ion-label>
+            <ion-input formControlName="novaSenha" id="novaSenha" [(ngModel)]="usuarioEntity.novaSenha" type="password"></ion-input>
+        </ion-item>
+        <div *ngIf="!minhaSenhaForm.get('novaSenha').valid && minhaSenhaForm.get('novaSenha').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+
+        <ion-item>
+            <ion-label stacked>Confirmar senha</ion-label>
+            <ion-input type="password" id="confirmSenha" formControlName="confirmSenha"></ion-input>
+        </ion-item>
+        <div [ngClass]="'class-error-form'" *ngIf="(!minhaSenhaForm.get('confirmSenha').valid && minhaSenhaForm.get('confirmSenha').touched) && minhaSenhaForm.controls.confirmSenha.errors?.MatchPassword">as senhas não conferem</div>
+
+        <div padding>
+            <button ion-button block outline type="submit" color="navBarColor">ALTERAR</button>
+        </div>
+
+    </form>
+
+</ion-content>

@@ -1,0 +1,65 @@
+<ion-header no-border>
+    <ion-navbar color="navBarColor">
+      <ion-title>Meus ingressos</ion-title>
+    </ion-navbar>
+  </ion-header>
+
+  <ion-content class="content-stable">
+
+      <ion-card>
+        <ion-card-content>
+          <ion-card-title>
+            <span style="font-size: 18px;">Inch Nails Live</span>
+          </ion-card-title>
+          <p>
+            <span>Uberlândia - MG</span><span style="float: right;">05 de Maio</span>
+          </p>
+        </ion-card-content>
+        <img src="assets/imgs/nin-live.png"/>
+
+        <ion-row>
+            <ion-col>
+              <button ion-button icon-start clear small color="blueColor" style="float: left;" (click)="openDetalheEventoPage(null, 'DETALHE')">
+                <ion-icon name="qr-scanner"></ion-icon>
+                <div>VER DETALHES</div>
+              </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-start clear small color="greenColor" style="float: right;" (click)="openDetalheEventoPage(null, 'REVENDA')">
+                <ion-icon name="sync"></ion-icon>
+                <div>REVENDER</div>
+              </button>
+            </ion-col>
+          </ion-row>
+
+      </ion-card>
+
+      <ion-card (click)="openDetalheEventoPage()">
+          <ion-card-content>
+            <ion-card-title>
+              <span style="font-size: 18px;">Inch Nails Live</span>
+            </ion-card-title>
+            <p>
+              <span>Uberlândia - MG</span><span style="float: right;">05 de Maio</span>
+            </p>
+          </ion-card-content>
+          <img src="assets/imgs/badu-live.png"/>
+  
+          <ion-row>
+              <ion-col>
+                <button ion-button icon-start clear small style="float: left;">
+                  <ion-icon name="qr-scanner"></ion-icon>
+                  <div>VER DETALHES</div>
+                </button>
+              </ion-col>
+              <ion-col>
+                <button ion-button icon-start clear small color="secondary" style="float: right;">
+                  <ion-icon name="cash"></ion-icon>
+                  <div>REVENDER</div>
+                </button>
+              </ion-col>
+            </ion-row>
+  
+        </ion-card>
+      
+    </ion-content>

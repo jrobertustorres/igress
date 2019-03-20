@@ -1,0 +1,73 @@
+// retirar linha verde do input
+.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner,
+.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+    border-bottom-color: transparent;
+    box-shadow: inset 0 -1px 0 0 #dedede;
+}
+
+.content-stable {
+    background-color: #E8E8E8 !important;
+}
+
+.hr-sect {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.35);
+    margin: 8px 0px;
+}
+
+.hr-sect::before,
+.hr-sect::after {
+    content: "";
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.35);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 8px;
+}
+
+.class-error-form-login {
+    color: red;
+    margin-left: 15px;
+    font-size: 13px;
+}
+
+.class-error-form {
+    color: red;
+    margin-left: 15px;
+    font-size: 13px;
+}
+
+.paragrafo-termos {
+    color: #999;
+    margin: 4px;
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+}
+
+.span-termos {
+    text-decoration: underline;
+}
+
+.item-divider-style {
+    background-color: #000;
+}
+
+.hr5 {
+    display: block;
+    height: 5px!important;
+    border: 0;
+    border-top: 0.1px solid #fff!important;
+    padding: 0;
+}
+
+.hr10 {
+    display: block;
+    height: 10px!important;
+    border: 0;
+    border-top: 0.1px solid #fff!important;
+    padding: 0;
+}

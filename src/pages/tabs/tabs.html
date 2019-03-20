@@ -1,0 +1,29 @@
+<ion-tabs color="tabBarColor" [selectedIndex]="0" *ngIf="!idUsuarioLogado">
+  <ion-tab [root]="tab1Root" [show]="true" tabTitle="Home" tabIcon="ios-home-outline"></ion-tab>
+  <ion-tab [root]="tab6Root" [show]="true" tabTitle="Revenda" tabIcon="ios-sync-outline"></ion-tab>
+  <ion-tab [root]="tab5Root" tabIcon=""></ion-tab>
+  <ion-fab center bottom *ngIf="showionTab">
+      <button ion-fab large color="fabColor" (click)="openMeusIngressosList();" style="background-color: #999;">
+          <img src="assets/imgs/icone.png">
+      </button>
+  </ion-fab>
+  <ion-tab [root]="tab2Root" [show]="true" [enabled]="true" tabTitle="Favoritos" tabIcon="ios-heart-outline"></ion-tab>
+  <ion-tab [root]="tab3Root" [show]="true" [enabled]="true" tabTitle="Perfil" tabIcon="ios-happy-outline" ></ion-tab>
+  <!-- <ion-tab [root]="tab4Root" [show]="true" [enabled]="true" tabTitle="Perfil" tabIcon="ios-happy-outline" *ngIf="idUsuarioLogado != null" ></ion-tab> -->
+
+</ion-tabs>
+
+<ion-tabs color="tabBarColor" [selectedIndex]="0" *ngIf="idUsuarioLogado">
+  <ion-tab [root]="tab1Root" [show]="true" tabTitle="Home" tabIcon="ios-home-outline"></ion-tab>
+  <ion-tab [root]="tab6Root" [show]="true" tabTitle="Revenda" tabIcon="ios-sync-outline"></ion-tab>
+  <ion-tab [root]="tab5Root" tabIcon=""></ion-tab>
+  <ion-fab center bottom *ngIf="showionTab">
+      <button ion-fab large color="fabColor" (click)="openMeusIngressosList();" style="background-color: #999;">
+          <img src="assets/imgs/icone.png">
+      </button>
+  </ion-fab>
+  <ion-tab [root]="tab2Root" [show]="true" [enabled]="true" tabTitle="Favoritos" tabIcon="ios-heart-outline"></ion-tab>
+  <!-- <ion-tab [root]="tab3Root" [show]="true" [enabled]="true" tabTitle="Perfil" tabIcon="ios-happy-outline" *ngIf="idUsuarioLogado == null" ></ion-tab> -->
+  <ion-tab [root]="tab4Root" [show]="true" [enabled]="true" tabTitle="Perfil" tabIcon="ios-happy-outline" ></ion-tab>
+
+</ion-tabs>

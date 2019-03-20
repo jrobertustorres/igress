@@ -1,0 +1,136 @@
+[{
+    "idEstado": "1",
+    "sigla": "AC",
+    "nome": "Acre"
+  },
+    {
+      "idEstado": "2",
+      "sigla": "AL",
+      "nome": "Alagoas"
+    },
+    {
+      "idEstado": "3",
+      "sigla": "AP",
+      "nome": "Amapá"
+    },
+    {
+      "idEstado": "4",
+      "sigla": "AM",
+      "nome": "Amazonas"
+    },
+    {
+      "idEstado": "5",
+      "sigla": "BA",
+      "nome": "Bahia"
+    },
+    {
+      "idEstado": "6",
+      "sigla": "CE",
+      "nome": "Ceará"
+    },
+    {
+      "idEstado": "7",
+      "sigla": "DF",
+      "nome": "Distrito Federal"
+    },
+    {
+      "idEstado": "8",
+      "sigla": "GO",
+      "nome": "Goiás"
+    },
+    {
+      "idEstado": "9",
+      "sigla": "ES",
+      "nome": "Espírito Santo"
+    },
+    {
+      "idEstado": "10",
+      "sigla": "MA",
+      "nome": "Maranhão"
+    },
+    {
+      "idEstado": "11",
+      "sigla": "MT",
+      "nome": "Mato Grosso"
+    },
+    {
+      "idEstado": "12",
+      "sigla": "MS",
+      "nome": "Mato Grosso do Sul"
+    },
+    {
+      "idEstado": "13",
+      "sigla": "MG",
+      "nome": "Minas Gerais"
+    },
+    {
+      "idEstado": "14",
+      "sigla": "PA",
+      "nome": "Pará"
+    },
+    {
+      "idEstado": "15",
+      "sigla": "PB",
+      "nome": "Paraíba"
+    },
+    {
+      "idEstado": "16",
+      "sigla": "PR",
+      "nome": "Paraná"
+    },
+    {
+      "idEstado": "17",
+      "sigla": "PE",
+      "nome": "Pernambuco"
+    },
+    {
+      "idEstado": "18",
+      "sigla": "PI",
+      "nome": "Piauí"
+    },
+    {
+      "idEstado": "19",
+      "sigla": "RJ",
+      "nome": "Rio de Janeiro"
+    },
+    {
+      "idEstado": "20",
+      "sigla": "RN",
+      "nome": "Rio Grande do Norte"
+    },
+    {
+      "idEstado": "21",
+      "sigla": "RS",
+      "nome": "Rio Grande do Sul"
+    },
+    {
+      "idEstado": "22",
+      "sigla": "RO",
+      "nome": "Rondônia"
+    },
+    {
+      "idEstado": "23",
+      "sigla": "RR",
+      "nome": "Roraima"
+    },
+    {
+      "idEstado": "24",
+      "sigla": "SP",
+      "nome": "São Paulo"
+    },
+    {
+      "idEstado": "25",
+      "sigla": "SC",
+      "nome": "Santa Catarina"
+    },
+    {
+      "idEstado": "26",
+      "sigla": "SE",
+      "nome": "Sergipe"
+    },
+    {
+      "idEstado": "27",
+      "sigla": "TO",
+      "nome": "Tocantins"
+    }]
+  
