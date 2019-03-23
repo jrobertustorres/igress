@@ -13,7 +13,21 @@
 
 <ion-content class="content-stable">
 
-    <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="favoritosList?.length == 0 || !idUsuario">
+    <div class="spinner-center" *ngIf="!favoritosList && idUsuario">
+        <ion-spinner name="dots"></ion-spinner>
+    </div>
+    
+    <div *ngIf="errorConnection" text-wrap>
+        <p style="text-align: center">
+            <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+        </p>
+        
+        <p style="text-align: center;">
+            <span class="spam-error-connection">{{ errorConnection }}</span>
+        </p>
+    </div>
+
+    <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="(!errorConnection && favoritosList?.length == 0) || !idUsuario">
         <div style="text-align: center;color: #484848;"><strong>Você ainda não possui nenhum favorito</strong></div>
         <div style="text-align: center;">
             <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>

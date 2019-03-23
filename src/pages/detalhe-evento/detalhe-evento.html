@@ -1,15 +1,33 @@
 <ion-header no-border>
     <ion-navbar color="navBarColor">
       <ion-title></ion-title>
-      <ion-buttons end>
-        <button ion-button icon-only (click)="addFavoritos()">
-            <ion-icon ios="ios-heart-outline" md="md-heart-outline"></ion-icon>
+      <ion-buttons end *ngIf="eventoDetalheEntity.nomeEvento">
+        <button ion-button icon-only (click)="adicionaRemoveFavoritoDetalhes(eventoDetalheEntity.idEvento, eventoDetalheEntity.idFavoritoEventoUsuario)">
+            <ion-icon ios="ios-heart" md="md-heart"
+            [ngClass]="{false:'corBranca', true:'corVermelha'}[showIcon]">
+            </ion-icon>
         </button>
-    </ion-buttons>
+      </ion-buttons>
     </ion-navbar>
   </ion-header>
 
 <ion-content>
+
+    <div class="spinner-center" *ngIf="!eventoDetalheEntity.nomeEvento && !errorConnection">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+
+      <div *ngIf="errorConnection" text-wrap>
+        <p style="text-align: center">
+            <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+        </p>
+        
+        <p style="text-align: center;">
+            <span class="spam-error-connection">{{ errorConnection }}</span>
+        </p>
+      </div>
+
+  <div *ngIf="eventoDetalheEntity.nomeEvento" >
 
     <ion-card>
       <!-- <img src="assets/imgs/nin-live.png"/> -->
@@ -45,69 +63,42 @@
         </div>
     </ion-item-divider>
 
-    <!-- <ion-list>
-        <ion-item>
-          <h2>ARENA MEIA PROMOCIONAL(COM CARTEIRINHA)</h2>
-          <h3>R$ 40,00 (+ r$ 4,00 TAXA)</h3>
-          <p>Vendas até 30/05/2019</p>
-        </ion-item>
-    </ion-list> -->
-
-    
     <ion-list>
-        <ion-item text-wrap>
-            
-          <div id="flex-container">
-              <div class="flex-item" id="flex">
-                <span style="font-size: 12px; font-weight: 500;">ARENA MEIA PROMOCIONAL(COM CARTEIRINHA)</span>
-                <p><span style="color: #0c60ee; font-size: 12px;"> R$ 40,00 (+ R$ 4,00 TAXA)</span></p>
-                <p>
-                  <span style="color: #999; font-size: 13px;"> Vendas até 30/05/2019</span>
-                </p>
-                <img src="assets/imgs/qrcode.png" *ngIf="lastViewDetalhe == 'DETALHE'" 
-                  style="float: right; margin-top: -40px; width: 40px; height: auto;" (click)="openModalQrcode()">
-                
-              </div>
-
-              <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == undefined">
-                  <ion-icon name="remove-circle" (click)="subtrairIngresso()"></ion-icon>
-                  <!-- {{currentNumber}} -->
-                  10
-                  <ion-icon name="add-circle" (click)="incrementaIngresso()"></ion-icon>
-              </div>
-
-              <div class="raw-item" id="raw" style="text-align: right; width: 1rem; height: 30px;" *ngIf="lastViewDetalhe == 'DETALHE'">
-                0
-              </div>
-              <!-- <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == 'REVENDA'">
-                <button ion-button icon-only item-end clear round (click)="subtrairProduto();" 
-                  style="width: 10px; height: 20px;">
-                  REVENDER
-                </button>
-              </div> -->
-
+      <ion-item text-wrap *ngFor="let ingresso of listLoteIngressoListEntity">
+          
+        <div id="flex-container">
+            <div class="flex-item" id="flex">
+              <span style="font-size: 12px; font-weight: 500;">{{ ingresso.nomeLote }}</span>
+              <p><span style="color: #0c60ee; font-size: 12px;"> {{ ingresso.valorETaxaFormat }}</span></p>
+              <p>
+                <span style="color: #999; font-size: 13px;"> {{ ingresso.vendaAteFormat }}</span>
+              </p>
+              <img src="assets/imgs/qrcode.png" *ngIf="lastViewDetalhe == 'DETALHE'" 
+                style="float: right; margin-top: -40px; width: 40px; height: auto;" (click)="openModalQrcode()">
+              
             </div>
 
-        </ion-item>
+            <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == undefined">
+                <ion-icon name="remove-circle" (click)="subtrairIngresso(ingresso)"></ion-icon>
+                <span *ngIf="ingresso.qtdIngresso > 0">{{ ingresso.qtdIngresso }}</span>
+                <span *ngIf="!ingresso.qtdIngresso" >0</span>
+                <ion-icon name="add-circle" (click)="incrementaIngresso(ingresso)"></ion-icon>
+            </div>
 
-        <ion-item text-wrap>
-            
-          <div id="flex-container">
-              <div class="flex-item" id="flex">
-                <span style="font-size: 12px; font-weight: 500;">ÁREA VIP 2 LOTE</span>
-                <p><span style="color: #0c60ee; font-size: 12px;"> R$ 80,00 (+ R$ 4,00 TAXA)</span></p>
-                <p><span style="color: #999; font-size: 13px;"> Vendas até 30/05/2019</span></p>
-              </div>
-
-              <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == undefined">
-                  <ion-icon name="remove-circle" (click)="decrement()"></ion-icon>
-                      0
-                      <ion-icon name="add-circle" (click)="increment()"></ion-icon>
-              </div>
+            <div class="raw-item" id="raw" style="text-align: right; width: 1rem; height: 30px;" *ngIf="lastViewDetalhe == 'DETALHE'">
+              0
+            </div>
+            <!-- <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == 'REVENDA'">
+              <button ion-button icon-only item-end clear round (click)="subtrairProduto();" 
+                style="width: 10px; height: 20px;">
+                REVENDER
+              </button>
+            </div> -->
 
           </div>
 
-        </ion-item>
+      </ion-item>
+
     </ion-list>
 
     <div padding>
@@ -133,5 +124,7 @@
         {{ eventoDetalheEntity.descricaoOrganizador }}
       </p>
     </div>
+
+  </div>
 
 </ion-content>

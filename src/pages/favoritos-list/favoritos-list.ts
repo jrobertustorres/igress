@@ -6,7 +6,7 @@ import { Constants } from '../../app/constants';
 import { FavoritosService } from './../../providers/favoritos-service';
 
 //ENTITYS
-import { FavoritoEntity } from '../../model/favorito-entity';
+import { FavoritoEventoUsuarioEntity } from '../../model/favorito-evento-usuario-entity';
 
 @IonicPage()
 @Component({
@@ -16,10 +16,11 @@ import { FavoritoEntity } from '../../model/favorito-entity';
 export class FavoritosListPage {
   public loading = null;
   public favoritosList: any = null;
-  private favoritoEntity: FavoritoEntity;
+  private favoritoEventoUsuarioEntity: FavoritoEventoUsuarioEntity;
   private toastMessage: string;
   public idUsuario: string = null;
   public showLoading: boolean = true;
+  private errorConnection: string;
 
   constructor(public navCtrl: NavController, 
               public loadingCtrl: LoadingController,
@@ -29,7 +30,7 @@ export class FavoritosListPage {
               public events: Events,
               public platform: Platform,
               public navParams: NavParams) {
-    this.favoritoEntity = new FavoritoEntity();
+    this.favoritoEventoUsuarioEntity = new FavoritoEventoUsuarioEntity();
     this.platform.registerBackButtonAction(()=>this.myHandlerFunction());
   }
 
@@ -69,27 +70,30 @@ export class FavoritosListPage {
   getListaFavoritos() {
     try {
 
-      if(this.showLoading == true) {
-        this.loading = this.loadingCtrl.create({
-          content: 'Aguarde...'
-          // spinner: 'dots',
-          // cssClass: 'transparent',
-        });
-        this.loading.present();
-      }
+      // if(this.showLoading == true) {
+      //   this.loading = this.loadingCtrl.create({
+      //     content: 'Aguarde...'
+      //   });
+      //   this.loading.present();
+      // }
 
-      this.favoritosService.getFavoritos()
-      .then((favoritosListResult: FavoritoEntity) => {
+      this.favoritosService.findFavoritosByUsuario()
+      .then((favoritosListResult: FavoritoEventoUsuarioEntity) => {
         this.favoritosList = favoritosListResult;
-        this.showLoading = true;
-        this.loading.dismiss();
+
+        console.log(this.favoritosList);
+
+        // this.showLoading = true;
+        // this.loading.dismiss();
       }, (err) => {
-        this.loading.dismiss();
-        err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        this.alertCtrl.create({
-          subTitle: err.message,
-          buttons: ['OK']
-        }).present();
+        this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.favoritosList = [];
+        // this.loading.dismiss();
+        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        // this.alertCtrl.create({
+        //   subTitle: err.message,
+        //   buttons: ['OK']
+        // }).present();
       });
 
     }catch (err){
@@ -99,16 +103,16 @@ export class FavoritosListPage {
     }
   }
 
-  removerFavorito(idFavoritos) {
+  removerFavorito(idFavoritoEventoUsuario: number) {
     try {
       this.loading = this.loadingCtrl.create({
         content: 'Aguarde...'
       });
       this.loading.present();
 
-      this.favoritoEntity.idFavoritos = idFavoritos;
-      this.favoritosService.removerFavoritos(this.favoritoEntity)
-      .then((favoritosListResult: FavoritoEntity) => {
+      this.favoritoEventoUsuarioEntity.idFavoritoEventoUsuario = idFavoritoEventoUsuario;
+      this.favoritosService.removeFavoritos(this.favoritoEventoUsuarioEntity)
+      .then((favoritosListResult: FavoritoEventoUsuarioEntity) => {
         this.showLoading = false;
         this.getListaFavoritos();
         this.toastMessage = 'O produto foi removido dos seus favoritos!';
@@ -128,10 +132,10 @@ export class FavoritosListPage {
     }
   }
 
-  showConfirmrRemover(idFavoritos) {
+  showConfirmrRemover(idFavoritoEventoUsuario: number) {
     const confirm = this.alertCtrl.create({
-      title: 'Remover produto favorito?',
-      message: 'Remover este produto dos seus favoritos?',
+      title: 'Remover evento favorito?',
+      message: 'Remover este evento dos seus favoritos?',
       buttons: [
         {
           text: 'MANTER',
@@ -141,7 +145,7 @@ export class FavoritosListPage {
         {
           text: 'REMOVER',
           handler: () => {
-            this.removerFavorito(idFavoritos);
+            this.removerFavorito(idFavoritoEventoUsuario);
           }
         }
       ]

@@ -51,4 +51,24 @@ export class EventoService {
     }
   }
 
+  public alteraCalculoLoteIngressoEvento(listLoteIngressoListEntity) {
+    try {
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'alteraCalculoLoteIngressoEvento/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(listLoteIngressoListEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
 }

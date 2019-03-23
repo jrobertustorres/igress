@@ -10,8 +10,6 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { FavoritosListPage } from '../pages/favoritos-list/favoritos-list';
@@ -36,6 +34,7 @@ import { CidadeEntity } from './../model/cidade-entity';
 import { EventoListEntity } from '../model/evento-list-entity';
 import { EventoDetalheEntity } from '../model/evento-detalhe-entity';
 import { LoteIngressoListEntity } from '../model/lote-ingresso-list-entity';
+import { FavoritoEventoUsuarioEntity } from '../model/favorito-evento-usuario-entity';
 
 //SERVICES
 import { FavoritosService } from '../providers/favoritos-service';
@@ -49,8 +48,6 @@ import { EventoService } from '../providers/evento-service';
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     FavoritosListPage,
     PerfilPage,
@@ -80,8 +77,6 @@ import { EventoService } from '../providers/evento-service';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     FavoritosListPage,
     PerfilPage,
@@ -111,6 +106,7 @@ import { EventoService } from '../providers/evento-service';
     EventoListEntity,
     EventoDetalheEntity,
     LoteIngressoListEntity,
+    FavoritoEventoUsuarioEntity,
     FavoritosService,
     LoginService,
     UsuarioService,

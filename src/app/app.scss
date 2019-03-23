@@ -71,3 +71,30 @@
     border-top: 0.1px solid #fff!important;
     padding: 0;
 }
+
+.corBranca {
+    color: #ffffff;
+}
+
+.corVermelha {
+    color: #FF0000;
+}
+
+ion-spinner * {
+    width: 48px!important;
+    height: 48px!important;
+    stroke: #444;
+    fill: #222;
+  }
+
+  .spinner-center {
+    text-align: center;
+    // line-height: 190px;
+    margin-top: 40%;
+}
+
+.spam-error-connection {
+    color:#484848; 
+    font-weight: 600; 
+    padding: 10px;
+}

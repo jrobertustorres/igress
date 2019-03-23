@@ -11,7 +11,7 @@ export class FavoritosService {
   constructor(public _http: Http) {
   }
 
-  public getFavoritos() {
+  public findFavoritosByUsuario() {
     try {
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'findFavoritosByUsuario/'
@@ -31,11 +31,11 @@ export class FavoritosService {
     }
   }
 
-  public adicionaFavoritos(favorito) {
+  public adicionaFavoritos(favoritoEventoUsuarioEntity) {
     try {
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'adicionaFavoritos/'
-          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(favorito), this.options)
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(favoritoEventoUsuarioEntity), this.options)
           .map(res=>res.json())
           .subscribe(data => {
             resolve(data);
@@ -51,11 +51,11 @@ export class FavoritosService {
     }
   }
 
-  public removerFavoritos(favorito) {
+  public removeFavoritos(favoritoEventoUsuarioEntity) {
     try {
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'removeFavoritos/'
-          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(favorito), this.options)
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(favoritoEventoUsuarioEntity), this.options)
           .map(res=>res.json())
           .subscribe(data => {
             resolve(data);

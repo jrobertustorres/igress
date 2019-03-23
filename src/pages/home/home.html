@@ -76,10 +76,24 @@
       </ion-slides> -->
 
 
+      <div class="spinner-center" *ngIf="!dadosEvento">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+
+      <div *ngIf="errorConnection" text-wrap>
+        <p style="text-align: center">
+            <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+        </p>
+        
+        <p style="text-align: center;">
+            <span class="spam-error-connection">{{ errorConnection }}</span>
+        </p>
+      </div>
+
   <ion-card (click)="openDetalheEventoPage(evento.idEvento)" *ngFor="let evento of dadosEvento">
     <ion-card-content style="padding: 3px 16px;">
       <ion-card-title style="line-height: 0.8;">
-        <span style="font-size: 18px;">{{ evento.nomeEvento }}</span>
+        <span style="font-size: 16px;">{{ evento.nomeEvento }}</span>
       </ion-card-title>
       <p>
         <span>{{ evento.cidadeEstadoFormat }}</span><span style="float: right;">{{ evento.dataEventoFormat }}</span>

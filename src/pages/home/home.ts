@@ -31,6 +31,8 @@ export class HomePage {
   private dadosUsuario: any;
   private dadosEvento: any;
   private idUsuarioLogado: string;
+  
+  private errorConnection: string;
 
   constructor(public navCtrl: NavController,
     private versaoAppService: VersaoAppService,
@@ -44,11 +46,10 @@ export class HomePage {
     this.usuarioEntity = new UsuarioEntity();
     this.versaoAppEntity = new VersaoAppEntity();
     this.eventoListEntity = new EventoListEntity();
-    
-    
   }
   
   ionViewWillEnter() {
+    this.dadosEvento = null;
     this.idUsuarioLogado = localStorage.getItem(Constants.ID_USUARIO);
     this.getAtualizacaoStatus();
   }
@@ -56,10 +57,10 @@ export class HomePage {
   getAtualizacaoStatus() {
     try {
 
-      this.loading = this.loadingCtrl.create({
-        content: "Aguarde...",
-      });
-      this.loading.present();
+      // this.loading = this.loadingCtrl.create({
+      //   content: "Aguarde...",
+      // });
+      // this.loading.present();
 
       // PARA TESTES NO BROWSER
       if(this.platform.is('mobileweb')) {
@@ -81,6 +82,8 @@ export class HomePage {
         }
 
       }, (err) => {
+        // this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        // this.dadosEvento = [];
         this.loading.dismiss();
         err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
         this.alertCtrl.create({
@@ -117,11 +120,14 @@ export class HomePage {
         this.findEventosDestaqueAndCidade();
         // this.loading.dismiss();
       }, (err) => {
-        this.loading.dismiss();
-        this.alertCtrl.create({
-          subTitle: err.message,
-          buttons: ['OK']
-        }).present();
+        this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.dadosEvento = [];
+        // this.loading.dismiss();
+        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        // this.alertCtrl.create({
+        //   subTitle: err.message,
+        //   buttons: ['OK']
+        // }).present();
       });
 
     }catch (err){
@@ -138,13 +144,16 @@ export class HomePage {
       .then((eventoResult: EventoListEntity) => {
         this.dadosEvento = eventoResult;
 
-        this.loading.dismiss();
+        // this.loading.dismiss();
       }, (err) => {
-        this.loading.dismiss();
-        this.alertCtrl.create({
-          subTitle: err.message,
-          buttons: ['OK']
-        }).present();
+        // this.loading.dismiss();
+        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.dadosEvento = [];
+        // this.alertCtrl.create({
+        //   subTitle: err.message,
+        //   buttons: ['OK']
+        // }).present();
       });
 
     }catch (err){
@@ -186,7 +195,6 @@ export class HomePage {
   }
   
   openDetalheEventoPage(idEvento: any) {
-    // this.navCtrl.push(DetalheEventoPage);
     this.navCtrl.push(DetalheEventoPage, {
       idEvento: idEvento
     })
