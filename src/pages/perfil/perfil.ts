@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Constants } from '../../app/constants';
 
 //PAGES
 import { LoginPage } from '../../pages/login/login';

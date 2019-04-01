@@ -61,8 +61,6 @@ export class LoginPage {
         });
         this.loading.present();
 
-      let nameView = this.navCtrl.getPrevious().name;
-
       this.loginService.login(this.loginForm.value)
         .then((usuarioEntityResult: UsuarioEntity) => {
           this.events.publish('showButtonEvent:change', true);

@@ -75,7 +75,7 @@ export class RecuperarSenhaPage implements OnInit {
     try {
       if (this.recuperarSenhaForm.valid) {
         this.loading = this.loadingCtrl.create({
-          content: 'Aguarde...'
+          content: ''
         });
         this.loading.present();
 

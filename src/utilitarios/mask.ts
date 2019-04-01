@@ -3,8 +3,14 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class MaskUtil {
 
-  maskPhoneConverter(tel) {
+  maskMoneyConvert(v) {
+    v=v.replace(/\D/g,'');
+    v=v.replace(/(\d{1,2})$/, ',$1');
+    v=v.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    return v;
+  }
 
+  maskPhoneConverter(tel) {
     // let ifenPosition = tel.length == 15 ? /(\d{5})(\d)/ : /(\d{4})(\d)/;
     let ifenPosition = (tel.length <= 14 && tel.length != 11) ? /(\d{4})(\d)/ : /(\d{5})(\d)/;
 

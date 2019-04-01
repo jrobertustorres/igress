@@ -13,8 +13,8 @@
 
 <ion-content>
 
-    <div class="spinner-center" *ngIf="!eventoDetalheEntity.nomeEvento && !errorConnection">
-        <ion-spinner name="dots"></ion-spinner>
+      <div class="spinner-center" *ngIf="showLoading">
+        <ion-spinner name="crescent"></ion-spinner>
       </div>
 
       <div *ngIf="errorConnection" text-wrap>
@@ -30,7 +30,6 @@
   <div *ngIf="eventoDetalheEntity.nomeEvento" >
 
     <ion-card>
-      <!-- <img src="assets/imgs/nin-live.png"/> -->
       <img [src]="sanitizer.bypassSecurityTrustUrl(eventoDetalheEntity.imagemEvento)"  />
     </ion-card>
 
@@ -57,70 +56,91 @@
     </div>
 
     <ion-item-divider color="navBarColor" style="margin-top: 0px;">
-        <span style="color: #fff;">Ingressos</span>
-        <div item-content>
-            <span style="margin-right: 10px;"> R$ 0,00 </span>
+        <span style="color: #fff;" *ngIf="lastButtonDetalhe != 'REVENDA'">Ingressos</span>
+        <span style="color: #fff;" *ngIf="lastButtonDetalhe == 'REVENDA'">Seus lotes para revenda</span>
+        <div item-content *ngIf="lastButtonDetalhe != 'REVENDA'">
+            <span style="margin-right: 10px;" *ngIf="!valorTotalIngressoFormat" > R$ 0,00 </span>
+            <span style="margin-right: 10px;" *ngIf="valorTotalIngressoFormat" > R$ {{ valorTotalIngressoFormat }} </span>
         </div>
     </ion-item-divider>
 
     <ion-list>
-      <ion-item text-wrap *ngFor="let ingresso of listLoteIngressoListEntity">
-          
-        <div id="flex-container">
-            <div class="flex-item" id="flex">
-              <span style="font-size: 12px; font-weight: 500;">{{ ingresso.nomeLote }}</span>
-              <p><span style="color: #0c60ee; font-size: 12px;"> {{ ingresso.valorETaxaFormat }}</span></p>
-              <p>
-                <span style="color: #999; font-size: 13px;"> {{ ingresso.vendaAteFormat }}</span>
-              </p>
-              <img src="assets/imgs/qrcode.png" *ngIf="lastViewDetalhe == 'DETALHE'" 
-                style="float: right; margin-top: -40px; width: 40px; height: auto;" (click)="openModalQrcode()">
-              
+
+      <!-- REVENDA -->
+      <div *ngIf="lastButtonDetalhe == 'REVENDA'">
+        <ion-item text-wrap *ngFor="let ingresso of listIngressoListEntity; let i = index;">
+
+            <ion-label color="dark" stacked>
+                <h4 style="font-size: 12px; font-weight: 500;">
+                  <strong>{{ ingresso.nomeLoteIngresso }}</strong>
+                </h4>
+                <h4 style="color: #0c60ee; font-size: 12px;">
+                  <strong>Comprado por: {{ ingresso.valorETaxaFormat }}</strong>
+                </h4>
+                <h4 style="color: #999; font-size: 13px;">
+                  <strong>{{ ingresso.vendaAteFormat }}</strong>
+                </h4>
+                <h4></h4>
+                <h4 style="color: #1B7700; font-size: 13px;">
+                    <strong>Revender por:</strong>
+                </h4>
+            </ion-label>
+
+            <ion-input id="valorRevenda" type="text" placeholder="Informe o valor da revenda" [(ngModel)]="ingresso.valorAnuncio"
+              type="text" (keyup)="getValorAnuncio($event.target.value, ingresso.idIngresso)"
+              spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+                  
+            <ion-checkbox item-right color="dark" [checked]="ingresso.itemChecked" (ionChange)="addCheckbox($event, ingresso.idIngresso)"></ion-checkbox>
+        </ion-item>
+      </div>
+      <!-- FIM REVENDA -->
+
+      <div *ngIf="lastButtonDetalhe != 'REVENDA'">
+        <ion-item text-wrap *ngFor="let ingresso of listIngressoListEntity">
+          <div id="flex-container">
+              <div class="flex-item" id="flex">
+                <span style="font-size: 12px; font-weight: 500;">{{ ingresso.nomeLoteIngresso }}</span>
+                <p><span style="color: #0c60ee; font-size: 12px;"> {{ ingresso.valorETaxaFormat }}</span></p>
+                <p>
+                  <span style="color: #999; font-size: 13px;"> {{ ingresso.vendaAteFormat }}</span>
+                </p>
+                <img src="assets/imgs/qrcode.png" *ngIf="lastButtonDetalhe == 'DETALHE'" 
+                  style="float: right; margin-top: -40px; width: 40px; height: auto;" (click)="openModalQrcode(ingresso.tokenIngresso)">
+              </div>
+  
+              <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastButtonDetalhe == undefined">
+                  <ion-icon name="remove-circle" (click)="subtrairIngresso(ingresso)"></ion-icon>
+                  <span *ngIf="ingresso.qtdIngresso > 0">{{ ingresso.qtdIngresso }}</span>
+                  <span *ngIf="!ingresso.qtdIngresso" >0</span>
+                  <ion-icon name="add-circle" (click)="incrementaIngresso(ingresso)"></ion-icon>
+              </div>
             </div>
-
-            <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == undefined">
-                <ion-icon name="remove-circle" (click)="subtrairIngresso(ingresso)"></ion-icon>
-                <span *ngIf="ingresso.qtdIngresso > 0">{{ ingresso.qtdIngresso }}</span>
-                <span *ngIf="!ingresso.qtdIngresso" >0</span>
-                <ion-icon name="add-circle" (click)="incrementaIngresso(ingresso)"></ion-icon>
-            </div>
-
-            <div class="raw-item" id="raw" style="text-align: right; width: 1rem; height: 30px;" *ngIf="lastViewDetalhe == 'DETALHE'">
-              0
-            </div>
-            <!-- <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastViewDetalhe == 'REVENDA'">
-              <button ion-button icon-only item-end clear round (click)="subtrairProduto();" 
-                style="width: 10px; height: 20px;">
-                REVENDER
-              </button>
-            </div> -->
-
-          </div>
-
-      </ion-item>
+        </ion-item>
+      </div>
 
     </ion-list>
 
     <div padding>
-        <button ion-button block outline type="submit" color="greenColor" *ngIf="lastViewDetalhe == undefined">COMPRAR INGRESSOS</button>
-        <button ion-button block outline type="submit" color="greenColor" *ngIf="lastViewDetalhe == 'REVENDA'">REVENDER SELECIONADOS</button>
+        <button ion-button block outline type="submit" color="greenColor" *ngIf="lastButtonDetalhe == undefined">COMPRAR INGRESSOS</button>
+        <button ion-button block outline type="submit" color="greenColor" 
+          *ngIf="lastButtonDetalhe == 'REVENDA'" [disabled]="!habilitaBotao" (click)="adicionaIngressoRevenda()">REVENDER SELECIONADOS</button>
     </div>
 
     <div padding class="content-stable">
-      <p>
+      <p style="font-weight: 500;">
         DESCRIÇÃO DO EVENTO
       </p>
-      <p>
+      <p style="font-size: 13px;">
         {{ eventoDetalheEntity.descricaoEvento }}
       </p>
 
     </div>
     
     <div padding>
-      <p>
+      <p style="font-weight: 500;">
         SOBRE O PRODUTOR
       </p>
-      <p>
+      <p style="font-size: 13px;">
         {{ eventoDetalheEntity.descricaoOrganizador }}
       </p>
     </div>

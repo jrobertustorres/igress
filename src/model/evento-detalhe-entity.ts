@@ -1,4 +1,6 @@
 import { LoteIngressoListEntity } from '../model/lote-ingresso-list-entity';
+import { IngressoListEntity } from '../model/ingresso-list-entity';
+import { AnuncioIngressoListEntity } from '../model/anuncio-ingresso-list-entity';
 export class EventoDetalheEntity {
 
   public idEvento: number;
@@ -17,6 +19,8 @@ export class EventoDetalheEntity {
   public valorTotalIngressoFormat: string;
 
   public listLoteIngressoListEntity: LoteIngressoListEntity[] = [];
+  public listIngressoListEntity: IngressoListEntity[] = [];
+  public listAnuncioIngressoListEntity: AnuncioIngressoListEntity[] = [];
 
   constructor(){
   }

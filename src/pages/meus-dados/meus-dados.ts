@@ -27,7 +27,8 @@ import { CidadesService } from '../../providers/cidades-service';
 })
 export class MeusDadosPage implements OnInit {
   public userChangeEvent = new EventEmitter();
-
+  private errorConnection: string;
+  public showLoading: boolean = true;
   public dadosUsuarioForm: FormGroup;
   private usuarioDetalheEntity: UsuarioDetalheEntity;
   private usuarioEntity: UsuarioEntity;
@@ -160,7 +161,7 @@ export class MeusDadosPage implements OnInit {
 
       if (this.dadosUsuarioForm.valid) {
         this.loading = this.loadingCtrl.create({
-          content: 'Aguarde...',
+          content: '',
         });
         this.loading.present();
 
@@ -235,10 +236,10 @@ export class MeusDadosPage implements OnInit {
 
   callGetDadosUsuario() {
     try {
-      this.loading = this.loadingCtrl.create({
-        content: 'Aguarde...',
-      });
-      this.loading.present();
+      // this.loading = this.loadingCtrl.create({
+      //   content: 'Aguarde...',
+      // });
+      // this.loading.present();
 
       this.usuarioService
         .getDadosUsuario()
@@ -252,11 +253,12 @@ export class MeusDadosPage implements OnInit {
           this.getCidadesByEstadoUsuario(dadosUsuarioDetalheResult.idEstado);
         })
         .catch(err => {
-          this.loading.dismiss();
-          this.alertCtrl.create({
-            subTitle: err.message,
-            buttons: ['OK']
-          }).present();
+          this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+          // this.loading.dismiss();
+          // this.alertCtrl.create({
+          //   subTitle: err.message,
+          //   buttons: ['OK']
+          // }).present();
         });
     }catch (err){
       if(err instanceof RangeError){
@@ -278,14 +280,16 @@ export class MeusDadosPage implements OnInit {
               this.dadosCidades = cidade; 
             }
           }
-          this.loading.dismiss();
+          this.showLoading = false;
+          // this.loading.dismiss();
         })
         .catch(err => {
-          this.loading.dismiss();
-          this.alertCtrl.create({
-            subTitle: err.message,
-            buttons: ['OK']
-          }).present();
+          this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+          // this.loading.dismiss();
+          // this.alertCtrl.create({
+          //   subTitle: err.message,
+          //   buttons: ['OK']
+          // }).present();
         });
     }catch (err){
       if(err instanceof RangeError){

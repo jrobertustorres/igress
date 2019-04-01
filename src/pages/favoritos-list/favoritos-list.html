@@ -13,8 +13,9 @@
 
 <ion-content class="content-stable">
 
-    <div class="spinner-center" *ngIf="!favoritosList && idUsuario">
-        <ion-spinner name="dots"></ion-spinner>
+    <!-- <div class="spinner-center" *ngIf="!favoritosList && idUsuario"> -->
+    <div class="spinner-center" *ngIf="showLoading">
+        <ion-spinner name="crescent"></ion-spinner>
     </div>
     
     <div *ngIf="errorConnection" text-wrap>
@@ -27,37 +28,34 @@
         </p>
     </div>
 
-    <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="(!errorConnection && favoritosList?.length == 0) || !idUsuario">
-        <div style="text-align: center;color: #484848;"><strong>Você ainda não possui nenhum favorito</strong></div>
+    <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" 
+        *ngIf="(!errorConnection && favoritosList?.length == 0) || !idUsuario">
+        <div style="text-align: center;color: #484848;"><strong>Você não possui nenhum favorito</strong></div>
         <div style="text-align: center;">
             <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
         </div>
     </div>
 
-    <!-- <div *ngIf="!idUsuario" style="margin-top: 25px;" padding>
-        <p style="text-align: center">
-            <ion-icon ios="ios-person" md="md-person" color="navBar" style="font-size: 50px;"></ion-icon>
-        </p>
-        <p style="text-align: center">
-            <span style="color:#484848;">Faça login para acessar <br>seus produtos favoritos.</span>
-        </p>
-        <div style="text-align: center; margin-top: 20px;">
-            <button ion-button block (click)="openLoginPage()" color="navBar" class="margin-button-save span-style-color">ENTRAR OU CADASTRAR</button>
-        </div>
-    </div> -->
-
-    <ion-list>
-        <ion-item *ngFor="let favorito of favoritosList" text-wrap (click)="openProdutosPorLojaListPage(favorito.idProduto)">
-            <ion-thumbnail item-start>
-                <img *ngIf="!favorito.imagem" src="assets/imgs/no-photo.png" />
-                <img *ngIf="favorito.imagem" src="{{favorito.imagem}}"/>
-            </ion-thumbnail>
-            <h5>{{favorito.produto}}</h5>
-            <p><span style="color: #999;">A partir de:</span> <span style="color: #0c60ee; font-size: 13px;"> {{ favorito.apartirDe | currency:'BRL' }}</span></p>
-            <button ion-button clear item-end (click)="showConfirmrRemover(favorito.idFavoritos);$event.stopPropagation();">
-              <ion-icon ios="ios-trash" md="md-trash" style="font-size: 20px; color: red"></ion-icon>
+    <ion-card (click)="openDetalheEventoPage(favorito.idEvento)" *ngFor="let favorito of favoritosList">
+        <ion-card-content style="padding: 3px 16px;">
+            <ion-card-title style="line-height: 0.8;">
+            <span style="font-size: 16px; font-weight: 500;">{{ favorito.nomeEvento }}</span>
+            </ion-card-title>
+            <p>
+            <span>{{ favorito.cidadeEstadoFormat }}</span><span style="float: right;">{{ favorito.dataEventoFormat }}</span>
+            </p>
+        </ion-card-content>
+        <img [src]="sanitizer.bypassSecurityTrustUrl(favorito.imagemEvento)"  />
+    
+        <div style="height: 35px; opacity: 0.7; background: #000; margin-top: -35px; text-align: left;">
+            <button ion-button icon-end color="light" (click)="confirmaRemover(favorito.idFavoritoEventoUsuario);$event.stopPropagation();"
+                style="height: 2.6rem; color: red; margin-right: 10px; float: right;" >
+                <span style="font-size: 14px; color: red;">
+                REMOVER
+                </span>
+                <ion-icon name="trash"></ion-icon>
             </button>
-        </ion-item>
-    </ion-list>
+        </div>
+    </ion-card>
 
 </ion-content>

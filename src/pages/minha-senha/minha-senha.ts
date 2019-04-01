@@ -82,7 +82,7 @@ export class MinhaSenhaPage {
       try {
         
         this.loading = this.loadingCtrl.create({
-          content: 'Aguarde...'
+          content: ''
         });
         this.loading.present();
 

@@ -13,9 +13,10 @@ export class EventoService {
 
   public findEventosDestaqueAndCidade() {
     try {
+      let token = localStorage.getItem(Constants.TOKEN_USUARIO) != null ? localStorage.getItem(Constants.TOKEN_USUARIO) : '';
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'findEventosDestaqueAndCidade/'
-          + localStorage.getItem(Constants.TOKEN_USUARIO), this.options)
+          + token, this.options)
           .map(res=>res.json())
           .subscribe(data => {
             resolve(data);
@@ -51,11 +52,91 @@ export class EventoService {
     }
   }
 
+  public findIngressoDetalheByIdEvento(eventoDetalheEntity) {
+    try {
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findIngressoDetalheByIdEvento/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(eventoDetalheEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public findIngressoDetalheRevendaByIdEvento(eventoDetalheEntity) {
+    try {
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findIngressoDetalheRevendaByIdEvento/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(eventoDetalheEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public findIngressosDisponivelByUsuario() {
+    try {
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findIngressosDisponivelByUsuario/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
   public alteraCalculoLoteIngressoEvento(listLoteIngressoListEntity) {
     try {
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'alteraCalculoLoteIngressoEvento/'
           + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(listLoteIngressoListEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public adicionaIngressoRevenda(anuncioIngressoListEntity) {
+    try {
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'adicionaIngressoRevenda/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(anuncioIngressoListEntity), this.options)
           .map(res=>res.json())
           .subscribe(data => {
             resolve(data);

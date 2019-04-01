@@ -68,7 +68,8 @@ export class ModalCidadesPage {
     try {
 
       this.loading = this.loadingCtrl.create({
-        content: 'Buscando cidades...',
+        content: '',
+        // content: 'Buscando cidades...',
       });
       this.loading.present();
 
@@ -96,7 +97,7 @@ export class ModalCidadesPage {
     }
   }
 
-  setCidade(idCidade, cidade) {
+  setCidade(idCidade: number, cidade: number) {
     this.viewCtrl.dismiss({
       idCidade: idCidade, cidade: cidade
     });

@@ -6,6 +6,7 @@ import { MyApp } from './app.component';
 import { Device } from '@ionic-native/device/ngx';
 import { MaskUtil } from '../utilitarios/mask';
 import { AppVersion } from '@ionic-native/app-version/ngx';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -35,6 +36,8 @@ import { EventoListEntity } from '../model/evento-list-entity';
 import { EventoDetalheEntity } from '../model/evento-detalhe-entity';
 import { LoteIngressoListEntity } from '../model/lote-ingresso-list-entity';
 import { FavoritoEventoUsuarioEntity } from '../model/favorito-evento-usuario-entity';
+import { IngressoListEntity } from '../model/ingresso-list-entity';
+import { AnuncioIngressoListEntity } from '../model/anuncio-ingresso-list-entity';
 
 //SERVICES
 import { FavoritosService } from '../providers/favoritos-service';
@@ -94,6 +97,7 @@ import { EventoService } from '../providers/evento-service';
   providers: [
     StatusBar,
     SplashScreen,
+    BarcodeScanner,
     Device,
     AppVersion,
     MaskUtil,
@@ -107,6 +111,8 @@ import { EventoService } from '../providers/evento-service';
     EventoDetalheEntity,
     LoteIngressoListEntity,
     FavoritoEventoUsuarioEntity,
+    IngressoListEntity,
+    AnuncioIngressoListEntity,
     FavoritosService,
     LoginService,
     UsuarioService,

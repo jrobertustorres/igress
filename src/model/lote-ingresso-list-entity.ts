@@ -1,7 +1,7 @@
 export class LoteIngressoListEntity {
 
   public idLoteIngresso: number;
-  public nomeLote: string;
+  public nomeLoteIngresso: string;
   public valorETaxaFormat: string;
   public vendaAteFormat: string;
   public valor: number;

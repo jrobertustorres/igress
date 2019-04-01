@@ -84,12 +84,12 @@ export class HomePage {
       }, (err) => {
         // this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
         // this.dadosEvento = [];
-        this.loading.dismiss();
         err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        this.alertCtrl.create({
-          subTitle: err.message,
-          buttons: ['OK']
-        }).present();
+        // this.loading.dismiss();
+        // this.alertCtrl.create({
+        //   subTitle: err.message,
+        //   buttons: ['OK']
+        // }).present();
       });
 
     }catch (err){
@@ -194,8 +194,9 @@ export class HomePage {
     // this.navCtrl.push(ModalBuscaProdutosPage);
   }
   
-  openDetalheEventoPage(idEvento: any) {
+  openDetalheEventoPage(idEvento: any, lastButtonDetalhe: string) {
     this.navCtrl.push(DetalheEventoPage, {
+      // lastButtonDetalhe: lastButtonDetalhe,
       idEvento: idEvento
     })
   }
