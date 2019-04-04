@@ -3,6 +3,8 @@ import { NavController, AlertController, Platform, LoadingController } from 'ion
 import { Constants } from '../../app/constants';
 import { Device } from '@ionic-native/device/ngx';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Geolocation } from '@ionic-native/geolocation';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 
 //ENTITYS
 import { UsuarioEntity } from '../../model/usuario-entity';
@@ -30,9 +32,10 @@ export class HomePage {
   private versao: any;
   private dadosUsuario: any;
   private dadosEvento: any;
+  private listEventosProximos: any;
   private idUsuarioLogado: string;
-  
-  private errorConnection: string;
+  public showLoading: boolean = true;  
+  private errorConnection: boolean = false;
 
   constructor(public navCtrl: NavController,
     private versaoAppService: VersaoAppService,
@@ -42,6 +45,8 @@ export class HomePage {
               private device: Device,
               public loadingCtrl: LoadingController,
               private sanitizer: DomSanitizer,
+              private geolocation: Geolocation,
+              private locationAccuracy: LocationAccuracy,
               public alertCtrl: AlertController) {
     this.usuarioEntity = new UsuarioEntity();
     this.versaoAppEntity = new VersaoAppEntity();
@@ -49,18 +54,73 @@ export class HomePage {
   }
   
   ionViewWillEnter() {
-    this.dadosEvento = null;
+    this.showLoading = true;
+    this.dadosEvento = [];
+    this.listEventosProximos = [];
     this.idUsuarioLogado = localStorage.getItem(Constants.ID_USUARIO);
     this.getAtualizacaoStatus();
   }
 
+  loadMore(infiniteScroll) {
+    setTimeout(() => {
+      this.findEventosDestaqueAndCidade(infiniteScroll);
+    }, 500);
+  }
+
+  selectedTabChanged($event): void {
+    this.errorConnection = null;
+    if ($event._value == "destaquesList") {
+      this.findEventosDestaqueAndCidade(null);
+    } else {
+        // para testes no browser acesso direto o this.getLocationPosition()
+        if (this.platform.is('cordova')) {
+          this.getGpsStatus();
+        } else {
+          this.getLocationPosition();
+        }
+    }
+  }
+
+  getGpsStatus() {
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+
+      if(canRequest) {
+        // the accuracy option will be ignored by iOS
+        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+              .then(() => {
+                console.log('dentro do then do canRequest ===> ');
+                this.getLocationPosition();
+              }).catch((error) => {
+                this.showLocationText();
+               });
+
+        // this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+        //   () => console.log('Request successful'),
+        //   error => console.log('Error requesting location permissions', error)
+        // );
+      }
+    
+    });
+  }
+
+  showLocationText() {
+    let prompt = this.alertCtrl.create({
+      title: 'Localização',
+      message: 'Não foi possível obter a localização atual!',
+      buttons: [
+        {
+          text: 'OK',
+          handler: data => {
+            // this.findPublicidadePropaganda(0,0);
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
   getAtualizacaoStatus() {
     try {
-
-      // this.loading = this.loadingCtrl.create({
-      //   content: "Aguarde...",
-      // });
-      // this.loading.present();
 
       // PARA TESTES NO BROWSER
       if(this.platform.is('mobileweb')) {
@@ -102,8 +162,7 @@ export class HomePage {
   verificaIdUsuario() {
 
     if(!this.idUsuarioLogado){
-      this.findEventosDestaqueAndCidade();
-      // this.loading.dismiss();
+      this.findEventosDestaqueAndCidade(null);
     }
     else if(this.idUsuarioLogado) {
       this.findUsuarioLogado();
@@ -117,7 +176,7 @@ export class HomePage {
       this.loginService.loginByIdService(this.usuarioEntity)
       .then((loginResult: UsuarioEntity) => {
         this.dadosUsuario = loginResult;
-        this.findEventosDestaqueAndCidade();
+        this.findEventosDestaqueAndCidade(null);
         // this.loading.dismiss();
       }, (err) => {
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
@@ -137,23 +196,23 @@ export class HomePage {
     }
   }
 
-  findEventosDestaqueAndCidade() {
+  findEventosDestaqueAndCidade(infiniteScroll: any) {
     try {
+      this.showLoading = true;
+      // this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEvento.length : null;
 
       this.eventoService.findEventosDestaqueAndCidade()
       .then((eventoResult: EventoListEntity) => {
         this.dadosEvento = eventoResult;
 
-        // this.loading.dismiss();
+        if(infiniteScroll) {
+          infiniteScroll.complete();
+        }
+        this.showLoading = false;
       }, (err) => {
-        // this.loading.dismiss();
-        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.showLoading = false;
         this.dadosEvento = [];
-        // this.alertCtrl.create({
-        //   subTitle: err.message,
-        //   buttons: ['OK']
-        // }).present();
       });
 
     }catch (err){
@@ -161,6 +220,53 @@ export class HomePage {
       }
       console.log(err);
     }
+  }
+
+  findEventosDestaqueAndCidadeProximosaMim(infiniteScroll: any, latitude, longitude) {
+    try {
+      this.dadosEvento = [];
+      this.eventoListEntity.latitude = latitude;
+      this.eventoListEntity.longitude = longitude;
+      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEvento.length : null;
+
+      console.log(JSON.stringify(this.eventoListEntity));
+
+      this.eventoService.findEventosDestaqueAndCidadeProximosaMim(this.eventoListEntity)
+      .then((eventoResult: EventoListEntity) => {
+        this.dadosEvento = eventoResult;
+        // this.listEventosProximos = eventoResult;
+        console.log(this.dadosEvento);
+        this.eventoListEntity.limiteDados = this.dadosEvento.length;
+        // this.eventoListEntity.limiteDados = this.listEventosProximos.length;
+
+        if(infiniteScroll) {
+          infiniteScroll.complete();
+        }
+        this.showLoading = false;
+      }, (err) => {
+        this.showLoading = false;
+        this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.dadosEvento = [];
+      });
+
+    }catch (err){
+      if(err instanceof RangeError){
+      }
+      console.log(err);
+    }
+  }
+
+  getLocationPosition() {
+    this.showLoading = true;
+    this.geolocation.getCurrentPosition().then((resp) => {
+      console.log(resp.coords.latitude);
+      console.log(resp.coords.longitude);
+      this.findEventosDestaqueAndCidadeProximosaMim(null, -19.9299007, -43.9320145);
+      // this.findEventosDestaqueAndCidadeProximosaMim(null, resp.coords.latitude, resp.coords.longitude);
+     }).catch((error) => {
+       this.errorGetLocation();
+       console.log('Error getting location', error);
+     });
   }
 
   showAlertVersao(versao) {
@@ -172,6 +278,21 @@ export class HomePage {
         text: 'OK',
           handler: () => {
             this.getPlatform(versao);
+          }
+      }]
+    });
+    alert.present();
+  }
+
+  errorGetLocation() {
+    const alert = this.alertCtrl.create({
+      title: "Falha ao obter localização",
+      subTitle: "Não foi possível obter sua localização atual",
+      buttons: [
+        {
+        text: 'OK',
+          handler: () => {
+            // this.getPlatform(versao);
           }
       }]
     });
@@ -196,7 +317,7 @@ export class HomePage {
   
   openDetalheEventoPage(idEvento: any, lastButtonDetalhe: string) {
     this.navCtrl.push(DetalheEventoPage, {
-      // lastButtonDetalhe: lastButtonDetalhe,
+      lastButtonDetalhe: lastButtonDetalhe,
       idEvento: idEvento
     })
   }

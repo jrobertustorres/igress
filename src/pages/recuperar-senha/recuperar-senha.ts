@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController, Events, Platform } from 'ionic-angular';
 import { FormBuilder,	FormGroup, Validators } from '@angular/forms';
 
 //ENTITYS
@@ -31,10 +31,12 @@ export class RecuperarSenhaPage implements OnInit {
               private usuarioService: UsuarioService,
               public events: Events,
               public alertCtrl: AlertController,
+              public platform: Platform,
               private toastCtrl: ToastController) {
 
     this.usuarioEntity = new UsuarioEntity();
     this.tabBarElement = document.querySelector('.tabbar.show-tabbar');
+    this.platform.registerBackButtonAction(()=>this.myHandlerFunction());
 
   }
 
@@ -55,6 +57,14 @@ export class RecuperarSenhaPage implements OnInit {
   ionViewWillLeave() {
     this.tabBarElement.style.display = 'flex';
     this.events.publish('showButtonEvent:change', true);
+  }
+
+  // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
+  myHandlerFunction(){
+    if(this.loading) {
+      this.loading.dismiss();
+      this.navCtrl.pop();
+    }
   }
 
   presentToast() {

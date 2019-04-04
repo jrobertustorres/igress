@@ -7,10 +7,15 @@ import { Device } from '@ionic-native/device/ngx';
 import { MaskUtil } from '../utilitarios/mask';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Network } from '@ionic-native/network';
+import { Geolocation } from '@ionic-native/geolocation';
+import { BrMaskerModule } from 'brmasker-ionic-3';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+//PAGES
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { FavoritosListPage } from '../pages/favoritos-list/favoritos-list';
@@ -24,6 +29,8 @@ import { MeusIngressosListPage } from '../pages/meus-ingressos-list/meus-ingress
 import { ModalQrcodePage } from '../pages/modal-qrcode/modal-qrcode';
 import { EditarPerfilPage } from '../pages/editar-perfil/editar-perfil';
 import { ModalCidadesPage } from '../pages/modal-cidades/modal-cidades';
+import { AnuncioRevendaListPage } from '../pages/anuncio-revenda-list/anuncio-revenda-list';
+import { CadastroCartaoPage } from '../pages/cadastro-cartao/cadastro-cartao';
 
 //ENTITIES
 import { UsuarioEntity } from '../model/usuario-entity';
@@ -63,20 +70,19 @@ import { EventoService } from '../providers/evento-service';
     ModalQrcodePage,
     EditarPerfilPage,
     ModalCidadesPage,
+    AnuncioRevendaListPage,
+    CadastroCartaoPage,
     TabsPage
   ],
   imports: [
     HttpModule,
     BrowserModule,
+    BrMaskerModule,
     IonicModule.forRoot(MyApp, {
       backButtonText: '',
     },
     )
   ],
-  // imports: [
-  //   BrowserModule,
-  //   IonicModule.forRoot(MyApp)
-  // ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
@@ -92,11 +98,16 @@ import { EventoService } from '../providers/evento-service';
     ModalQrcodePage,
     EditarPerfilPage,
     ModalCidadesPage,
+    AnuncioRevendaListPage,
+    CadastroCartaoPage,
     TabsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    Network,
+    Geolocation,
+    LocationAccuracy,
     BarcodeScanner,
     Device,
     AppVersion,

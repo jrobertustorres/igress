@@ -69,7 +69,6 @@ export class ModalCidadesPage {
 
       this.loading = this.loadingCtrl.create({
         content: '',
-        // content: 'Buscando cidades...',
       });
       this.loading.present();
 

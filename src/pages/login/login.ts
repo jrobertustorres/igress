@@ -21,6 +21,10 @@ export class LoginPage {
   tabBarElement: any;
   private loading = null;
   private usuarioEntity: UsuarioEntity;
+  public showLoading: boolean = false;
+  public message: string;
+
+  // private errorConnection: boolean = false;
 
   constructor(public navCtrl: NavController,
               private formBuilder: FormBuilder, 
@@ -55,23 +59,23 @@ export class LoginPage {
     try {
 
       if (this.loginForm.valid) {
+        // this.loading = this.loadingCtrl.create({
+        //   content: ''
+        // });
+        // this.loading.present();
 
-        this.loading = this.loadingCtrl.create({
-          content: 'Aguarde...'
-        });
-        this.loading.present();
-
-      this.loginService.login(this.loginForm.value)
-        .then((usuarioEntityResult: UsuarioEntity) => {
-          this.events.publish('showButtonEvent:change', true);
-          this.loading.dismiss();
-        }, (err) => {
-          this.loading.dismiss();
-          this.alertCtrl.create({
-            subTitle: err.message,
-            buttons: ['OK']
-          }).present();
-        });
+        this.loginService.login(this.loginForm.value)
+          .then((usuarioEntityResult: UsuarioEntity) => {
+            // this.loading.dismiss();
+            this.events.publish('showButtonEvent:change', true);
+          }, (err) => {
+            this.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
+            // this.loading.dismiss();
+            this.alertCtrl.create({
+              subTitle: err.message,
+              buttons: ['OK']
+            }).present();
+          });
       } else {
         Object.keys(this.loginForm.controls).forEach(campo => {
           const controle = this.loginForm.get(campo);

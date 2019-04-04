@@ -7,6 +7,7 @@ import { FavoritosListPage } from '../favoritos-list/favoritos-list';
 import { PerfilPage } from '../perfil/perfil';
 import { EditarPerfilPage } from '../editar-perfil/editar-perfil';
 import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
+import { AnuncioRevendaListPage } from '../anuncio-revenda-list/anuncio-revenda-list';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -19,7 +20,7 @@ export class TabsPage {
   tab2Root = FavoritosListPage;
   tab3Root = PerfilPage;
   tab4Root = EditarPerfilPage;
-  tab6Root = FavoritosListPage;
+  tab6Root = AnuncioRevendaListPage;
 
   constructor(public events: Events,
               public navCtrl: NavController) {

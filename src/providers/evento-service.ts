@@ -32,6 +32,48 @@ export class EventoService {
     }
   }
 
+  public findEventosDestaqueAndCidadeProximosaMim(eventoListEntity) {
+    try {
+      let token = localStorage.getItem(Constants.TOKEN_USUARIO) != null ? localStorage.getItem(Constants.TOKEN_USUARIO) : '';
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findEventosDestaqueAndCidadeProximosaMim/'
+          + token, JSON.stringify(eventoListEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public findAnuncioRevenda() {
+    try {
+      let token = localStorage.getItem(Constants.TOKEN_USUARIO) != null ? localStorage.getItem(Constants.TOKEN_USUARIO) : '';
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findAnuncioRevenda/'
+          + token, this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
   public findEventoDetalheByIdEvento(eventoDetalheEntity) {
     try {
       return new Promise((resolve, reject) => {
@@ -51,7 +93,7 @@ export class EventoService {
       }
     }
   }
-
+  
   public findIngressoDetalheByIdEvento(eventoDetalheEntity) {
     try {
       return new Promise((resolve, reject) => {
@@ -136,6 +178,26 @@ export class EventoService {
     try {
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'adicionaIngressoRevenda/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(anuncioIngressoListEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public removeIngressoRevenda(anuncioIngressoListEntity) {
+    try {
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'removeIngressoRevenda/'
           + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(anuncioIngressoListEntity), this.options)
           .map(res=>res.json())
           .subscribe(data => {

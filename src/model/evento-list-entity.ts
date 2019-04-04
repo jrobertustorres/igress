@@ -5,6 +5,7 @@ export class EventoListEntity {
   public cidadeEstadoFormat: string;
   public dataEventoFormat: string;
   public imagemEvento: string;
+  public limiteDados: string;
   
   public latitude: number;
   public longitude: number;

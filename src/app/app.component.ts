@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Device } from '@ionic-native/device/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
+import { Network } from '@ionic-native/network';
 import { Constants } from '../app/constants';
 
 import { TabsPage } from '../pages/tabs/tabs';
@@ -18,8 +19,15 @@ export class MyApp {
               statusBar: StatusBar, 
               private device: Device,
               private appVersion: AppVersion,
+              private network: Network,
+              public alertCtrl: AlertController,
               splashScreen: SplashScreen) {
     platform.ready().then(() => {
+      this.checkNetwork();
+      // abaixo verificamos se a intenet cair depois que o cliente já entrou no app
+      // this.network.onDisconnect().subscribe(() => {
+      //   this.checkNetwork();
+      // });
       if (this.platform.is('cordova')) {
         localStorage.setItem(Constants.UUID, this.device.uuid);
         this.appVersion.getVersionNumber().then((version) => {
@@ -34,4 +42,26 @@ export class MyApp {
       splashScreen.hide();
     });
   }
+
+  checkNetwork() {
+
+    if(this.network.type === 'none' || this.network.type === 'unknown') {
+      localStorage.setItem(Constants.MODO_OFF_LINE, 'ON');
+      let alert = this.alertCtrl.create({
+      title: 'Você está offline',
+      subTitle: 'Você está offline mas pode acessar seus ingressos normalmente',
+      buttons: [{
+        text: 'Ok',
+        handler: () => {
+            this.platform.exitApp();
+            }
+        }]
+      });
+    alert.present();
+    } else {
+      localStorage.setItem(Constants.MODO_OFF_LINE, 'OFF');
+    }
+
+  }
+
 }

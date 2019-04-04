@@ -18,13 +18,12 @@ import { DetalheEventoPage } from '../detalhe-evento/detalhe-evento';
   templateUrl: 'favoritos-list.html',
 })
 export class FavoritosListPage {
-  public loading = null;
-  public favoritosList: any = null;
+  public favoritosList: any;
   private favoritoEventoUsuarioEntity: FavoritoEventoUsuarioEntity;
   private toastMessage: string;
   public idUsuario: string = null;
   public showLoading: boolean = true;
-  private errorConnection: string;
+  private errorConnection: boolean = false;
 
   constructor(public navCtrl: NavController, 
               public loadingCtrl: LoadingController,
@@ -48,13 +47,15 @@ export class FavoritosListPage {
     if (localStorage.getItem(Constants.ID_USUARIO)) {
       this.showLoading = true;
       this.getListaFavoritos();
+    } else {
+      this.showLoading = false;
     }
   }
 
   // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
   myHandlerFunction(){
-    if(this.loading) {
-      this.loading.dismiss();
+    if(this.showLoading) {
+      this.showLoading = false;
       this.navCtrl.pop();
     }
   }
@@ -81,17 +82,10 @@ export class FavoritosListPage {
         this.favoritosList = favoritosListResult;
         this.showLoading = false;
 
-        // this.showLoading = true;
-        // this.loading.dismiss();
       }, (err) => {
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.showLoading = false;
         this.favoritosList = [];
-        // this.loading.dismiss();
-        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        // this.alertCtrl.create({
-        //   subTitle: err.message,
-        //   buttons: ['OK']
-        // }).present();
       });
 
     }catch (err){
@@ -124,32 +118,16 @@ export class FavoritosListPage {
 
   removerFavorito(idFavoritoEventoUsuario: number) {
     try {
-      // this.loading = this.loadingCtrl.create({
-      //   content: ''
-      // });
-      // this.loading.present();
-
-      // this.loading = this.loadingCtrl.create({
-      //   content: '',
-      //   spinner: 'dots'
-      // });
-      
       this.showLoading = true;
 
       this.favoritoEventoUsuarioEntity.idFavoritoEventoUsuario = idFavoritoEventoUsuario;
       this.favoritosService.removeFavoritos(this.favoritoEventoUsuarioEntity)
       .then((favoritosListResult: FavoritoEventoUsuarioEntity) => {
-        // this.showLoading = false;
         this.getListaFavoritos();
         this.toastMessage = 'O evento foi removido dos seus favoritos!';
         this.presentToast();
       }, (err) => {
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        // this.loading.dismiss();
-        // this.alertCtrl.create({
-        //   subTitle: err.message,
-        //   buttons: ['OK']
-        // }).present();
       });
 
     }catch (err){

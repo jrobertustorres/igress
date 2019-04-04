@@ -101,6 +101,7 @@ export class MeusDadosPage implements OnInit {
   }
 
   ionViewDidLoad() {
+    
   }
 
   ionViewWillEnter() {
@@ -111,6 +112,17 @@ export class MeusDadosPage implements OnInit {
   ionViewWillLeave() {
     this.tabBarElement.style.display = 'flex';
     this.events.publish('showButtonEvent:change', true);
+  }
+
+  // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
+  myHandlerFunction(){
+    if(this.showLoading || this.loading) {
+      // this.showLoading = false;
+      // this.loading ? this.loading.dismiss() : '';
+      this.showLoading = this.showLoading ? this.showLoading : false;
+      this.loading ? this.loading.dismiss() : '';
+      this.navCtrl.pop();
+    }
   }
 
   getIdEstado(idEstado: any) {

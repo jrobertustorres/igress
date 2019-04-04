@@ -1,0 +1,48 @@
+<ion-header no-border>
+    <ion-navbar color="navBarColor">
+      <ion-title><span class="font-title">Cartão de crédito</span></ion-title>
+    </ion-navbar>
+  </ion-header>
+
+
+<ion-content padding>
+    <form [formGroup]="cartaoForm" (ngSubmit)="submeterCartao()">
+        <ion-item>
+            <ion-label stacked>Número do cartão</ion-label>
+            <ion-input formControlName="numeroCartao" [(ngModel)]="usuarioDetalheEntity.numeroCartao" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('numeroCartao').valid && cartaoForm.get('numeroCartao').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        <!-- <div *ngIf="dadosUsuarioForm.get('nomePessoa').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div> -->
+        
+        <ion-item>
+            <!-- <ion-label stacked>Nome do titular</ion-label> -->
+            <ion-grid>
+                <ion-row>
+                  <ion-col col-12>Validade</ion-col>
+                  <ion-input formControlName="validade" [(ngModel)]="usuarioDetalheEntity.validade" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+                </ion-row>
+                <ion-row>
+                  <ion-col col-6>CVV</ion-col>
+                  <ion-input formControlName="cvv" [(ngModel)]="usuarioDetalheEntity.cvv" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+                </ion-row>
+              </ion-grid>
+        </ion-item>
+        
+        <ion-item>
+            <ion-label stacked>Nome do titular</ion-label>
+            <ion-input formControlName="nomeTitular" [(ngModel)]="usuarioDetalheEntity.nomeTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('nomeTitular').valid && cartaoForm.get('nomeTitular').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        
+        <ion-item>
+            <ion-label stacked>CPF</ion-label>
+            <ion-input formControlName="cpf" [(ngModel)]="usuarioDetalheEntity.cpf" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('cpf').valid && cartaoForm.get('cpf').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button ion-button block outline type="submit" color="navBarColor">SALVAR</button>
+        </div>
+    </form>
+
+</ion-content>

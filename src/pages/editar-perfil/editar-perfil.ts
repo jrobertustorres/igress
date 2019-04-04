@@ -5,6 +5,7 @@ import { Constants } from '../../app/constants';
 //PAGES
 import { MeusDadosPage } from '../meus-dados/meus-dados';
 import { MinhaSenhaPage } from '../minha-senha/minha-senha';
+import { CadastroCartaoPage } from '../cadastro-cartao/cadastro-cartao';
 
 @IonicPage()
 @Component({
@@ -45,6 +46,10 @@ export class EditarPerfilPage {
     this.navCtrl.push(MinhaSenhaPage);
   }
 
+  openCartaoPage() {
+    this.navCtrl.push(CadastroCartaoPage);
+  }
+
   openTermos(){
     window.open('http://www.petpratico.com.br/termos-de-uso-1_0.html', '_system', 'location=yes');
   }
@@ -71,11 +76,6 @@ export class EditarPerfilPage {
             localStorage.removeItem(Constants.ID_USUARIO);
             localStorage.removeItem(Constants.TOKEN_USUARIO);
             localStorage.removeItem(Constants.NOME_PESSOA);
-            // localStorage.removeItem(Constants.QTD_ITENS_CARRINHO);
-            // localStorage.removeItem(Constants.CIDADES_POR_ESTADO);
-            // localStorage.removeItem(Constants.IS_CADASTRO_COMPLETO);
-            // localStorage.removeItem(Constants.IS_CADASTRO_ENDERECO_COMPLETO);
-            // localStorage.removeItem(Constants.ESTADO_TEMA);
             // this.events.publish('atualizaBadgeCarrinhoLogoutEvent:change', localStorage.getItem(Constants.QTD_ITENS_CARRINHO));
             this.events.publish('usuarioLogadoEvent:change', localStorage.getItem(Constants.ID_USUARIO));
             // this.navCtrl.parent.select(0);

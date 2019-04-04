@@ -34,7 +34,8 @@
       </ion-title>
     <ion-buttons end>
 
-      <button ion-button icon-only (click)="openLocationPage()">
+      <!-- <button ion-button icon-only (click)="getLocationPosition()"> -->
+      <button ion-button icon-only (click)="getGpsStatus()">
           <ion-icon ios="ios-locate" md="md-locate"></ion-icon>
       </button>
 
@@ -90,7 +91,8 @@
       </ion-slides> -->
 
 
-      <div class="spinner-center" *ngIf="!dadosEvento">
+      <!-- <div class="spinner-center" *ngIf="!dadosEvento"> -->
+      <div class="spinner-center" *ngIf="showLoading">
         <ion-spinner name="crescent"></ion-spinner>
         <!-- <ion-spinner name="dots"></ion-spinner> -->
       </div>
@@ -105,7 +107,7 @@
         </p>
       </div>
 
-  <ion-card (click)="openDetalheEventoPage(evento.idEvento)" *ngFor="let evento of dadosEvento">
+  <ion-card (click)="openDetalheEventoPage(evento.idEvento, 'HOME')" *ngFor="let evento of dadosEvento">
     <ion-card-content style="padding: 3px 16px;">
       <ion-card-title style="line-height: 0.8;">
         <span style="font-size: 16px; font-weight: 500;">{{ evento.nomeEvento }}</span>
@@ -127,5 +129,9 @@
         </button>
     </div>
   </ion-card>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)" *ngIf="canLoadMore">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

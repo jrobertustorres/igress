@@ -5,7 +5,7 @@
                   <ion-icon name="menu"></ion-icon>
               </button>
         <ion-title>
-            <span>Meus favoritos</span>
+            <span class="font-title">Meus favoritos</span>
         </ion-title>
     </ion-navbar>
 
@@ -13,7 +13,6 @@
 
 <ion-content class="content-stable">
 
-    <!-- <div class="spinner-center" *ngIf="!favoritosList && idUsuario"> -->
     <div class="spinner-center" *ngIf="showLoading">
         <ion-spinner name="crescent"></ion-spinner>
     </div>
@@ -29,7 +28,14 @@
     </div>
 
     <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" 
-        *ngIf="(!errorConnection && favoritosList?.length == 0) || !idUsuario">
+        *ngIf="!idUsuario">
+        <div style="text-align: center;color: #484848;"><strong>Faça login para ver seus favoritos</strong></div>
+        <div style="text-align: center;">
+            <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
+        </div>
+    </div>
+    <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" 
+        *ngIf="(!errorConnection && favoritosList?.length == 0) && idUsuario">
         <div style="text-align: center;color: #484848;"><strong>Você não possui nenhum favorito</strong></div>
         <div style="text-align: center;">
             <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>

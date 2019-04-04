@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, ModalController, LoadingController, AlertController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, ModalController, LoadingController, AlertController, ToastController, Platform } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MaskUtil } from "../../utilitarios/mask";
 
@@ -14,6 +14,7 @@ import { FavoritosService } from '../../providers/favoritos-service';
 
 //PAGES
 import { ModalQrcodePage } from '../modal-qrcode/modal-qrcode';
+import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
 
 @IonicPage()
 @Component({
@@ -33,18 +34,17 @@ export class DetalheEventoPage {
   public showIcon: boolean;
   public valorAnuncio: any;
   public listLoteIngressoListEntity = [];
-
   public listAnuncioIngressoListEntity = [];
-
   public listIngressoListEntity = [];
-  // public listIngressoRevenda: [];
   public dadosServicoCalculo: any;
   private errorConnection: string = '';
   private valorTotalIngressoFormat: string;
   private ingressosMarcados = [];
   private habilitaBotao: boolean = false; 
-
   public listIngressoRevenda = [];
+
+  public status: string;
+  public statusEnum: string;
 
   constructor(public navCtrl: NavController, 
               public modalCtrl: ModalController,
@@ -56,38 +56,48 @@ export class DetalheEventoPage {
               private sanitizer: DomSanitizer,
               private toastCtrl: ToastController,
               private mask: MaskUtil,
+              public platform: Platform,
               public navParams: NavParams) {
     this.tabBarElement = document.querySelector('.tabbar.show-tabbar');
-    // this.lastViewDetalhe = navParams.get('lastViewDetalhe');
     this.eventoDetalheEntity = new EventoDetalheEntity();
     this.favoritoEventoUsuarioEntity = new FavoritoEventoUsuarioEntity();
     this.anuncioIngressoListEntity = new AnuncioIngressoListEntity();
-    // this.listIngressoRevenda = new AnuncioIngressoListEntity();
     this.idEvento = navParams.get("idEvento");
     this.lastButtonDetalhe = navParams.get("lastButtonDetalhe");
+    this.platform.registerBackButtonAction(()=>this.myHandlerFunction());
+
   }
 
   ngOnInit() {
-    // if(this.lastButtonDetalhe == 'REVENDA' || this.lastButtonDetalhe == 'DETALHE') {
-    if(this.lastButtonDetalhe == 'REVENDA') {
-      // this.findIngressoDetalheByIdEvento();
-      this.findIngressoDetalheRevendaByIdEvento();
-    } else {
-      this.findEventoDetalheByIdEvento();
-    }
-    // if(this.lastButtonDetalhe == 'DETALHE') {
-    //   this.findIngressoDetalheByIdEvento();
-    // }
   }
 
   ionViewWillEnter() {
     this.tabBarElement.style.display = 'none';
     this.events.publish('showButtonEvent:change', false);
+
+    if(this.lastButtonDetalhe == 'REVENDA') {
+      this.findIngressoDetalheRevendaByIdEvento();
+    } else if(this.lastButtonDetalhe == 'DETALHE'){
+      this.findIngressoDetalheByIdEvento();
+    }
+    if(this.lastButtonDetalhe == 'HOME') {
+      this.findEventoDetalheByIdEvento();
+    }
   }
     
   ionViewWillLeave() {
     this.tabBarElement.style.display = 'flex';
     this.events.publish('showButtonEvent:change', true);
+  }
+
+  // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
+  myHandlerFunction(){
+    if(this.showLoading || this.loading) {
+      // this.showLoading = false;
+      this.showLoading = this.showLoading ? this.showLoading : false;
+      this.loading ? this.loading.dismiss() : '';
+      this.navCtrl.pop();
+    }
   }
 
   presentToast() {
@@ -108,6 +118,28 @@ export class DetalheEventoPage {
     try {
       this.eventoDetalheEntity.idEvento = this.idEvento;
       this.eventoService.findEventoDetalheByIdEvento(this.eventoDetalheEntity)
+      .then((eventoDetalheResult: EventoDetalheEntity) => {
+        this.eventoDetalheEntity = eventoDetalheResult;
+        this.listIngressoListEntity = this.eventoDetalheEntity.listLoteIngressoListEntity;
+        this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
+        this.showLoading = false;
+
+      }, (err) => {
+        this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.showLoading = false;
+      });
+
+    }catch (err){
+      if(err instanceof RangeError){
+      }
+      console.log(err);
+    }
+  }
+
+  findIngressosDisponivelByUsuario() {
+    try {
+      this.eventoDetalheEntity.idEvento = this.idEvento;
+      this.eventoService.findIngressosDisponivelByUsuario()
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
         this.listIngressoListEntity = this.eventoDetalheEntity.listLoteIngressoListEntity;
@@ -236,15 +268,12 @@ export class DetalheEventoPage {
 
   adicionaRemoveFavoritoDetalhes(idEvento: number, idFavoritoEventoUsuario: number){
     try {
-      // this.showLoading = true;
       this.showIcon = !this.showIcon;
-
       if(!this.showIcon) {
         this.removerFavoritoDetalhes(idFavoritoEventoUsuario);
       } else {
         this.adicionaFavoritoDetalhes(idEvento);
       }
-      
     }catch (err){
       if(err instanceof RangeError){
       }
@@ -257,24 +286,20 @@ export class DetalheEventoPage {
     try {
       this.loading = this.loadingCtrl.create({
         content: "",
-        // spinner: 'circles'
       });
       this.loading.present();
-
       this.favoritoEventoUsuarioEntity = new FavoritoEventoUsuarioEntity();
       this.favoritoEventoUsuarioEntity.idEvento = idEvento;
+
       this.favoritosService.adicionaFavoritos(this.favoritoEventoUsuarioEntity)
       .then((favoritoResult: FavoritoEventoUsuarioEntity) => {
         setTimeout(() => { 
-          // this.showLoading = false;
           this.loading.dismiss();
-        }, 1000);
+        }, 3000);
 
-        // this.loading.dismiss();
         this.toastMessage = 'O evento foi adicionado aos seus favoritos!';
         this.presentToast();
       }, (err) => {
-        // this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
         this.loading.dismiss();
         this.alertCtrl.create({
           subTitle: err.message ? err.message : 'Não foi possível conectar ao servidor',
@@ -292,7 +317,6 @@ export class DetalheEventoPage {
     try {
       this.loading = this.loadingCtrl.create({
         content: "",
-        // spinner: 'circles'
       });
       this.loading.present();
 
@@ -301,14 +325,11 @@ export class DetalheEventoPage {
       this.favoritosService.removeFavoritos(this.favoritoEventoUsuarioEntity)
       .then((favoritoResult: FavoritoEventoUsuarioEntity) => {
         setTimeout(() => { 
-          // this.showLoading = false;
           this.loading.dismiss();
         }, 1000);
-        // this.loading.dismiss();
         this.toastMessage = 'O evento foi removido dos seus favoritos!';
         this.presentToast();
       }, (err) => {
-        // this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
         this.loading.dismiss();
         this.alertCtrl.create({
           subTitle: err.message ? err.message : 'Não foi possível conectar ao servidor',
@@ -326,11 +347,15 @@ export class DetalheEventoPage {
   getValorAnuncio(v: string, idIngresso: number) {
     for(let i =0;i<this.listIngressoListEntity.length;i++){
       if(this.listIngressoListEntity[i].idIngresso == idIngresso) {
-        this.valorAnuncio = this.mask.maskMoneyConvert(v);
-        this.listIngressoListEntity[i]['valorAnuncio'] = this.valorAnuncio;
-
-        if(this.listIngressoListEntity[i]['valorAnuncio'].length == 0) {
+        // this.valorAnuncio = this.mask.maskMoneyConvert(v); // antes
+        // this.listIngressoListEntity[i]['valorAnuncio'] = this.valorAnuncio; // antes
+        this.valorAnuncio = v;
+        this.listIngressoListEntity[i]['valorAnuncio'] = v;
+        // if(this.listIngressoListEntity[i]['valorAnuncio'].length == 0) { // antes
+        if(this.listIngressoListEntity[i]['valorAnuncio'] == '0,00' || this.listIngressoListEntity[i]['valorAnuncio'] == '') {
           this.listIngressoListEntity[i].itemChecked = false;
+          this.listIngressoListEntity[i]['valorAnuncio'] = '';
+          this.valorAnuncio = null;
         } else {
           this.listIngressoListEntity[i].itemChecked = true;
         }
@@ -339,18 +364,16 @@ export class DetalheEventoPage {
     }
   }
 
-  addCheckbox(event: any, idIngresso: number) {
-
+  addCheckbox(event: any, idIngresso: number, statusIngressoEnum: string) {
     if ( event.checked ) {
       this.ingressosMarcados.push(idIngresso);
     } else {
       let index = this.removeCheckedFromArray(idIngresso);
       this.ingressosMarcados.splice(index,1);
 
-      for(let i =0;i<this.listIngressoListEntity.length;i++){        
+      for(let i =0;i<this.listIngressoListEntity.length;i++){   
         if(this.listIngressoListEntity[i].idIngresso == idIngresso) {
           this.listIngressoListEntity[i]['valorAnuncio'] = '';
-          // this.valorAnuncio = null;
           if(this.listIngressoListEntity[i]['valorAnuncio'].length == 0) {
             this.listIngressoListEntity[i].itemChecked = false;
           } else {
@@ -358,10 +381,8 @@ export class DetalheEventoPage {
           }
         }
       }
-
     }
     this.alteraStatusBotao();
-
   }
   
   alteraStatusBotao() {
@@ -385,45 +406,83 @@ export class DetalheEventoPage {
         content: "",
       });
       this.loading.present();
-      
+
       for(let i =0;i<this.listIngressoListEntity.length;i++){
-        // if(this.listIngressoListEntity[i].itemChecked ) {
-        //   this.anuncioIngressoListEntity[i] = {
-        //     idIngresso: this.listIngressoListEntity[i].idIngresso, 
-        //     valorAnuncio: this.listIngressoListEntity[i].valorAnuncio 
-        //   }
-        if(this.listIngressoListEntity[i].itemChecked ) {
+        if(this.listIngressoListEntity[i].itemChecked) {
           this.listAnuncioIngressoListEntity[i] = {
             idIngresso: this.listIngressoListEntity[i].idIngresso, 
             valorAnuncio: this.listIngressoListEntity[i].valorAnuncio 
           }
-
-          // let precision = (this.anuncioIngressoListEntity[i].valorAnuncio  + "").split(".")[1].length;
-          // if(precision != 2) {
-
-            this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(".", "");
-            // this.anuncioIngressoListEntity[i].valorAnuncio = this.anuncioIngressoListEntity[i].valorAnuncio.replace(".", "");
-          // }
+          this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(".", "");
           this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(",", ".");
-          // this.anuncioIngressoListEntity[i].valorAnuncio = this.anuncioIngressoListEntity[i].valorAnuncio.replace(",", ".");
         }
       }
 
+      // remove o elemente se for null
+      this.listAnuncioIngressoListEntity = this.listAnuncioIngressoListEntity.filter(function () { return true });
       this.anuncioIngressoListEntity.listAnuncioIngressoListEntity = this.listAnuncioIngressoListEntity;
-
-      console.log(JSON.stringify(this.anuncioIngressoListEntity));
-      // console.log(this.listAnuncioIngressoListEntity);
-      console.log(this.anuncioIngressoListEntity);
-      // console.log(this.anuncioIngressoListEntity.listAnuncioIngressoListEntity);
-
+      
       this.eventoService.adicionaIngressoRevenda(this.anuncioIngressoListEntity)
       .then((anuncioIngressoResult: AnuncioIngressoListEntity) => {
         this.anuncioIngressoListEntity = anuncioIngressoResult;
 
-        console.log(this.anuncioIngressoListEntity);
+        this.findIngressoDetalheRevendaByIdEvento();
 
         this.loading.dismiss();
         this.toastMessage = 'O lote foi disponibilizado para revenda!';
+        this.presentToast();
+      }, (err) => {
+        this.loading.dismiss();
+        this.alertCtrl.create({
+          subTitle: err.message ? err.message : 'Não foi possível conectar ao servidor',
+          buttons: ['OK']
+        }).present();
+      });
+
+    }catch (err){
+      if(err instanceof RangeError){
+      }
+      console.log(err);
+    }
+
+  }
+
+  removerLoteRevendaConfirm(idAnuncio: number) {
+    let alert = this.alertCtrl.create({
+      subTitle: 'Deseja realmente remover o lote da revenda?',
+      buttons: [
+        {
+          text: 'Manter',
+          role: 'cancel'
+        },
+        {
+          text: 'Remover',
+          handler: () => {
+            this.removeIngressoRevenda(idAnuncio);
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  removeIngressoRevenda(idAnuncio: number) {
+    try {
+
+      this.loading = this.loadingCtrl.create({
+        content: "",
+      });
+      this.loading.present();
+      
+      this.anuncioIngressoListEntity = new AnuncioIngressoListEntity();
+      this.anuncioIngressoListEntity.idAnuncio = idAnuncio;
+      this.eventoService.removeIngressoRevenda(this.anuncioIngressoListEntity)
+      .then((anuncioIngressoResult: AnuncioIngressoListEntity) => {
+        this.anuncioIngressoListEntity = anuncioIngressoResult;
+        this.findIngressoDetalheRevendaByIdEvento();
+
+        this.loading.dismiss();
+        this.toastMessage = 'O lote foi retirado da revenda!';
         this.presentToast();
       }, (err) => {
         this.loading.dismiss();

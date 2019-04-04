@@ -7,6 +7,19 @@
 </ion-header>
 
 <ion-content>
+    <div class="spinner-center" *ngIf="showLoading">
+        <ion-spinner name="crescent"></ion-spinner>
+    </div>
+            
+    <div *ngIf="errorConnection" text-wrap>
+        <p style="text-align: center">
+            <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+        </p>
+                
+        <p style="text-align: center;">
+            <span class="spam-error-connection">{{ errorConnection }}</span>
+        </p>
+    </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="submeterLogin()">
 

@@ -3,25 +3,22 @@ import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Constants } from '../../app/constants';
 
-//ENTITIES
-import { EventoListEntity } from '../../model/evento-list-entity';
-
 //SERVICES
 import { EventoService } from '../../providers/evento-service';
 
-//PAGES
-import { DetalheEventoPage } from '../detalhe-evento/detalhe-evento';
+//ENTITIES
+import { EventoListEntity } from '../../model/evento-list-entity';
 
 @IonicPage()
 @Component({
-  selector: 'page-meus-ingressos-list',
-  templateUrl: 'meus-ingressos-list.html',
+  selector: 'page-anuncio-revenda-list',
+  templateUrl: 'anuncio-revenda-list.html',
 })
-export class MeusIngressosListPage {
-  private errorConnection: string;
-  public ingressosList: any = null;
-  public showLoading: boolean = true;
+export class AnuncioRevendaListPage {
   private eventoListEntity: EventoListEntity;
+  public anuncioList: any = [];
+  public showLoading: boolean = true;
+  private errorConnection: boolean = false;
   public idUsuario: string = null;
 
   constructor(public navCtrl: NavController, 
@@ -34,8 +31,13 @@ export class MeusIngressosListPage {
   }
 
   ngOnInit() {
+  }
+  
+  ionViewWillEnter(){
+    this.showLoading = true;
+    this.anuncioList = null;
     this.idUsuario = localStorage.getItem(Constants.ID_USUARIO);
-    this.getListaIngressos();
+    this.getListaAnuncioRevenda();
   }
 
   // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
@@ -46,32 +48,26 @@ export class MeusIngressosListPage {
     }
   }
 
-  getListaIngressos() {
+  getListaAnuncioRevenda() {
     try {
 
-      this.eventoService.findIngressosDisponivelByUsuario()
+      this.eventoService.findAnuncioRevenda()
       .then((ingressosListResult: EventoListEntity) => {
-        this.ingressosList = ingressosListResult;
+        this.anuncioList = ingressosListResult;
+        console.log(this.anuncioList);
         this.showLoading = false;
 
       }, (err) => {
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        this.ingressosList = [];
         this.showLoading = false;
+        this.anuncioList = [];
       });
-
+  
     }catch (err){
-      if(err instanceof RangeError){
-      }
-      console.log(err);
+        if(err instanceof RangeError){
+        }
+        console.log(err);
     }
-  }
-
-  openDetalheEventoPage(idEvento: any, lastButtonDetalhe: string) {
-    this.navCtrl.push(DetalheEventoPage, {
-      lastButtonDetalhe: lastButtonDetalhe,
-      idEvento: idEvento
-    })
   }
 
 }

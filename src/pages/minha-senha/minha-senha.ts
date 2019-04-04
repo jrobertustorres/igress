@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController, Events, Platform } from 'ionic-angular';
 import { FormBuilder,	FormGroup, Validators } from '@angular/forms';
 
 //ENTITYS
@@ -32,9 +32,11 @@ export class MinhaSenhaPage {
               private usuarioService: UsuarioService,
               private toastCtrl: ToastController,
               public events: Events,
+              public platform: Platform,
               private formBuilder: FormBuilder) {
 
     this.usuarioEntity = new UsuarioEntity();
+    this.platform.registerBackButtonAction(()=>this.myHandlerFunction());
     this.tabBarElement = document.querySelector('.tabbar.show-tabbar');
   }
 
@@ -60,6 +62,14 @@ export class MinhaSenhaPage {
   ionViewWillLeave() {
     this.tabBarElement.style.display = 'flex';
     this.events.publish('showButtonEvent:change', true);
+  }
+
+  // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
+  myHandlerFunction(){
+    if(this.loading) {
+      this.loading.dismiss();
+      this.navCtrl.pop();
+    }
   }
 
   presentToast() {

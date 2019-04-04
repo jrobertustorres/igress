@@ -12,4 +12,5 @@ export class Constants {
   public static UUID = 'uuid_usuario';
   public static VERSION_NUMBER = 'version_number';
   public static CIDADES_POR_ESTADO = 'cidades_por_estado';
+  public static MODO_OFF_LINE = 'modo_off_line';
 }
