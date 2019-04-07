@@ -16,9 +16,7 @@ export class PerfilPage {
               public navParams: NavParams) {
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   openLoginPage() {
     this.navCtrl.push(LoginPage);

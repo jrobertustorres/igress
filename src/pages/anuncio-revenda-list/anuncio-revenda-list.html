@@ -32,7 +32,7 @@
       </div>
   </div>
 
-  <ion-card *ngFor="let anuncio of anuncioList">
+  <ion-card *ngFor="let anuncio of anuncioList" (click)="openDetalheEventoPage(anuncio.idEvento, 'ANUNCIOLIST');">
     <ion-card-content>
       <ion-card-title>
         <span style="font-size: 16px;">{{ anuncio.nomeEvento }}</span>
@@ -43,7 +43,7 @@
     </ion-card-content>
     <img [src]="sanitizer.bypassSecurityTrustUrl(anuncio.imagemEvento)"  />
 
-    <ion-row>
+    <!-- <ion-row>
         <ion-col>
           <button ion-button icon-start clear small color="blueColor" style="float: left;" (click)="openDetalheEventoPage(anuncio.idEvento, 'DETALHE');">
             <ion-icon name="qr-scanner"></ion-icon>
@@ -56,7 +56,7 @@
             <div>REVENDA</div>
           </button>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
 
   </ion-card>
 

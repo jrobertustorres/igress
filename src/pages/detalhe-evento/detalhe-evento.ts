@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ModalController, LoadingController, AlertController, ToastController, Platform } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MaskUtil } from "../../utilitarios/mask";
+import { Constants } from '../../app/constants';
 
 //ENTITYS
 import { EventoDetalheEntity } from '../../model/evento-detalhe-entity';
@@ -14,7 +15,8 @@ import { FavoritosService } from '../../providers/favoritos-service';
 
 //PAGES
 import { ModalQrcodePage } from '../modal-qrcode/modal-qrcode';
-import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
+import { ModalEntrarCadastrarPage } from '../modal-entrar-cadastrar/modal-entrar-cadastrar';
+// import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
 
 @IonicPage()
 @Component({
@@ -42,6 +44,7 @@ export class DetalheEventoPage {
   private ingressosMarcados = [];
   private habilitaBotao: boolean = false; 
   public listIngressoRevenda = [];
+  private idUsuarioLogado: string;
 
   public status: string;
   public statusEnum: string;
@@ -65,6 +68,7 @@ export class DetalheEventoPage {
     this.idEvento = navParams.get("idEvento");
     this.lastButtonDetalhe = navParams.get("lastButtonDetalhe");
     this.platform.registerBackButtonAction(()=>this.myHandlerFunction());
+    this.idUsuarioLogado = localStorage.getItem(Constants.ID_USUARIO);
 
   }
 
@@ -80,8 +84,11 @@ export class DetalheEventoPage {
     } else if(this.lastButtonDetalhe == 'DETALHE'){
       this.findIngressoDetalheByIdEvento();
     }
-    if(this.lastButtonDetalhe == 'HOME') {
+    if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
       this.findEventoDetalheByIdEvento();
+    }
+    if(this.lastButtonDetalhe == 'ANUNCIOLIST') {
+      this.findAnuncioDetalheByIdEvento();
     }
   }
     
@@ -185,6 +192,30 @@ export class DetalheEventoPage {
     try {
       this.eventoDetalheEntity.idEvento = this.idEvento;
       this.eventoService.findIngressoDetalheRevendaByIdEvento(this.eventoDetalheEntity)
+      .then((eventoDetalheResult: EventoDetalheEntity) => {
+        this.eventoDetalheEntity = eventoDetalheResult;
+        this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
+
+        this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
+        this.showLoading = false;
+
+      }, (err) => {
+        this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.showLoading = false;
+      });
+
+    }catch (err){
+      if(err instanceof RangeError){
+      }
+      console.log(err);
+    }
+  }
+
+  findAnuncioDetalheByIdEvento() {
+    try {
+
+      this.eventoDetalheEntity.idEvento = this.idEvento;
+      this.eventoService.findAnuncioDetalheByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
         this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
@@ -498,6 +529,19 @@ export class DetalheEventoPage {
       console.log(err);
     }
 
+  }
+
+  openPagamentoPage() {
+    if(this.idUsuarioLogado) {
+      // ir para pagamento
+    } else {
+      this.openModalEntrarCadastrarPage();      
+    }
+  }
+
+  openModalEntrarCadastrarPage() {
+    let modal = this.modalCtrl.create(ModalEntrarCadastrarPage);
+    modal.present();
   }
 
   openModalQrcode(tokenIngresso: string){

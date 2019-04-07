@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, Platform, LoadingController } from 'ionic-angular';
 import { Constants } from '../../app/constants';
-import { Device } from '@ionic-native/device/ngx';
+import { Device } from '@ionic-native/device';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
@@ -56,7 +56,7 @@ export class HomePage {
   ionViewWillEnter() {
     this.showLoading = true;
     this.dadosEvento = [];
-    this.listEventosProximos = [];
+    // this.listEventosProximos = [];
     this.idUsuarioLogado = localStorage.getItem(Constants.ID_USUARIO);
     this.getAtualizacaoStatus();
   }
@@ -69,6 +69,7 @@ export class HomePage {
 
   selectedTabChanged($event): void {
     this.errorConnection = null;
+    // this.dadosEvento = [];
     if ($event._value == "destaquesList") {
       this.findEventosDestaqueAndCidade(null);
     } else {
@@ -78,6 +79,16 @@ export class HomePage {
         } else {
           this.getLocationPosition();
         }
+    }
+  }
+
+  checkPlatform() {
+    this.segment = "proximosList";
+    // para testes no browser acesso direto o this.getLocationPosition()
+    if (this.platform.is('cordova')) {
+      this.getGpsStatus();
+    } else {
+      this.getLocationPosition();
     }
   }
 
@@ -123,12 +134,13 @@ export class HomePage {
     try {
 
       // PARA TESTES NO BROWSER
-      if(this.platform.is('mobileweb')) {
+      if (!this.platform.is('cordova')) {
         this.versaoAppEntity.versao = "0.0.1"; // so para testes
         this.versaoAppEntity.sistemaOperacional = "ANDROID"; // so para testes
       } else { // para uso no smartphone
         this.versaoAppEntity.versao = localStorage.getItem(Constants.VERSION_NUMBER);
         this.versaoAppEntity.sistemaOperacional = this.device.platform;
+
       }
 
       this.versaoAppService.versaoApp(this.versaoAppEntity)
@@ -142,9 +154,11 @@ export class HomePage {
         }
 
       }, (err) => {
-        // this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        this.showLoading = false;
+        this.errorConnection = null;
         // this.dadosEvento = [];
-        err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
+        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
         // this.loading.dismiss();
         // this.alertCtrl.create({
         //   subTitle: err.message,
@@ -259,10 +273,8 @@ export class HomePage {
   getLocationPosition() {
     this.showLoading = true;
     this.geolocation.getCurrentPosition().then((resp) => {
-      console.log(resp.coords.latitude);
-      console.log(resp.coords.longitude);
-      this.findEventosDestaqueAndCidadeProximosaMim(null, -19.9299007, -43.9320145);
-      // this.findEventosDestaqueAndCidadeProximosaMim(null, resp.coords.latitude, resp.coords.longitude);
+      // this.findEventosDestaqueAndCidadeProximosaMim(null, -19.9299007, -43.9320145);
+      this.findEventosDestaqueAndCidadeProximosaMim(null, resp.coords.latitude, resp.coords.longitude);
      }).catch((error) => {
        this.errorGetLocation();
        console.log('Error getting location', error);

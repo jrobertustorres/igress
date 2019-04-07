@@ -1,7 +1,7 @@
 <ion-header no-border>
     <ion-navbar color="navBarColor">
       <ion-title></ion-title>
-      <ion-buttons end *ngIf="eventoDetalheEntity.nomeEvento">
+      <ion-buttons end *ngIf="eventoDetalheEntity.nomeEvento && idUsuarioLogado">
         <button ion-button icon-only (click)="adicionaRemoveFavoritoDetalhes(eventoDetalheEntity.idEvento, eventoDetalheEntity.idFavoritoEventoUsuario)">
             <ion-icon ios="ios-heart" md="md-heart"
             [ngClass]="{false:'corBranca', true:'corVermelha'}[showIcon]">
@@ -115,7 +115,29 @@
       </div>
       <!-- FIM REVENDA -->
 
-      <div *ngIf="lastButtonDetalhe != 'REVENDA'">
+      <!-- ANUNCIOLIST -->
+      <div *ngIf="lastButtonDetalhe == 'ANUNCIOLIST'">
+        <ion-item text-wrap *ngFor="let ingresso of listIngressoListEntity; let i = index;">
+
+            <ion-label color="dark" stacked>
+                <h4 style="font-size: 12px; font-weight: 500;">
+                  <strong>{{ ingresso.nomeLoteIngresso }}</strong>
+                </h4>
+                <p><span style="color: #0c60ee; font-size: 12px;"> {{ ingresso.valorETaxaFormat }}</span></p>
+                <h4 style="color: #999; font-size: 13px;">
+                  <strong>{{ ingresso.vendaAteFormat }}</strong>
+                </h4>
+                <h4></h4>
+            </ion-label>
+
+            <ion-checkbox item-right color="dark" [checked]="ingresso.itemChecked" 
+              (ionChange)="addCheckbox($event, ingresso.idIngresso, ingresso.statusIngressoEnum)"></ion-checkbox>
+
+        </ion-item>
+      </div>
+      <!-- FIM ANUNCIOLIST -->
+
+      <div *ngIf="lastButtonDetalhe != 'REVENDA' && lastButtonDetalhe != 'ANUNCIOLIST'">
         <ion-item text-wrap *ngFor="let ingresso of listIngressoListEntity">
           <div id="flex-container">
               <div class="flex-item" id="flex">
@@ -128,7 +150,8 @@
                   style="float: right; margin-top: -40px; width: 40px; height: auto;" (click)="openModalQrcode(ingresso.tokenIngresso)">
               </div>
   
-              <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" *ngIf="lastButtonDetalhe == 'HOME'">
+              <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" 
+                *ngIf="lastButtonDetalhe == 'HOME' || lastButtonDetalhe == 'FAVORITOLIST'">
                   <ion-icon name="remove-circle" (click)="subtrairIngresso(ingresso)"></ion-icon>
                   <span *ngIf="ingresso.qtdIngresso > 0">{{ ingresso.qtdIngresso }}</span>
                   <span *ngIf="!ingresso.qtdIngresso" >0</span>
@@ -141,13 +164,11 @@
     </ion-list>
 
     <div padding>
-        <button ion-button block outline type="submit" color="greenColor" *ngIf="lastButtonDetalhe == undefined">COMPRAR INGRESSOS</button>
+        <button ion-button block outline type="submit" color="greenColor" (click)="openPagamentoPage()"
+          *ngIf="lastButtonDetalhe == 'HOME' || lastButtonDetalhe == 'ANUNCIOLIST' || lastButtonDetalhe == 'FAVORITOLIST'">COMPRAR INGRESSOS</button>
         <button ion-button block outline type="submit" color="greenColor" 
           *ngIf="lastButtonDetalhe == 'REVENDA'" [disabled]="!habilitaBotao" (click)="adicionaIngressoRevenda()">REVENDER SELECIONADOS
         </button>
-        <!-- <button ion-button block outline type="submit" color="danger" 
-          *ngIf="lastButtonDetalhe == 'REVENDA'" [disabled]="!habilitaBotao" (click)="removeIngressoRevenda()">REMOVER SELECIONADOS
-        </button> -->
     </div>
 
     <div padding class="content-stable">

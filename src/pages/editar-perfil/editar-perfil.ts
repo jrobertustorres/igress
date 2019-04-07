@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events } from 'ionic-angular';
 import { Constants } from '../../app/constants';
+import { Device } from '@ionic-native/device';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 //PAGES
 import { MeusDadosPage } from '../meus-dados/meus-dados';
@@ -21,6 +23,8 @@ export class EditarPerfilPage {
   constructor(public navCtrl: NavController, 
               public alertCtrl: AlertController,
               public events: Events,
+              private device: Device,
+              private emailComposer: EmailComposer,
               public navParams: NavParams) {
   }
 
@@ -36,6 +40,28 @@ export class EditarPerfilPage {
     this.nomeUsuarioLogado = localStorage.getItem(Constants.NOME_PESSOA);
     this.emailUsuario = localStorage.getItem(Constants.EMAIL_PESSOA);
 
+  }
+
+  sendEmailBug() {
+    this.emailComposer.isAvailable().then((available: boolean) =>{
+      if(available) {
+      }
+     });
+     
+     let email = {
+       to: 'diretoria@logiic.com.br',
+       cco: ['jose@logiic.com.br', 'bruno@logiic.com.br'],
+       subject: 'Problema encontrado no app.',
+       body: '<p><h1>Olá! Descreva abaixo o problema encontrado e logo analizaremos.</h1></p>' +
+       '<h1>Informações para suporte</h1>'+
+       '<h1>Pet Prático v'+ localStorage.getItem(Constants.VERSION_NUMBER) +'</h1>' +
+       '<h1>'+ this.device.model +'</h1>' +
+       '<h1>'+ this.device.platform +' '+ this.device.version +'</h1>' +
+       '<h1>----------------------</h1>',
+       isHtml: true
+     };
+
+     this.emailComposer.open(email);
   }
 
   openMeusDadosPage() {

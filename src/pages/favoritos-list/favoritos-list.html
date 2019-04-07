@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <ion-card (click)="openDetalheEventoPage(favorito.idEvento)" *ngFor="let favorito of favoritosList">
+    <ion-card (click)="openDetalheEventoPage(favorito.idEvento, 'FAVORITOLIST')" *ngFor="let favorito of favoritosList">
         <ion-card-content style="padding: 3px 16px;">
             <ion-card-title style="line-height: 0.8;">
             <span style="font-size: 16px; font-weight: 500;">{{ favorito.nomeEvento }}</span>

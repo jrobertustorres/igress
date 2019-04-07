@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-navbar color="navBarColor">
+        <ion-title>
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button (click)="closeModal()">
+              <ion-icon ios="ios-close" md="md-close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <div style="margin-top: 10px;" padding>
+
+    <div style="text-align: center;">
+      <img height="30" src="assets/imgs/logo.png" class="style-page">
+    </div>
+
+    <ion-grid>
+        <ion-row>
+          <ion-col col-6>
+              <button ion-button block outline (click)="openLoginPage()" color="navBarColor">ENTRAR</button>
+          </ion-col>
+          <ion-col col-6>
+              <button ion-button block outline (click)="openMeusDadosPage()" color="navBarColor">CADASTRAR</button>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+
+  </div>
+  <div class="hr-sect">ou</div>
+
+  <div>
+      <div padding>
+          <button ion-button icon-left block style="background-color: #395692" (click)="doFbLogin()">
+              <ion-icon ios="logo-facebook" md="logo-facebook" class="style-right-icon-facebook"></ion-icon>
+              <span class="span-style">Continuar com FACEBOOK</span>
+          </button>
+      </div>
+  </div>
+
+</ion-content>

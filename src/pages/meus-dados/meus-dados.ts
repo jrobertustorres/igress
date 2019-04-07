@@ -87,6 +87,7 @@ export class MeusDadosPage implements OnInit {
       .getEstados()
       .subscribe(dados => {
       this.estados = dados;
+      this.showLoading = false;
     });
 
     if(!localStorage.getItem(Constants.TOKEN_USUARIO)){
@@ -100,9 +101,7 @@ export class MeusDadosPage implements OnInit {
 
   }
 
-  ionViewDidLoad() {
-    
-  }
+  ionViewDidLoad() {}
 
   ionViewWillEnter() {
     this.tabBarElement.style.display = 'none';

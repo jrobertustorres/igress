@@ -3,14 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 import { MyApp } from './app.component';
-import { Device } from '@ionic-native/device/ngx';
+import { Device } from '@ionic-native/device';
 import { MaskUtil } from '../utilitarios/mask';
-import { AppVersion } from '@ionic-native/app-version/ngx';
+import { AppVersion } from '@ionic-native/app-version';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Network } from '@ionic-native/network';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -31,6 +32,7 @@ import { EditarPerfilPage } from '../pages/editar-perfil/editar-perfil';
 import { ModalCidadesPage } from '../pages/modal-cidades/modal-cidades';
 import { AnuncioRevendaListPage } from '../pages/anuncio-revenda-list/anuncio-revenda-list';
 import { CadastroCartaoPage } from '../pages/cadastro-cartao/cadastro-cartao';
+import { ModalEntrarCadastrarPage } from '../pages/modal-entrar-cadastrar/modal-entrar-cadastrar';
 
 //ENTITIES
 import { UsuarioEntity } from '../model/usuario-entity';
@@ -72,6 +74,7 @@ import { EventoService } from '../providers/evento-service';
     ModalCidadesPage,
     AnuncioRevendaListPage,
     CadastroCartaoPage,
+    ModalEntrarCadastrarPage,
     TabsPage
   ],
   imports: [
@@ -100,6 +103,7 @@ import { EventoService } from '../providers/evento-service';
     ModalCidadesPage,
     AnuncioRevendaListPage,
     CadastroCartaoPage,
+    ModalEntrarCadastrarPage,
     TabsPage
   ],
   providers: [
@@ -108,6 +112,7 @@ import { EventoService } from '../providers/evento-service';
     Network,
     Geolocation,
     LocationAccuracy,
+    EmailComposer,
     BarcodeScanner,
     Device,
     AppVersion,

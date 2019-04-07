@@ -76,9 +76,10 @@ export class EventoService {
 
   public findEventoDetalheByIdEvento(eventoDetalheEntity) {
     try {
+      let token = localStorage.getItem(Constants.TOKEN_USUARIO) != null ? localStorage.getItem(Constants.TOKEN_USUARIO) : '';
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'findEventoDetalheByIdEvento/'
-          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(eventoDetalheEntity), this.options)
+          + token, JSON.stringify(eventoDetalheEntity), this.options)
           .map(res=>res.json())
           .subscribe(data => {
             resolve(data);
@@ -119,6 +120,27 @@ export class EventoService {
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + 'findIngressoDetalheRevendaByIdEvento/'
           + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(eventoDetalheEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public findAnuncioDetalheByIdEvento(eventoDetalheEntity) {
+    try {
+      let token = localStorage.getItem(Constants.TOKEN_USUARIO) != null ? localStorage.getItem(Constants.TOKEN_USUARIO) : '';
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findAnuncioDetalheByIdEvento/'
+          + token, JSON.stringify(eventoDetalheEntity), this.options)
           .map(res=>res.json())
           .subscribe(data => {
             resolve(data);

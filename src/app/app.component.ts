@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { Device } from '@ionic-native/device/ngx';
-import { AppVersion } from '@ionic-native/app-version/ngx';
+import { Device } from '@ionic-native/device';
+import { AppVersion } from '@ionic-native/app-version';
 import { Network } from '@ionic-native/network';
 import { Constants } from '../app/constants';
 
@@ -25,9 +25,9 @@ export class MyApp {
     platform.ready().then(() => {
       this.checkNetwork();
       // abaixo verificamos se a intenet cair depois que o cliente já entrou no app
-      // this.network.onDisconnect().subscribe(() => {
-      //   this.checkNetwork();
-      // });
+      this.network.onDisconnect().subscribe(() => {
+        this.checkNetwork();
+      });
       if (this.platform.is('cordova')) {
         localStorage.setItem(Constants.UUID, this.device.uuid);
         this.appVersion.getVersionNumber().then((version) => {
@@ -44,7 +44,6 @@ export class MyApp {
   }
 
   checkNetwork() {
-
     if(this.network.type === 'none' || this.network.type === 'unknown') {
       localStorage.setItem(Constants.MODO_OFF_LINE, 'ON');
       let alert = this.alertCtrl.create({
@@ -53,7 +52,6 @@ export class MyApp {
       buttons: [{
         text: 'Ok',
         handler: () => {
-            this.platform.exitApp();
             }
         }]
       });

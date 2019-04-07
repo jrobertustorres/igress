@@ -35,7 +35,8 @@
     <ion-buttons end>
 
       <!-- <button ion-button icon-only (click)="getLocationPosition()"> -->
-      <button ion-button icon-only (click)="getGpsStatus()">
+      <!-- <button ion-button icon-only (click)="getGpsStatus()"> -->
+      <button ion-button icon-only (click)="checkPlatform()">
           <ion-icon ios="ios-locate" md="md-locate"></ion-icon>
       </button>
 
@@ -91,7 +92,6 @@
       </ion-slides> -->
 
 
-      <!-- <div class="spinner-center" *ngIf="!dadosEvento"> -->
       <div class="spinner-center" *ngIf="showLoading">
         <ion-spinner name="crescent"></ion-spinner>
         <!-- <ion-spinner name="dots"></ion-spinner> -->
@@ -107,28 +107,101 @@
         </p>
       </div>
 
-  <ion-card (click)="openDetalheEventoPage(evento.idEvento, 'HOME')" *ngFor="let evento of dadosEvento">
-    <ion-card-content style="padding: 3px 16px;">
-      <ion-card-title style="line-height: 0.8;">
-        <span style="font-size: 16px; font-weight: 500;">{{ evento.nomeEvento }}</span>
-      </ion-card-title>
-      <p>
-        <span>{{ evento.cidadeEstadoFormat }}</span><span style="float: right;">{{ evento.dataEventoFormat }}</span>
-      </p>
-    </ion-card-content>
-    <img [src]="sanitizer.bypassSecurityTrustUrl(evento.imagemEvento)"  />
-    <!-- <img src="assets/imgs/badu-live.png"/> -->
 
-    <div style="height: 35px; opacity: 0.7; background: #000; margin-top: -35px; text-align: left;">
-        <!-- <span style="font-size: 18px; color: #fff; margin-left: 10px;">Saladas</span> -->
-        <button ion-button color="light" outline 
-          style="height: 2.6rem; border-color: #ffffff; margin-right: 10px; float: right;" >
-          <span style="font-size: 14px; color: #ffffff;">
-            COMPRAR
-          </span>
-        </button>
-    </div>
-  </ion-card>
+<div [ngSwitch]="segment">
+    <ion-list *ngSwitchCase="'destaquesList'">
+        <ion-card (click)="openDetalheEventoPage(evento.idEvento, 'HOME')" *ngFor="let evento of dadosEvento">
+            <ion-card-content style="padding: 3px 16px;">
+            <ion-card-title style="line-height: 0.8;">
+                <span style="font-size: 16px; font-weight: 500;">{{ evento.nomeEvento }}</span>
+            </ion-card-title>
+            <p>
+                <span>{{ evento.cidadeEstadoFormat }}</span><span style="float: right;">{{ evento.dataEventoFormat }}</span>
+            </p>
+            </ion-card-content>
+            <img [src]="sanitizer.bypassSecurityTrustUrl(evento.imagemEvento)"  />
+
+            <div style="height: 35px; opacity: 0.7; background: #000; margin-top: -35px; text-align: left;">
+                <button ion-button color="light" outline 
+                style="height: 2.6rem; border-color: #ffffff; margin-right: 10px; float: right;" >
+                <span style="font-size: 14px; color: #ffffff;">
+                    COMPRAR
+                </span>
+                </button>
+            </div>
+        </ion-card>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'proximosList'">
+        <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="dadosEvento?.length == 0">
+            <div style="text-align: center;color: #484848;"><strong>Não encontramos nenhum evento nas proximidades</strong></div>
+            <div style="text-align: center;">
+                <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
+            </div>
+        </div>
+        <ion-card (click)="openDetalheEventoPage(evento.idEvento, 'HOME')" *ngFor="let evento of dadosEvento">
+            <ion-card-content style="padding: 3px 16px;">
+            <ion-card-title style="line-height: 0.8;">
+                <span style="font-size: 16px; font-weight: 500;">{{ evento.nomeEvento }}</span>
+            </ion-card-title>
+            <p>
+                <span>{{ evento.cidadeEstadoFormat }}</span><span style="float: right;">{{ evento.dataEventoFormat }}</span>
+            </p>
+            </ion-card-content>
+            <img [src]="sanitizer.bypassSecurityTrustUrl(evento.imagemEvento)"  />
+
+            <div style="height: 35px; opacity: 0.7; background: #000; margin-top: -35px; text-align: left;">
+                <button ion-button color="light" outline 
+                style="height: 2.6rem; border-color: #ffffff; margin-right: 10px; float: right;" >
+                <span style="font-size: 14px; color: #ffffff;">
+                    COMPRAR
+                </span>
+                </button>
+            </div>
+        </ion-card>
+    </ion-list>
+</div>
+
+
+
+  <!-- <div [ngSwitch]="segment">
+        <ion-list *ngSwitchCase="'candidatosList'">
+
+            <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="vagas?.length == 0">
+                <div style="text-align: center;color: #484848;"><strong>{{ 'SEM_CANDIDATO' | translate }}</strong></div>
+                <div style="text-align: center;">
+                    <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
+                </div>
+            </div>
+
+            <div>
+                <button ion-item *ngFor="let vaga of vagas" text-wrap (click)="callDetalheCandidatoVaga(vaga.idVagaUsuario)">
+                    <span style="font-size: 15px;"><b>{{ vaga.nomePessoa }}</b></span>
+                    <p style="color: #999 ">
+                        <ion-icon ios="ios-calendar" md="md-calendar" class="margin-icon"></ion-icon>{{ 'DATA_CANDIDATURA' | translate }}: {{ vaga.dataCandidatadaFormat }}
+                    </p>
+                </button>
+            </div>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'finalistasList'">
+            <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="vagas?.length == 0">
+                <div style="text-align: center;color: #484848;"><strong>{{ 'SEM_VAGAS_ARQUIVADAS' | translate }}</strong></div>
+                <div style="text-align: center;">
+                    <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
+                </div>
+            </div>
+            <div>
+                <button ion-item *ngFor="let finalista of vagas" text-wrap (click)="callDetalheCandidatoVaga(finalista.idVagaUsuario)">
+                    <span style="font-size: 15px;"><b>{{ finalista.nomePessoa }}</b></span>
+                    <p style="color: #999 ">
+                        <ion-icon ios="ios-calendar" md="md-calendar" class="margin-icon"></ion-icon>{{ 'DATA_CANDIDATURA' | translate }}: {{ finalista.dataCandidatadaFormat }}
+                    </p>
+                </button>
+            </div>
+        </ion-list>
+
+    </div> -->
 
   <ion-infinite-scroll (ionInfinite)="loadMore($event)" *ngIf="canLoadMore">
       <ion-infinite-scroll-content></ion-infinite-scroll-content>

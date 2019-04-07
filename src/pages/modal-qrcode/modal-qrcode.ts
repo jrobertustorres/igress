@@ -15,13 +15,18 @@ export class ModalQrcodePage {
               private barcodeScanner: BarcodeScanner,
               public navParams: NavParams) {
     this.tokenIngresso = navParams.get("tokenIngresso");
+    this.barcodeScanner.encode(this.barcodeScanner.Encode.TEXT_TYPE, this.tokenIngresso).then((encodedData) => {
+      this.tokenIngresso = encodedData;
+    }, (err) => {
+        console.log("Error occured : " + err);
+    });
 
-    this.barcodeScanner.scan().then(tokenIngresso => {
-      console.log('Barcode data ', tokenIngresso);
-      this.tokenIngresso = tokenIngresso;
-      }).catch(err => {
-          console.log('Error', err);
-      });
+    // this.barcodeScanner.scan().then(tokenIngresso => {
+    //   console.log('Barcode data ', tokenIngresso);
+    //   this.tokenIngresso = tokenIngresso;
+    //   }).catch(err => {
+    //       console.log('Error', err);
+    //   });
   }
 
   ngOnInit() {

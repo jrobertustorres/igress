@@ -137,9 +137,10 @@ export class FavoritosListPage {
     }
   }
 
-  openDetalheEventoPage(idEvento: any) {
+  openDetalheEventoPage(idEvento: any, lastButtonDetalhe: string) {
     this.navCtrl.push(DetalheEventoPage, {
-      idEvento: idEvento
+      idEvento: idEvento,
+      lastButtonDetalhe: lastButtonDetalhe,
     })
   }
 

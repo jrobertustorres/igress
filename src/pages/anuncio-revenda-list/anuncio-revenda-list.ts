@@ -9,6 +9,9 @@ import { EventoService } from '../../providers/evento-service';
 //ENTITIES
 import { EventoListEntity } from '../../model/evento-list-entity';
 
+//PAGES
+import { DetalheEventoPage } from '../detalhe-evento/detalhe-evento';
+
 @IonicPage()
 @Component({
   selector: 'page-anuncio-revenda-list',
@@ -54,7 +57,7 @@ export class AnuncioRevendaListPage {
       this.eventoService.findAnuncioRevenda()
       .then((ingressosListResult: EventoListEntity) => {
         this.anuncioList = ingressosListResult;
-        console.log(this.anuncioList);
+        // console.log(this.anuncioList);
         this.showLoading = false;
 
       }, (err) => {
@@ -68,6 +71,13 @@ export class AnuncioRevendaListPage {
         }
         console.log(err);
     }
+  }
+
+  openDetalheEventoPage(idEvento: any, lastButtonDetalhe: string) {
+    this.navCtrl.push(DetalheEventoPage, {
+      lastButtonDetalhe: lastButtonDetalhe,
+      idEvento: idEvento
+    })
   }
 
 }
