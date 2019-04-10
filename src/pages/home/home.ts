@@ -5,6 +5,7 @@ import { Device } from '@ionic-native/device';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 //ENTITYS
 import { UsuarioEntity } from '../../model/usuario-entity';
@@ -32,6 +33,7 @@ export class HomePage {
   private versao: any;
   private dadosUsuario: any;
   private dadosEvento: any;
+  private dadosEventosProximos: any;
   private listEventosProximos: any;
   private idUsuarioLogado: string;
   public showLoading: boolean = true;  
@@ -47,6 +49,7 @@ export class HomePage {
               private sanitizer: DomSanitizer,
               private geolocation: Geolocation,
               private locationAccuracy: LocationAccuracy,
+              private diagnostic: Diagnostic,
               public alertCtrl: AlertController) {
     this.usuarioEntity = new UsuarioEntity();
     this.versaoAppEntity = new VersaoAppEntity();
@@ -55,7 +58,7 @@ export class HomePage {
   
   ionViewWillEnter() {
     this.showLoading = true;
-    this.dadosEvento = [];
+    // this.dadosEvento = [];    
     // this.listEventosProximos = [];
     this.idUsuarioLogado = localStorage.getItem(Constants.ID_USUARIO);
     this.getAtualizacaoStatus();
@@ -69,7 +72,8 @@ export class HomePage {
 
   selectedTabChanged($event): void {
     this.errorConnection = null;
-    // this.dadosEvento = [];
+    this.dadosEventosProximos = null;
+    this.dadosEvento = null;
     if ($event._value == "destaquesList") {
       this.findEventosDestaqueAndCidade(null);
     } else {
@@ -94,24 +98,43 @@ export class HomePage {
 
   getGpsStatus() {
     this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-
       if(canRequest) {
-        // the accuracy option will be ignored by iOS
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
               .then(() => {
-                console.log('dentro do then do canRequest ===> ');
                 this.getLocationPosition();
               }).catch((error) => {
-                this.showLocationText();
+                // this.showLocationText();
                });
-
-        // this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-        //   () => console.log('Request successful'),
-        //   error => console.log('Error requesting location permissions', error)
-        // );
       }
-    
     });
+
+
+    // this.diagnostic.isLocationEnabled()
+    //   .then((state) => {
+    //     console.log('dentro do then');
+    //     if (state == true) {
+    //       console.log('dentro state true');
+    //       this.getLocationPosition();
+    //     } else {
+    //       console.log('dentro accuracy');
+    //       this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+    //         console.log('dentro do then do accuracy');
+    //         if(canRequest) {
+    //           console.log('dentro do canRequest');
+    //           // the accuracy option will be ignored by iOS
+    //           this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+    //           .then(() => {
+    //             console.log('dentro do then do canRequest ===> ');
+    //             this.getLocationPosition();
+    //           }).catch((error) => {
+    //             this.showLocationText();
+    //            });
+    //         }
+
+    //       });
+    //     }
+    //   }).catch(e => console.error(e));
+
   }
 
   showLocationText() {
@@ -238,19 +261,17 @@ export class HomePage {
 
   findEventosDestaqueAndCidadeProximosaMim(infiniteScroll: any, latitude, longitude) {
     try {
-      this.dadosEvento = [];
+      // this.dadosEventosProximos = [];
       this.eventoListEntity.latitude = latitude;
       this.eventoListEntity.longitude = longitude;
-      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEvento.length : null;
-
-      console.log(JSON.stringify(this.eventoListEntity));
+      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEventosProximos.length : null;
 
       this.eventoService.findEventosDestaqueAndCidadeProximosaMim(this.eventoListEntity)
       .then((eventoResult: EventoListEntity) => {
-        this.dadosEvento = eventoResult;
+        this.dadosEventosProximos = eventoResult;
         // this.listEventosProximos = eventoResult;
-        console.log(this.dadosEvento);
-        this.eventoListEntity.limiteDados = this.dadosEvento.length;
+        console.log(this.dadosEventosProximos);
+        this.eventoListEntity.limiteDados = this.dadosEventosProximos.length;
         // this.eventoListEntity.limiteDados = this.listEventosProximos.length;
 
         if(infiniteScroll) {
@@ -260,7 +281,7 @@ export class HomePage {
       }, (err) => {
         this.showLoading = false;
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        this.dadosEvento = [];
+        this.dadosEventosProximos = [];
       });
 
     }catch (err){

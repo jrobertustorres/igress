@@ -133,13 +133,13 @@
     </ion-list>
 
     <ion-list *ngSwitchCase="'proximosList'">
-        <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="dadosEvento?.length == 0">
+        <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="dadosEventosProximos?.length == 0">
             <div style="text-align: center;color: #484848;"><strong>Não encontramos nenhum evento nas proximidades</strong></div>
             <div style="text-align: center;">
                 <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
             </div>
         </div>
-        <ion-card (click)="openDetalheEventoPage(evento.idEvento, 'HOME')" *ngFor="let evento of dadosEvento">
+        <ion-card (click)="openDetalheEventoPage(evento.idEvento, 'HOME')" *ngFor="let evento of dadosEventosProximos">
             <ion-card-content style="padding: 3px 16px;">
             <ion-card-title style="line-height: 0.8;">
                 <span style="font-size: 16px; font-weight: 500;">{{ evento.nomeEvento }}</span>

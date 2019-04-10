@@ -11,7 +11,7 @@
     <form [formGroup]="minhaSenhaForm" (ngSubmit)="submeterNovaSenha()">
 
         <ion-item>
-            <ion-label stacked>Senha atual</ion-label>
+            <ion-label floating>Senha atual</ion-label>
             <ion-input formControlName="senha" id="senha" type="text" *ngIf="showPwd" [(ngModel)]="usuarioEntity.senha"></ion-input>
             <ion-input formControlName="senha" id="senha" type="password" *ngIf="!showPwd" [(ngModel)]="usuarioEntity.senha"></ion-input>
             <button icon-only ion-button clear type="button" item-right color="dark" (click)="showPwd=!showPwd">
@@ -23,13 +23,13 @@
         <div *ngIf="!minhaSenhaForm.get('senha').valid && minhaSenhaForm.get('senha').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
 
         <ion-item>
-            <ion-label stacked>Nova senha</ion-label>
+            <ion-label floating>Nova senha</ion-label>
             <ion-input formControlName="novaSenha" id="novaSenha" [(ngModel)]="usuarioEntity.novaSenha" type="password"></ion-input>
         </ion-item>
         <div *ngIf="!minhaSenhaForm.get('novaSenha').valid && minhaSenhaForm.get('novaSenha').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
 
         <ion-item>
-            <ion-label stacked>Confirmar senha</ion-label>
+            <ion-label floating>Confirmar senha</ion-label>
             <ion-input type="password" id="confirmSenha" formControlName="confirmSenha"></ion-input>
         </ion-item>
         <div [ngClass]="'class-error-form'" *ngIf="(!minhaSenhaForm.get('confirmSenha').valid && minhaSenhaForm.get('confirmSenha').touched) && minhaSenhaForm.controls.confirmSenha.errors?.MatchPassword">as senhas não conferem</div>

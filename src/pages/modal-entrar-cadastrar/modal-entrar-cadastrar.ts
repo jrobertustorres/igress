@@ -24,6 +24,10 @@ export class ModalEntrarCadastrarPage {
     this.viewCtrl.dismiss();
   }
 
+  doFbLogin() {
+    
+  }
+
   openLoginPage() {
     this.navCtrl.push(LoginPage);
   }

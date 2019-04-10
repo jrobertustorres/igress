@@ -18,6 +18,10 @@ export class PerfilPage {
 
   ngOnInit() {}
 
+  doFbLogin() {
+    
+  }
+
   openLoginPage() {
     this.navCtrl.push(LoginPage);
   }

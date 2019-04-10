@@ -28,7 +28,7 @@ import { CidadesService } from '../../providers/cidades-service';
 export class MeusDadosPage implements OnInit {
   public userChangeEvent = new EventEmitter();
   private errorConnection: string;
-  public showLoading: boolean = true;
+  // public showLoading: boolean = true;
   public dadosUsuarioForm: FormGroup;
   private usuarioDetalheEntity: UsuarioDetalheEntity;
   private usuarioEntity: UsuarioEntity;
@@ -87,7 +87,7 @@ export class MeusDadosPage implements OnInit {
       .getEstados()
       .subscribe(dados => {
       this.estados = dados;
-      this.showLoading = false;
+      // this.showLoading = false;
     });
 
     if(!localStorage.getItem(Constants.TOKEN_USUARIO)){
@@ -115,13 +115,11 @@ export class MeusDadosPage implements OnInit {
 
   // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
   myHandlerFunction(){
-    if(this.showLoading || this.loading) {
-      // this.showLoading = false;
-      // this.loading ? this.loading.dismiss() : '';
-      this.showLoading = this.showLoading ? this.showLoading : false;
+    // if(this.showLoading || this.loading) {
+      // this.showLoading = this.showLoading ? this.showLoading : false;
       this.loading ? this.loading.dismiss() : '';
       this.navCtrl.pop();
-    }
+    // }
   }
 
   getIdEstado(idEstado: any) {
@@ -247,10 +245,10 @@ export class MeusDadosPage implements OnInit {
 
   callGetDadosUsuario() {
     try {
-      // this.loading = this.loadingCtrl.create({
-      //   content: 'Aguarde...',
-      // });
-      // this.loading.present();
+      this.loading = this.loadingCtrl.create({
+        content: '',
+      });
+      this.loading.present();
 
       this.usuarioService
         .getDadosUsuario()
@@ -265,7 +263,7 @@ export class MeusDadosPage implements OnInit {
         })
         .catch(err => {
           this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
-          // this.loading.dismiss();
+          this.loading.dismiss();
           // this.alertCtrl.create({
           //   subTitle: err.message,
           //   buttons: ['OK']
@@ -291,12 +289,13 @@ export class MeusDadosPage implements OnInit {
               this.dadosCidades = cidade; 
             }
           }
-          this.showLoading = false;
-          // this.loading.dismiss();
+          // this.showLoading = false;
+          this.loading.dismiss();
         })
         .catch(err => {
           this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
-          // this.loading.dismiss();
+          this.loading.dismiss(); 
+          // this.showLoading = false;
           // this.alertCtrl.create({
           //   subTitle: err.message,
           //   buttons: ['OK']

@@ -12,6 +12,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { EmailComposer } from '@ionic-native/email-composer';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -47,6 +48,7 @@ import { LoteIngressoListEntity } from '../model/lote-ingresso-list-entity';
 import { FavoritoEventoUsuarioEntity } from '../model/favorito-evento-usuario-entity';
 import { IngressoListEntity } from '../model/ingresso-list-entity';
 import { AnuncioIngressoListEntity } from '../model/anuncio-ingresso-list-entity';
+import { CartaoCreditoEntity } from '../model/cartao-credito-entity';
 
 //SERVICES
 import { FavoritosService } from '../providers/favoritos-service';
@@ -56,6 +58,7 @@ import { VersaoAppService } from '../providers/versao-app-service';
 import { EstadosService } from './../providers/estados-service';
 import { CidadesService } from '../providers/cidades-service';
 import { EventoService } from '../providers/evento-service';
+import { CartaoService } from '../providers/cartao-service';
 
 @NgModule({
   declarations: [
@@ -111,6 +114,7 @@ import { EventoService } from '../providers/evento-service';
     SplashScreen,
     Network,
     Geolocation,
+    Diagnostic,
     LocationAccuracy,
     EmailComposer,
     BarcodeScanner,
@@ -129,6 +133,7 @@ import { EventoService } from '../providers/evento-service';
     FavoritoEventoUsuarioEntity,
     IngressoListEntity,
     AnuncioIngressoListEntity,
+    CartaoCreditoEntity,
     FavoritosService,
     LoginService,
     UsuarioService,
@@ -136,6 +141,7 @@ import { EventoService } from '../providers/evento-service';
     EstadosService,
     CidadesService,
     EventoService,
+    CartaoService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

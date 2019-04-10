@@ -63,7 +63,8 @@
       "cordova-plugin-app-version": {},
       "cordova-plugin-device": {},
       "cordova-plugin-network-information": {},
-      "cordova-plugin-email-composer": {}
+      "cordova-plugin-email-composer": {},
+      "cordova.plugins.diagnostic": {}
     },
     "platforms": [
       "android"

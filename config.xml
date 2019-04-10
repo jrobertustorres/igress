@@ -100,5 +100,6 @@
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="Localizar eventos próximos a você" />
     </plugin>
     <plugin name="cordova-plugin-request-location-accuracy" spec="~2.2.3" />
+    <plugin name="cordova.plugins.diagnostic" spec="~4.0.8" />
     <engine name="android" spec="^7.1.4" />
 </widget>
