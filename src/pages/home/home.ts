@@ -78,22 +78,24 @@ export class HomePage {
       this.findEventosDestaqueAndCidade(null);
     } else {
         // para testes no browser acesso direto o this.getLocationPosition()
-        if (this.platform.is('cordova')) {
-          this.getGpsStatus();
-        } else {
-          this.getLocationPosition();
-        }
+        // if (this.platform.is('cordova')) {
+        //   this.getGpsStatus();
+        // } else {
+        //   this.getLocationPosition();
+        // }
+        this.getLocationPosition();
     }
   }
 
   checkPlatform() {
     this.segment = "proximosList";
     // para testes no browser acesso direto o this.getLocationPosition()
-    if (this.platform.is('cordova')) {
-      this.getGpsStatus();
-    } else {
-      this.getLocationPosition();
-    }
+    // if (this.platform.is('cordova')) {
+    //   this.getGpsStatus();
+    // } else {
+    //   this.getLocationPosition();
+    // }
+    this.getLocationPosition();
   }
 
   getGpsStatus() {

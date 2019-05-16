@@ -1,10 +1,14 @@
 <ion-header no-border>
-    <ion-navbar color="navBarColor">
+    <!-- <ion-navbar color="navBarColor"> -->
+    <ion-navbar transparent>
       <ion-title></ion-title>
       <ion-buttons end *ngIf="eventoDetalheEntity.nomeEvento && idUsuarioLogado">
         <button ion-button icon-only (click)="adicionaRemoveFavoritoDetalhes(eventoDetalheEntity.idEvento, eventoDetalheEntity.idFavoritoEventoUsuario)">
-            <ion-icon ios="ios-heart" md="md-heart"
-            [ngClass]="{false:'corBranca', true:'corVermelha'}[showIcon]">
+            <ion-icon ios="md-heart" md="md-heart" *ngIf="showIcon" 
+            [ngClass]="{true:'corVermelha'}[showIcon]">
+            </ion-icon>
+            <ion-icon ios="md-heart-outline" md="md-heart-outline" *ngIf="!showIcon" 
+            [ngClass]="{false:'corCinza'}[!showIcon]">
             </ion-icon>
         </button>
       </ion-buttons>
@@ -94,7 +98,7 @@
                 </h4>
             </ion-label>
 
-            <ion-input id="valorRevenda" type="text" placeholder="Informe o valor da revenda" [(ngModel)]="ingresso.valorAnuncio"
+            <ion-input id="valorRevenda" type="number" placeholder="Informe o valor da revenda" [(ngModel)]="ingresso.valorAnuncio"
               type="text" [brmasker]="{money: true, thousand: '.'}" *ngIf="ingresso.statusIngressoEnum == 'DISPONIVEL'" 
               (keyup)="getValorAnuncio($event.target.value, ingresso.idIngresso)" 
               spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">
@@ -165,7 +169,7 @@
 
     <div padding>
         <button ion-button block outline type="submit" color="greenColor" (click)="openPagamentoPage()"
-          *ngIf="lastButtonDetalhe == 'HOME' || lastButtonDetalhe == 'ANUNCIOLIST' || lastButtonDetalhe == 'FAVORITOLIST'">COMPRAR INGRESSOS</button>
+          *ngIf="lastButtonDetalhe == 'HOME' || lastButtonDetalhe == 'ANUNCIOLIST' || lastButtonDetalhe == 'FAVORITOLIST'" [disabled]="!habilitaBotao">CONTINUAR</button>
         <button ion-button block outline type="submit" color="greenColor" 
           *ngIf="lastButtonDetalhe == 'REVENDA'" [disabled]="!habilitaBotao" (click)="adicionaIngressoRevenda()">REVENDER SELECIONADOS
         </button>

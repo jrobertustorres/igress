@@ -6,6 +6,7 @@ import { MyApp } from './app.component';
 import { Device } from '@ionic-native/device';
 import { MaskUtil } from '../utilitarios/mask';
 import { AppVersion } from '@ionic-native/app-version';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Network } from '@ionic-native/network';
 import { Geolocation } from '@ionic-native/geolocation';
@@ -13,6 +14,15 @@ import { BrMaskerModule } from 'brmasker-ionic-3';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { Diagnostic } from '@ionic-native/diagnostic';
+// import { TooltipsModule, TooltipController } from 'ionic-tooltips';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TooltipsModule } from 'ionic-tooltips';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DatePicker } from '@ionic-native/date-picker';
+import { Facebook } from '@ionic-native/facebook';
+
+// import jsencrypt from 'jsencrypt';
+// import { MoipCreditCard } from 'moip-sdk-js';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -34,6 +44,7 @@ import { ModalCidadesPage } from '../pages/modal-cidades/modal-cidades';
 import { AnuncioRevendaListPage } from '../pages/anuncio-revenda-list/anuncio-revenda-list';
 import { CadastroCartaoPage } from '../pages/cadastro-cartao/cadastro-cartao';
 import { ModalEntrarCadastrarPage } from '../pages/modal-entrar-cadastrar/modal-entrar-cadastrar';
+import { PagamentoPage } from '../pages/pagamento/pagamento';
 
 //ENTITIES
 import { UsuarioEntity } from '../model/usuario-entity';
@@ -49,6 +60,7 @@ import { FavoritoEventoUsuarioEntity } from '../model/favorito-evento-usuario-en
 import { IngressoListEntity } from '../model/ingresso-list-entity';
 import { AnuncioIngressoListEntity } from '../model/anuncio-ingresso-list-entity';
 import { CartaoCreditoEntity } from '../model/cartao-credito-entity';
+import { VendaEntity } from '../model/venda-entity';
 
 //SERVICES
 import { FavoritosService } from '../providers/favoritos-service';
@@ -59,6 +71,7 @@ import { EstadosService } from './../providers/estados-service';
 import { CidadesService } from '../providers/cidades-service';
 import { EventoService } from '../providers/evento-service';
 import { CartaoService } from '../providers/cartao-service';
+import { PagamentoService } from '../providers/pagamento-service';
 
 @NgModule({
   declarations: [
@@ -78,16 +91,20 @@ import { CartaoService } from '../providers/cartao-service';
     AnuncioRevendaListPage,
     CadastroCartaoPage,
     ModalEntrarCadastrarPage,
+    PagamentoPage,
     TabsPage
   ],
   imports: [
     HttpModule,
     BrowserModule,
     BrMaskerModule,
+    NgxQRCodeModule,
+    BrowserAnimationsModule,
+    TooltipsModule.forRoot(),
     IonicModule.forRoot(MyApp, {
       backButtonText: '',
     },
-    )
+    ),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -107,11 +124,15 @@ import { CartaoService } from '../providers/cartao-service';
     AnuncioRevendaListPage,
     CadastroCartaoPage,
     ModalEntrarCadastrarPage,
+    PagamentoPage,
     TabsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    // TooltipController,
+    DatePicker ,
+    Facebook,
     Network,
     Geolocation,
     Diagnostic,
@@ -134,6 +155,7 @@ import { CartaoService } from '../providers/cartao-service';
     IngressoListEntity,
     AnuncioIngressoListEntity,
     CartaoCreditoEntity,
+    VendaEntity,
     FavoritosService,
     LoginService,
     UsuarioService,
@@ -142,6 +164,7 @@ import { CartaoService } from '../providers/cartao-service';
     CidadesService,
     EventoService,
     CartaoService,
+    PagamentoService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -87,6 +87,10 @@
     color: #FF0000;
 }
 
+.corCinza {
+    color: #484848;
+}
+
 ion-spinner {
     width: 48px!important;
     height: 48px!important;    
@@ -146,4 +150,44 @@ ion-input{
 
 .font-title {
     font-size: 17px;
+}
+
+// cidade estado
+.cidade-span-style {
+    color: #000;
+    font-size: 14px;
+    float: right;
+}
+.cidade-dropdown-icon-cidade-disable {
+    font-size: 18px;
+    color: #D6D6D6;
+}
+.cidade-dropdown-icon-cidade-enable {
+    font-size: 18px;
+    color: #999;
+}
+.cidade-dropdown-icon-cidade {
+    font-size: 18px;
+    color: #999;
+}
+.cidade-label-style-enable {
+    color: #999;
+    font-size: 13px;
+}
+.cidade-label-style-disable {
+    color: #D6D6D6;
+    font-size: 13px;
+}
+.disableDiv {
+    pointer-events: none;
+}
+.my-label {
+    font-size: 13px;
+}
+// fim cidade estado
+
+.bandeira-style {
+    float: right; 
+    width: 50%; 
+    margin-top: 50%;
 }

@@ -29,8 +29,6 @@ export class LoginService {
       this.usuarioEntity.versaoApp = localStorage.getItem(Constants.VERSION_NUMBER);
       this.usuarioEntity.uuid = localStorage.getItem(Constants.UUID);
 
-      console.log(this.usuarioEntity);
-      
       return new Promise((resolve, reject) => {
         this.http.post(Constants.API_URL + 'login/', 
         JSON.stringify(this.usuarioEntity), this.options)
@@ -39,14 +37,13 @@ export class LoginService {
             resolve(data);
 
             localStorage.setItem(Constants.TOKEN_USUARIO, data.token);
-            // localStorage.setItem(Constants.NOME_PESSOA, data.nomePessoa);
             let names = data.nomePessoa.split(" ");
             names = names[0] +' '+ names[1];
             localStorage.setItem(Constants.NOME_PESSOA, names);
 
             localStorage.setItem(Constants.EMAIL_PESSOA, data.email);
             localStorage.setItem(Constants.ID_USUARIO, data.idUsuario);
-            // localStorage.setItem(Constants.IS_CADASTRO_COMPLETO, data.isCadastroCompleto);
+            localStorage.setItem(Constants.PUBLIC_KEY, data.publicKey);
 
             this.events.publish('usuarioLogadoEvent:change', data.idUsuario);
             this.userChangeEvent.emit(data.nomePessoa);
@@ -78,13 +75,12 @@ export class LoginService {
             resolve(data);
 
             localStorage.setItem(Constants.TOKEN_USUARIO, data.token);
-            // localStorage.setItem(Constants.NOME_PESSOA, data.nomePessoa);
             let names = data.nomePessoa.split(" ");
             names = names[0] +' '+ names[1];
             localStorage.setItem(Constants.NOME_PESSOA, names);
             localStorage.setItem(Constants.EMAIL_PESSOA, data.email);
             localStorage.setItem(Constants.ID_USUARIO, data.idUsuario);
-            // localStorage.setItem(Constants.IS_CADASTRO_COMPLETO, data.isCadastroCompleto);
+            localStorage.setItem(Constants.PUBLIC_KEY, data.publicKey);
 
             this.events.publish('usuarioLogadoEvent:change', data.idUsuario);
             this.userChangeEvent.emit(data.nomePessoa);
@@ -118,13 +114,12 @@ export class LoginService {
             resolve(data);
 
             localStorage.setItem(Constants.TOKEN_USUARIO, data.token);
-            // localStorage.setItem(Constants.NOME_PESSOA, data.nomePessoa);
             let names = data.nomePessoa.split(" ");
             names = names[0] +' '+ names[1];
             localStorage.setItem(Constants.NOME_PESSOA, names);
             localStorage.setItem(Constants.EMAIL_PESSOA, data.email);
             localStorage.setItem(Constants.ID_USUARIO, data.idUsuario);
-            // localStorage.setItem(Constants.IS_CADASTRO_COMPLETO, data.isCadastroCompleto);
+            localStorage.setItem(Constants.PUBLIC_KEY, data.publicKey);
 
             this.events.publish('usuarioLogadoEvent:change', data.idUsuario);
             this.userChangeEvent.emit(data.nomePessoa);

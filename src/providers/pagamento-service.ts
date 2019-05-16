@@ -21,8 +21,29 @@ export class PagamentoService {
           .subscribe(data => {
             resolve(data);
           }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public compraLoteIngresso(vendaEntity) {
+    try {
+
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'compraLoteIngresso/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(vendaEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
             console.log(err);
-            // reject(err.json());
+            reject(err.json());
           });
       });
 

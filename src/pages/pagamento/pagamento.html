@@ -1,0 +1,89 @@
+<ion-header no-border>
+  <ion-navbar transparent>
+    <ion-title><span class="font-title">Pagamento</span></ion-title>
+  </ion-navbar>
+</ion-header>
+  
+<ion-content>
+  
+  <div *ngIf="errorConnection" text-wrap>
+      <p style="text-align: center">
+          <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+      </p>
+      
+      <p style="text-align: center;">
+          <span class="spam-error-connection">{{ errorConnection }}</span>
+      </p>
+  </div>
+
+  <div *ngIf="!errorConnection" >
+    <!-- <div padding style="text-align: center;">
+        <img src="assets/imgs/amex.png" style="width: 13%;"/>
+        <img src="assets/imgs/master.png" style="width: 13%;"/>
+        <img src="assets/imgs/visa.png" style="width: 13%;"/>
+        <img src="assets/imgs/diners.png" style="width: 13%;"/>
+        <img src="assets/imgs/hipercard.png" style="width: 13%;"/>
+        <img src="assets/imgs/elo.png" style="width: 13%;"/>
+    </div> -->
+
+
+        <ion-row>
+          <ion-col col-9>
+            <ion-item>
+              <ion-label floating>Número do cartão</ion-label>
+              <ion-input [(ngModel)]="cartaoCreditoEntity.numeroCartaoCredito" type="text" 
+                spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col col-3>
+            <img src="{{ imgCartao }}" class="bandeira-style"/>
+          </ion-col>
+
+        </ion-row>
+
+      <ion-row>
+        <ion-col col-3>
+          <ion-item>
+            <ion-label floating>Mês</ion-label>
+            <ion-input [(ngModel)]="cartaoCreditoEntity.mesExpiracao" type="text" maxlength="2" spellcheck="false" autocapitalize="off" 
+              autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-3>
+          <ion-item class="padding-left-2px">
+            <ion-label floating>Ano</ion-label>
+            <ion-input [(ngModel)]="cartaoCreditoEntity.anoExpiracao" type="text" maxlength="4" spellcheck="false" autocapitalize="off" 
+              autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <p padding>
+        <span style="font-size: 17px;">
+          Dados do titular do cartão
+        </span>
+      </p>
+
+      <ion-item>
+        <ion-label floating>Nome do titular (impresso no cartão)</ion-label>
+        <ion-input [(ngModel)]="usuarioDetalheEntity.nomePessoa" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+      </ion-item>
+        
+      <ion-item>
+          <ion-label floating>CPF titular</ion-label>
+          <ion-input [(ngModel)]="usuarioDetalheEntity.cpfPessoa" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label floating>Email</ion-label>
+          <ion-input [(ngModel)]="usuarioDetalheEntity.emailUsuario" type="email" [readonly]="true"></ion-input>
+      </ion-item>
+      
+        
+      <div padding>
+          <button ion-button block outline color="greenColor" (click)="comprarIngressos()">COMPRAR INGRESSOS</button>
+      </div>
+  </div>
+  
+</ion-content>
+  

@@ -57,7 +57,6 @@ export class AnuncioRevendaListPage {
       this.eventoService.findAnuncioRevenda()
       .then((ingressosListResult: EventoListEntity) => {
         this.anuncioList = ingressosListResult;
-        // console.log(this.anuncioList);
         this.showLoading = false;
 
       }, (err) => {

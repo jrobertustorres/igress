@@ -31,4 +31,24 @@ export class CartaoService {
     }
   }
 
+  public findCartaoCredito() {
+    try {
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findCartaoCredito/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
 }

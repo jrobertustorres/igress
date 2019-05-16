@@ -6,10 +6,15 @@ export class UsuarioDetalheEntity {
       public idEstado: number;
     
       public nomePessoa: string;
+      public cpfPessoa: string;
+      public dataNascimento: Date;
       public telefonePessoa: string;
       public tipoUsuario: string;
       public endereco: string;
-      public idiomaUsuario: string;
+      public numeroLogradouro: string;
+      public complemento: string;
+      public bairro: string;
+      public cep: string;
       
       public emailUsuario: string;
       

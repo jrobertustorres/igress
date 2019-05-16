@@ -1,72 +1,186 @@
 <ion-header no-border>
-    <ion-navbar color="navBarColor">
+    <ion-navbar transparent>
       <ion-title><span class="font-title">Cartão de crédito</span></ion-title>
     </ion-navbar>
   </ion-header>
 
-
 <ion-content>
 
-    <div padding style="text-align: center;">
-        <img src="assets/imgs/amex.png" style="width: 13%;"/>
-        <img src="assets/imgs/master.png" style="width: 13%;"/>
-        <img src="assets/imgs/visa.png" style="width: 13%;"/>
-        <img src="assets/imgs/diners.png" style="width: 13%;"/>
-        <img src="assets/imgs/hipercard.png" style="width: 13%;"/>
-        <img src="assets/imgs/elo.png" style="width: 13%;"/>
-
+    <!-- <div class="spinner-center" *ngIf="showLoading">
+        <ion-spinner name="crescent"></ion-spinner>
+    </div> -->
+    
+    <div *ngIf="errorConnection" text-wrap>
+        <p style="text-align: center">
+            <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+        </p>
+        
+        <p style="text-align: center;">
+            <span class="spam-error-connection">{{ errorConnection }}</span>
+        </p>
     </div>
 
-    <form [formGroup]="cartaoForm" (ngSubmit)="submeterCartao()">
-      <ion-item>
-        <ion-label floating>Número do cartão</ion-label>
-        <ion-input formControlName="numeroCartao" [(ngModel)]="cartaoCreditoEntity.numeroCartao" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-      </ion-item>
-      <div *ngIf="!cartaoForm.get('numeroCartao').valid && cartaoForm.get('numeroCartao').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
-        <!-- <div *ngIf="dadosUsuarioForm.get('nomePessoa').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div> -->
-        
-      <ion-row>
-        <ion-col col-7>
-          <ion-item>
-            <ion-label floating>Validade</ion-label>
-            <ion-input formControlName="validade" [(ngModel)]="cartaoCreditoEntity.validade" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col col-5>
-          <ion-item class="padding-left-2px">
-            <ion-label floating>CVV</ion-label>
-            <ion-input formControlName="cvv" [(ngModel)]="cartaoCreditoEntity.cvv" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-            
-      <ion-item>
-        <ion-label floating>Nome do titular</ion-label>
-        <ion-input formControlName="nomeTitular" [(ngModel)]="cartaoCreditoEntity.nomeTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-      </ion-item>
-      <div *ngIf="!cartaoForm.get('nomeTitular').valid && cartaoForm.get('nomeTitular').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
-        
-      <ion-item>
-          <ion-label floating>CPF</ion-label>
-          <ion-input formControlName="cpfTitular" [(ngModel)]="cartaoCreditoEntity.cpfTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-      </ion-item>
-      <div *ngIf="!cartaoForm.get('cpfTitular').valid && cartaoForm.get('cpfTitular').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
-      
-      <ion-item>
-          <ion-label floating>Data nascimento</ion-label>
-          <ion-input formControlName="datanascimento" [(ngModel)]="cartaoCreditoEntity.datanascimento" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-      </ion-item>
-      <div *ngIf="!cartaoForm.get('datanascimento').valid && cartaoForm.get('datanascimento').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
-      
-      <ion-item>
-          <ion-label floating>Telefone</ion-label>
-          <ion-input formControlName="telefone" [(ngModel)]="cartaoCreditoEntity.telefone" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-      </ion-item>
-      <div *ngIf="!cartaoForm.get('telefone').valid && cartaoForm.get('telefone').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+    <div *ngIf="!errorConnection" >
+      <div padding style="text-align: center;">
+          <img src="assets/imgs/amex.png" style="width: 13%;"/>
+          <img src="assets/imgs/master.png" style="width: 13%;"/>
+          <img src="assets/imgs/visa.png" style="width: 13%;"/>
+          <img src="assets/imgs/diners.png" style="width: 13%;"/>
+          <img src="assets/imgs/hipercard.png" style="width: 13%;"/>
+          <img src="assets/imgs/elo.png" style="width: 13%;"/>
 
-      <div padding>
-          <button ion-button block outline type="submit" color="navBarColor">SALVAR</button>
-        </div>
-    </form>
+      </div>
+
+      <!-- <form [formGroup]="cartaoForm" (ngSubmit)="submeterCartao()"> -->
+      <form [formGroup]="cartaoForm">
+        <!-- <ion-item>
+            <ion-label stacked>Titular diferente</ion-label>
+          <ion-checkbox formControlName="titularDiferente" [(ngModel)]="titularDiferente" [checked]="false"></ion-checkbox>
+        </ion-item> -->
+
+        <ion-item>
+            <ion-label stacked>Titular diferente</ion-label>
+            <ion-checkbox checked="false" (ionChange)="checkTitularDiferente($event)"></ion-checkbox>
+          </ion-item>
+
+
+
+          <ion-row>
+            <ion-col col-9>
+              <ion-item>
+                <ion-label floating>Número do cartão</ion-label>
+                <ion-input formControlName="numeroCartaoCredito" [(ngModel)]="cartaoCreditoEntity.numeroCartaoCredito" type="text" 
+                  spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" (ionBlur)="consultaBandeira(null);"></ion-input>
+              </ion-item>
+              <div *ngIf="!cartaoForm.get('numeroCartaoCredito').valid && cartaoForm.get('numeroCartaoCredito').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+              <div *ngIf="numeroInvalido" [ngClass]="'class-error-form'">número inválido!</div>
+            </ion-col>
+            <ion-col col-3>
+              <img src="{{ imgCartao }}" class="bandeira-style"/>
+            </ion-col>
+
+          </ion-row>
+
+        <ion-row>
+          <!-- <span>Validade</span> -->
+          <ion-col col-3>
+            <ion-item>
+              <ion-label floating>Mês</ion-label>
+              <ion-input formControlName="mesExpiracao" [(ngModel)]="cartaoCreditoEntity.mesExpiracao" type="text" maxlength="2" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+            <div *ngIf="dataExpiracaoInvalida" [ngClass]="'class-error-form'">data inválida!</div>
+          </ion-col>
+          <ion-col col-3>
+            <ion-item class="padding-left-2px">
+              <ion-label floating>Ano</ion-label>
+              <ion-input formControlName="anoExpiracao" [(ngModel)]="cartaoCreditoEntity.anoExpiracao" type="text" maxlength="4" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col col-5>
+            <ion-item class="padding-left-2px">
+              <ion-label floating>CVV</ion-label>
+              <ion-input formControlName="cvc" [(ngModel)]="cvc" type="text" maxlength="4" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+            <div *ngIf="codigoSegurancaInvalido" [ngClass]="'class-error-form'">código inválido!</div>
+          </ion-col>
+          <ion-icon ios="ios-help" md="md-help" style="float: right; margin-top: 15%;"
+            tooltip="Para Mastercard, Visa ou 
+            Diners, são os últimos três dígitos na área de assinatura no verso do seu cartão. Para o 
+            American Express, são os quatro dígitos no lado direito superior na frente do cartão." 
+            positionH="left" arrow="true" event="click" duration="4000000">
+          </ion-icon>
+        </ion-row>
+
+        <ion-item>
+          <ion-label floating>Nome do titular (impresso no cartão)*</ion-label>
+          <ion-input formControlName="nomeTitular" [(ngModel)]="cartaoCreditoEntity.nomeTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('nomeTitular').valid && cartaoForm.get('nomeTitular').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+          
+        <ion-item>
+            <ion-label floating>CPF titular</ion-label>
+            <ion-input formControlName="cpfTitular" [(ngModel)]="cartaoCreditoEntity.cpfTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('cpfTitular').valid && cartaoForm.get('cpfTitular').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        
+        <ion-item (click)="selecionaDataNascTitular()">
+            <ion-label floating>Data de nascimento</ion-label>
+            <ion-datetime formControlName="dataNascimentoTitular" displayFormat="DD/MM/YYYY" name="dataNascimentoTitular" min="1919" max="2099" [(ngModel)]="dataNascimentoTitular"></ion-datetime>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('dataNascimentoTitular').valid && cartaoForm.get('dataNascimentoTitular').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+
+        <!-- <ion-item>
+            <ion-label floating>Data nascimento</ion-label>
+            <ion-input formControlName="dataNascimentoTitular" [(ngModel)]="cartaoCreditoEntity.dataNascimentoTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('dataNascimentoTitular').valid && cartaoForm.get('dataNascimentoTitular').touched" [ngClass]="'class-error-form'">campo obrigatório</div> -->
+        
+        <ion-item>
+            <ion-label floating>Telefone</ion-label>
+            <ion-input formControlName="telefoneTitular" [(ngModel)]="telefoneTitular" type="text" (keyup)="getCampoTelefone(telefoneTitular)" maxlength="15"></ion-input>
+        </ion-item>
+        <div *ngIf="cartaoForm.get('telefoneTitular').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 50 caracteres</div>
+
+        <ion-item>
+            <ion-label floating>Rua</ion-label>
+            <ion-input formControlName="endereco" [(ngModel)]="cartaoCreditoEntity.endereco" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('endereco').valid && cartaoForm.get('endereco').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        
+        <ion-item>
+            <ion-label floating>Bairro</ion-label>
+            <ion-input formControlName="bairro" [(ngModel)]="cartaoCreditoEntity.bairro" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('bairro').valid && cartaoForm.get('bairro').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        
+        <ion-item>
+            <ion-label floating>Número</ion-label>
+            <ion-input formControlName="numeroLogradouro" [(ngModel)]="cartaoCreditoEntity.numeroLogradouro" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('numeroLogradouro').valid && cartaoForm.get('numeroLogradouro').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        
+        <ion-item>
+            <ion-label floating>Complemento</ion-label>
+            <ion-input formControlName="complemento" [(ngModel)]="cartaoCreditoEntity.complemento" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('complemento').valid && cartaoForm.get('complemento').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        
+        <ion-item>
+            <ion-label floating>Cep</ion-label>
+            <ion-input formControlName="cep" [(ngModel)]="cartaoCreditoEntity.cep" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('cep').valid && cartaoForm.get('cep').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+
+        <ion-list>
+          <ion-item>
+              <ion-label class="my-label">Estado</ion-label>
+              <ion-select formControlName="idEstado" [(ngModel)]="cartaoCreditoEntity.idEstado" class="cidade-span-style" (ionChange)="getIdEstado($event)" cancelText="Cancelar">
+                  <ion-option *ngFor="let estado of estados" value="{{estado.idEstado}}">{{estado.nome}}</ion-option>
+              </ion-select>
+          </ion-item>
+      </ion-list>
+
+      <ion-list>
+          <ion-item>
+
+            <!-- <div> -->
+                <div [ngClass]="{'disableDiv': !idEstado}">
+                  <p (click)="showModalCidades()" class="my-label">
+                      <span class="my-label label label-md" [ngClass]="{'cidade-label-style-disable': !idEstado, 'cidade-label-style-enable': idEstado}">Cidade </span>
+                      <span class="cidade-span-style"> {{ dadosCidades.cidade }}
+                  <ion-icon name="arrow-dropdown" [ngClass]="{'cidade-dropdown-icon-cidade-disable': !idEstado, 'cidade-dropdown-icon-cidade-enable': idEstado}"></ion-icon>
+              </span>
+                  </p>
+              </div>
+
+          </ion-item>
+      </ion-list>
+          
+        <div padding>
+            <button ion-button block outline type="submit" color="navBarColor" (click)="validaDadosCartao(cvc)">SALVAR</button>
+          </div>
+      </form>
+    </div>
 
 </ion-content>

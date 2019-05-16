@@ -17,6 +17,7 @@ export class UsuarioEntity {
   public status: boolean;
   public versaoApp: string;
   public uuid: string;
+  public publicKey: string;
   
   public isCadastroCompletoVaga: boolean;
   public isCadastroCompletoServico: boolean;

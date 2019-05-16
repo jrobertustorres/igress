@@ -1,8 +1,9 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { NavController, NavParams, LoadingController, AlertController, ToastController, ModalController, Events } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, AlertController, ToastController, ModalController, Events, Platform } from 'ionic-angular';
 import { Constants } from '../../app/constants';
 import { FormBuilder,	FormGroup, Validators } from '@angular/forms';
 import { MaskUtil } from "../../utilitarios/mask";
+import { DatePicker } from '@ionic-native/date-picker';
 
 //UTILITARIOS
 import { PasswordValidation } from '../../utilitarios/password-validation';
@@ -49,6 +50,8 @@ export class MeusDadosPage implements OnInit {
   public telefonePessoa: any;
   private dadosFormat: any;
 
+  public dataNascimento: string;
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public loadingCtrl: LoadingController,
@@ -60,6 +63,8 @@ export class MeusDadosPage implements OnInit {
               private cidadesService: CidadesService,
               private mask: MaskUtil,
               private toastCtrl: ToastController,
+              private datePicker: DatePicker,
+              public platform: Platform,
               public modalCtrl: ModalController) {
 
     this.usuarioDetalheEntity = new UsuarioDetalheEntity();
@@ -69,13 +74,24 @@ export class MeusDadosPage implements OnInit {
   }
 
   ngOnInit() {
+    //para testes no browser
+    // if (!this.platform.is('cordova')) {
+    //   this.dataNascimento = new Date().toISOString();
+    // }
 
     this.dadosUsuarioForm = this.formBuilder.group({
       'nomePessoa': ['', [Validators.required, Validators.maxLength(100)]],
       'emailUsuario': ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]],
+      'cpfPessoa': ['', [Validators.required, Validators.maxLength(50)]],
+      'dataNascimento': ['', [Validators.required, Validators.maxLength(50)]],
       'telefonePessoa': ['', Validators.maxLength(50)],
       'idEstado': [''],
       'idCidade': [''],
+      'endereco': ['', [Validators.required, Validators.maxLength(50)]],
+      'numeroLogradouro': ['', [Validators.required,Validators.maxLength(50)]],
+      'complemento': ['', Validators.maxLength(50)],
+      'bairro': ['', [Validators.required,Validators.maxLength(50)]],
+      'cep': ['', [Validators.required,Validators.maxLength(50)]],
       'senhaUsuario': [''],
       'confirmSenha': ['']
     }, {
@@ -83,11 +99,12 @@ export class MeusDadosPage implements OnInit {
       }
     );
 
+    this.dadosUsuarioForm.controls.dataNascimento.disable();
+
     this.estadosService
       .getEstados()
       .subscribe(dados => {
       this.estados = dados;
-      // this.showLoading = false;
     });
 
     if(!localStorage.getItem(Constants.TOKEN_USUARIO)){
@@ -115,11 +132,8 @@ export class MeusDadosPage implements OnInit {
 
   // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
   myHandlerFunction(){
-    // if(this.showLoading || this.loading) {
-      // this.showLoading = this.showLoading ? this.showLoading : false;
-      this.loading ? this.loading.dismiss() : '';
-      this.navCtrl.pop();
-    // }
+    this.loading ? this.loading.dismiss() : '';
+    this.navCtrl.pop();
   }
 
   getIdEstado(idEstado: any) {
@@ -138,6 +152,21 @@ export class MeusDadosPage implements OnInit {
     });
 
     toast.present();
+  }
+
+  public selecionaDataNasc() {
+    this.datePicker.show({
+      date: new Date(),
+      mode: 'date',
+      okText: 'OK',
+      cancelText: 'Cancelar',
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    })
+    .then(dataNascimento => {
+      this.dataNascimento = dataNascimento.toISOString();
+
+    }, (err) => {
+    });
   }
 
   getCampoTelefone(tel: any) {
@@ -169,6 +198,7 @@ export class MeusDadosPage implements OnInit {
     try {
 
       if (this.dadosUsuarioForm.valid) {
+
         this.loading = this.loadingCtrl.create({
           content: '',
         });
@@ -223,6 +253,9 @@ export class MeusDadosPage implements OnInit {
     this.dadosFormat.idCidade = this.dadosCidades.idCidade;
     this.removeFormatTel();
 
+    let dataNascimento = new Date(this.dataNascimento);
+    this.dadosFormat.dataNascimento = dataNascimento;
+
     this.usuarioService
     .editaUsuario(this.dadosFormat)
     .then((usuarioDetalheEntityResult: UsuarioDetalheEntity) => {
@@ -254,6 +287,7 @@ export class MeusDadosPage implements OnInit {
         .getDadosUsuario()
         .then((dadosUsuarioDetalheResult) => {
           this.usuarioDetalheEntity = dadosUsuarioDetalheResult;
+          this.dataNascimento = this.usuarioDetalheEntity.dataNascimento ? new Date(this.usuarioDetalheEntity.dataNascimento).toJSON().split('T')[0] : null;
 
           if (this.usuarioDetalheEntity.telefonePessoa) {
             this.telefonePessoa = this.mask.maskPhoneConverter(this.usuarioDetalheEntity.telefonePessoa);
@@ -264,10 +298,6 @@ export class MeusDadosPage implements OnInit {
         .catch(err => {
           this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
           this.loading.dismiss();
-          // this.alertCtrl.create({
-          //   subTitle: err.message,
-          //   buttons: ['OK']
-          // }).present();
         });
     }catch (err){
       if(err instanceof RangeError){
@@ -289,18 +319,54 @@ export class MeusDadosPage implements OnInit {
               this.dadosCidades = cidade; 
             }
           }
-          // this.showLoading = false;
           this.loading.dismiss();
         })
         .catch(err => {
           this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
           this.loading.dismiss(); 
-          // this.showLoading = false;
-          // this.alertCtrl.create({
-          //   subTitle: err.message,
-          //   buttons: ['OK']
-          // }).present();
         });
+    }catch (err){
+      if(err instanceof RangeError){
+      }
+      console.log(err);
+    }
+  }
+
+  buscaEnderecoPorCep(cep: any) {
+    try {
+
+      if(cep) {
+
+        this.loading = this.loadingCtrl.create({
+          content: '',
+        });
+        this.loading.present();
+
+        this.usuarioService
+          .buscaEnderecoPorCep(this.usuarioDetalheEntity.cep)
+          .then((enderecoEntityResult: UsuarioDetalheEntity) => {
+            this.usuarioDetalheEntity.bairro = enderecoEntityResult.bairro;
+            this.usuarioDetalheEntity.cep = enderecoEntityResult.cep;
+            this.usuarioDetalheEntity.endereco = enderecoEntityResult.endereco;
+
+            if(this.usuarioDetalheEntity.idEstado) {
+              this.getCidadesByEstadoUsuario(this.usuarioDetalheEntity.idEstado);
+              this.idEstado = this.usuarioDetalheEntity.idEstado; // setando o idEstado para habilitar o combo de cidades
+              this.idCidade = this.usuarioDetalheEntity.idCidade;
+            } else {
+              this.loading.dismiss();
+            }
+
+          })
+          .catch(err => {
+            this.loading.dismiss();
+            this.alertCtrl.create({
+              subTitle: err.message,
+              buttons: ['OK']
+            }).present();
+          });
+      }
+
     }catch (err){
       if(err instanceof RangeError){
       }

@@ -16,6 +16,7 @@ import { FavoritosService } from '../../providers/favoritos-service';
 //PAGES
 import { ModalQrcodePage } from '../modal-qrcode/modal-qrcode';
 import { ModalEntrarCadastrarPage } from '../modal-entrar-cadastrar/modal-entrar-cadastrar';
+import { PagamentoPage } from '../pagamento/pagamento';
 // import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
 
 @IonicPage()
@@ -43,6 +44,7 @@ export class DetalheEventoPage {
   private valorTotalIngressoFormat: string;
   private ingressosMarcados = [];
   private habilitaBotao: boolean = false; 
+  private qtdIngressoAdicionado: number = 0; 
   public listIngressoRevenda = [];
   private idUsuarioLogado: string;
 
@@ -218,6 +220,7 @@ export class DetalheEventoPage {
       this.eventoService.findAnuncioDetalheByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
+        console.log(this.eventoDetalheEntity);
         this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
@@ -239,11 +242,13 @@ export class DetalheEventoPage {
     if(ingresso.qtdIngresso < ingresso.maxQtdIngressoCompra) {
       ingresso.qtdIngresso += 1;
     }
+    // this.qtdIngressoAdicionado = ingresso.qtdIngresso;
     this.alteraCalculoLoteIngressoEvento(ingresso);
   }
 
   subtrairIngresso(ingresso) {
     ingresso.qtdIngresso -= 1;
+    // this.qtdIngressoAdicionado = ingresso.qtdIngresso;
     if (ingresso.qtdIngresso < 0) {
       ingresso.qtdIngresso = 0;
     } else {
@@ -259,6 +264,11 @@ export class DetalheEventoPage {
       });
       this.loading.present();
 
+      // for(let j =0; j<ingresso.length; j++){
+      //   this.habilitaBotao = ingresso.qtdIngresso > 0 ? true : false;
+      // }
+      let qtdTotal = 0;
+      
       for(let i =0;i<this.listIngressoListEntity.length;i++){
         if(this.listIngressoListEntity[i].idLoteIngresso == ingresso.idLoteIngresso) {
           this.listLoteIngressoListEntity[i] = {
@@ -273,6 +283,14 @@ export class DetalheEventoPage {
           }
         }
       }
+      
+      for(let j =0; j<this.listLoteIngressoListEntity.length; j++){
+        if(this.listLoteIngressoListEntity[j].qtdIngresso > 0) {
+          qtdTotal = this.listLoteIngressoListEntity[j].qtdIngresso;
+        }
+        this.habilitaBotao = qtdTotal > 0 ? true : false;
+      }
+
 
       this.eventoDetalheEntity.listLoteIngressoListEntity = this.listLoteIngressoListEntity;
 
@@ -533,7 +551,37 @@ export class DetalheEventoPage {
 
   openPagamentoPage() {
     if(this.idUsuarioLogado) {
-      // ir para pagamento
+      let idLoteIngresso = null;
+      let qtdIngresso = null;
+      let arrayLotePagamento = [];
+      let arrayLote = this.eventoDetalheEntity.listLoteIngressoListEntity;
+
+
+      // for(let i =0;i<this.listIngressoListEntity.length;i++){
+      //   if(this.listIngressoListEntity[i].itemChecked) {
+      //     this.listAnuncioIngressoListEntity[i] = {
+      //       idIngresso: this.listIngressoListEntity[i].idIngresso, 
+      //       valorAnuncio: this.listIngressoListEntity[i].valorAnuncio 
+      //     }
+      //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(".", "");
+      //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(",", ".");
+      //   }
+      // }
+
+      for(let i = 0; i < arrayLote.length; i++){
+        if(arrayLote[i].qtdIngresso > 0) {
+          arrayLotePagamento[i] = {
+            idLoteIngresso: arrayLote[i].idLoteIngresso,
+            qtdIngresso: arrayLote[i].qtdIngresso
+          }
+        }
+      }
+      // console.log(arrayLotePagamento);
+      // console.log(qtdIngresso);
+      this.navCtrl.push(PagamentoPage, {
+        arrayLotePagamento: arrayLotePagamento
+        // qtdIngresso: qtdIngresso
+      })
     } else {
       this.openModalEntrarCadastrarPage();      
     }

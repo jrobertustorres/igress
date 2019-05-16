@@ -128,4 +128,22 @@ export class UsuarioService {
     }
   }
 
+  public buscaEnderecoPorCep(cep: any) {
+    try {
+      return new Promise((resolve, reject) => {
+        this._http.post(Constants.API_URL + 'buscaEnderecoPorCep/'+ cep,  this.options)
+          .subscribe(data => {
+            resolve(data.json());
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Events, NavController } from 'ionic-angular';
+import { Events, NavController, ToastController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { Constants } from '../../app/constants';
 
@@ -23,6 +23,7 @@ export class TabsPage {
   tab6Root = AnuncioRevendaListPage;
 
   constructor(public events: Events,
+              private toastCtrl: ToastController,
               public navCtrl: NavController) {
   }
 
@@ -39,9 +40,25 @@ export class TabsPage {
     });
   }
 
+  presentToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Você precisa estar logado para ver seus ingressos',
+      duration: 3000,
+      position: 'bottom',
+      cssClass: "toast-success"
+    });
+
+    toast.onDidDismiss(() => {
+    });
+
+    toast.present();
+  }
+
   openMeusIngressosList() {
     if(this.idUsuarioLogado) {
       this.navCtrl.push(MeusIngressosListPage, { animate: true, direction: 'back' });
+    } else {
+      this.presentToast();
     }
 
   }

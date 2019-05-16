@@ -1,15 +1,12 @@
-<ion-header>
+<ion-header no-border>
 
-  <ion-navbar color="navBarColor">
+  <ion-navbar transparent>
     <ion-title><span class="font-title">Meus Dados</span></ion-title>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
-    <!-- <div class="spinner-center" *ngIf="showLoading">
-        <ion-spinner name="crescent"></ion-spinner>
-    </div> -->
             
     <div *ngIf="errorConnection" text-wrap>
         <p style="text-align: center">
@@ -23,7 +20,8 @@
 
     <!-- <div *ngIf="dadosCidades.cidade" > -->
     <div>
-        <form [formGroup]="dadosUsuarioForm" (ngSubmit)="submeterDadosUsuario()">
+        <!-- <form [formGroup]="dadosUsuarioForm" (ngSubmit)="submeterDadosUsuario()"> -->
+        <form [formGroup]="dadosUsuarioForm">
 
             <ion-item>
                 <ion-label floating>Nome</ion-label>
@@ -31,20 +29,75 @@
             </ion-item>
             <div *ngIf="!dadosUsuarioForm.get('nomePessoa').valid && dadosUsuarioForm.get('nomePessoa').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
             <div *ngIf="dadosUsuarioForm.get('nomePessoa').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div>
-
+            
             <ion-item>
                 <ion-label floating>Email</ion-label>
                 <ion-input formControlName="emailUsuario" [(ngModel)]="usuarioDetalheEntity.emailUsuario" type="email" [readonly]="isReadOnly"></ion-input>
             </ion-item>
             <div *ngIf="(!dadosUsuarioForm.get('emailUsuario').valid && dadosUsuarioForm.get('emailUsuario').touched) && !dadosUsuarioForm.get('emailUsuario').hasError('pattern')" [ngClass]="'class-error-form'">campo obrigatório</div>
             <div *ngIf="dadosUsuarioForm.get('emailUsuario').hasError('pattern')" [ngClass]="'class-error-form'">e-mail inválido</div>
+            
+            <ion-item>
+                <ion-label floating>CPF</ion-label>
+                <ion-input formControlName="cpfPessoa" [(ngModel)]="usuarioDetalheEntity.cpfPessoa" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+            <div *ngIf="!dadosUsuarioForm.get('cpfPessoa').valid && dadosUsuarioForm.get('cpfPessoa').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+            <div *ngIf="dadosUsuarioForm.get('cpfPessoa').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div>
+          
+            <ion-item (click)="selecionaDataNasc()">
+                <ion-label floating>Data de nascimento</ion-label>
+                <ion-datetime formControlName="dataNascimento" displayFormat="DD/MM/YYYY" name="dataNascimento" min="1919" max="2099" [(ngModel)]="dataNascimento"></ion-datetime>
+            </ion-item>
+            <div *ngIf="!dadosUsuarioForm.get('dataNascimento').valid && dadosUsuarioForm.get('dataNascimento').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+
+                
+            <!-- <ion-item>
+                <ion-label floating>Data de nascimento</ion-label>
+                <ion-input formControlName="dataNascimento" [(ngModel)]="usuarioDetalheEntity.dataNascimento" type="text"></ion-input>
+            </ion-item>
+            <div *ngIf="!dadosUsuarioForm.get('dataNascimento').valid && dadosUsuarioForm.get('dataNascimento').touched" [ngClass]="'class-error-form'">campo obrigatório</div> -->
 
             <ion-item>
                 <ion-label floating>Telefone</ion-label>
-                <ion-input formControlName="telefonePessoa" [(ngModel)]="telefonePessoa" type="text" (keyup)="getCampoTelefone(telefonePessoa)" placeholder="Digite apenas números" maxlength="15"></ion-input>
+                <ion-input formControlName="telefonePessoa" [(ngModel)]="telefonePessoa" type="text" (keyup)="getCampoTelefone(telefonePessoa)" maxlength="15"></ion-input>
             </ion-item>
             <div *ngIf="dadosUsuarioForm.get('telefonePessoa').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 50 caracteres</div>
 
+            <ion-item>
+                <ion-label floating>Seu cep</ion-label>
+                <ion-input formControlName="cep" [(ngModel)]="usuarioDetalheEntity.cep" maxLength="10"></ion-input>
+            </ion-item>
+            <div *ngIf="!dadosUsuarioForm.get('cep').valid && dadosUsuarioForm.get('cep').touched" [ngClass]="'class-error-form'" maxlength="10">campo obrigatório</div>
+            <button ion-button clear (click)="buscaEnderecoPorCep(usuarioDetalheEntity.cep)">Buscar por cep</button>
+        
+                
+            <ion-item>
+                <ion-label floating>Rua</ion-label>
+                <ion-input formControlName="endereco" [(ngModel)]="usuarioDetalheEntity.endereco" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+            <div *ngIf="!dadosUsuarioForm.get('endereco').valid && dadosUsuarioForm.get('endereco').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+            <div *ngIf="dadosUsuarioForm.get('endereco').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div>
+            
+            <ion-item>
+                <ion-label floating>Número</ion-label>
+                <ion-input formControlName="numeroLogradouro" [(ngModel)]="usuarioDetalheEntity.numeroLogradouro" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+            <div *ngIf="!dadosUsuarioForm.get('numeroLogradouro').valid && dadosUsuarioForm.get('numeroLogradouro').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+            <div *ngIf="dadosUsuarioForm.get('numeroLogradouro').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div>
+            
+            <ion-item>
+                <ion-label floating>Complemento</ion-label>
+                <ion-input formControlName="complemento" [(ngModel)]="usuarioDetalheEntity.complemento" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+            <div *ngIf="dadosUsuarioForm.get('complemento').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div>
+            
+            <ion-item>
+                <ion-label floating>Bairro</ion-label>
+                <ion-input formControlName="bairro" [(ngModel)]="usuarioDetalheEntity.bairro" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+            </ion-item>
+            <div *ngIf="!dadosUsuarioForm.get('bairro').valid && dadosUsuarioForm.get('bairro').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+            <div *ngIf="dadosUsuarioForm.get('bairro').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 100 caracteres</div>
+            
             <ion-list>
                 <ion-item>
                     <ion-label class="my-label">Estado</ion-label>
@@ -54,7 +107,7 @@
                 </ion-item>
                 <!-- <div *ngIf="!dadosUsuarioForm.get('idEstado').valid && dadosUsuarioForm.get('idEstado').touched" [ngClass]="'class-error-form'">campo obrigatório</div> -->
             </ion-list>
-
+    
             <ion-list>
                 <ion-item>
 
@@ -72,12 +125,6 @@
             </ion-list>
 
             <div *ngIf="!idUsuario">
-                <!-- <ion-item-divider class="item-divider-style">
-                    Minha senha
-                    <div item-content>
-                        <ion-icon ios="ios-lock" md="md-lock" item-start></ion-icon>
-                    </div>
-                </ion-item-divider> -->
 
                 <ion-item>
                     <ion-label floating>Senha</ion-label>
@@ -93,7 +140,7 @@
             </div>
 
             <div padding>
-                <button ion-button block outline type="submit" color="navBarColor">SALVAR</button>
+                <button ion-button block outline type="submit" color="navBarColor" (click)="submeterDadosUsuario()">SALVAR</button>
             </div>
         </form>
     </div>

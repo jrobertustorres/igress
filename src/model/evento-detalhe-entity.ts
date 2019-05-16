@@ -14,6 +14,7 @@ export class EventoDetalheEntity {
   public cartaoCredito: number;
   public favorito: boolean;
   public descricaoOrganizador: string;
+  public qtdParcelamentoEvento: string;
 
   public imagemEvento: string;
   public valorTotalIngressoFormat: string;
