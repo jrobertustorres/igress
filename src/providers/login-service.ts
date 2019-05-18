@@ -38,7 +38,11 @@ export class LoginService {
 
             localStorage.setItem(Constants.TOKEN_USUARIO, data.token);
             let names = data.nomePessoa.split(" ");
-            names = names[0] +' '+ names[1];
+            if(names[1]) {
+              names = names[0] +' '+ names[1];
+            } else {
+              names = names[0];
+            }
             localStorage.setItem(Constants.NOME_PESSOA, names);
 
             localStorage.setItem(Constants.EMAIL_PESSOA, data.email);
@@ -76,7 +80,11 @@ export class LoginService {
 
             localStorage.setItem(Constants.TOKEN_USUARIO, data.token);
             let names = data.nomePessoa.split(" ");
-            names = names[0] +' '+ names[1];
+            if(names[1]) {
+              names = names[0] +' '+ names[1];
+            } else {
+              names = names[0];
+            }
             localStorage.setItem(Constants.NOME_PESSOA, names);
             localStorage.setItem(Constants.EMAIL_PESSOA, data.email);
             localStorage.setItem(Constants.ID_USUARIO, data.idUsuario);
@@ -115,7 +123,11 @@ export class LoginService {
 
             localStorage.setItem(Constants.TOKEN_USUARIO, data.token);
             let names = data.nomePessoa.split(" ");
-            names = names[0] +' '+ names[1];
+            if(names[1]) {
+              names = names[0] +' '+ names[1];
+            } else {
+              names = names[0];
+            }
             localStorage.setItem(Constants.NOME_PESSOA, names);
             localStorage.setItem(Constants.EMAIL_PESSOA, data.email);
             localStorage.setItem(Constants.ID_USUARIO, data.idUsuario);

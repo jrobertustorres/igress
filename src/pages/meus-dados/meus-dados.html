@@ -1,7 +1,7 @@
 <ion-header no-border>
 
   <ion-navbar transparent>
-    <ion-title><span class="font-title">Meus Dados</span></ion-title>
+    <ion-title><span class="font-title">Dados cadastrais</span></ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -49,14 +49,7 @@
                 <ion-datetime formControlName="dataNascimento" displayFormat="DD/MM/YYYY" name="dataNascimento" min="1919" max="2099" [(ngModel)]="dataNascimento"></ion-datetime>
             </ion-item>
             <div *ngIf="!dadosUsuarioForm.get('dataNascimento').valid && dadosUsuarioForm.get('dataNascimento').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
-
                 
-            <!-- <ion-item>
-                <ion-label floating>Data de nascimento</ion-label>
-                <ion-input formControlName="dataNascimento" [(ngModel)]="usuarioDetalheEntity.dataNascimento" type="text"></ion-input>
-            </ion-item>
-            <div *ngIf="!dadosUsuarioForm.get('dataNascimento').valid && dadosUsuarioForm.get('dataNascimento').touched" [ngClass]="'class-error-form'">campo obrigatório</div> -->
-
             <ion-item>
                 <ion-label floating>Telefone</ion-label>
                 <ion-input formControlName="telefonePessoa" [(ngModel)]="telefonePessoa" type="text" (keyup)="getCampoTelefone(telefonePessoa)" maxlength="15"></ion-input>
@@ -69,7 +62,6 @@
             </ion-item>
             <div *ngIf="!dadosUsuarioForm.get('cep').valid && dadosUsuarioForm.get('cep').touched" [ngClass]="'class-error-form'" maxlength="10">campo obrigatório</div>
             <button ion-button clear (click)="buscaEnderecoPorCep(usuarioDetalheEntity.cep)">Buscar por cep</button>
-        
                 
             <ion-item>
                 <ion-label floating>Rua</ion-label>

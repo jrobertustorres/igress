@@ -131,7 +131,7 @@ import { PagamentoService } from '../providers/pagamento-service';
     StatusBar,
     SplashScreen,
     // TooltipController,
-    DatePicker ,
+    DatePicker,
     Facebook,
     Network,
     Geolocation,

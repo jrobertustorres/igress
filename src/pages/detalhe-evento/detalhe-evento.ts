@@ -17,6 +17,8 @@ import { FavoritosService } from '../../providers/favoritos-service';
 import { ModalQrcodePage } from '../modal-qrcode/modal-qrcode';
 import { ModalEntrarCadastrarPage } from '../modal-entrar-cadastrar/modal-entrar-cadastrar';
 import { PagamentoPage } from '../pagamento/pagamento';
+import { CadastroCartaoPage } from '../cadastro-cartao/cadastro-cartao';
+import { PerfilPage } from '../perfil/perfil';
 // import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
 
 @IonicPage()
@@ -75,6 +77,10 @@ export class DetalheEventoPage {
   }
 
   ngOnInit() {
+    console.log(this.lastButtonDetalhe);
+    if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
+      this.findEventoDetalheByIdEvento();
+    }
   }
 
   ionViewWillEnter() {
@@ -86,9 +92,10 @@ export class DetalheEventoPage {
     } else if(this.lastButtonDetalhe == 'DETALHE'){
       this.findIngressoDetalheByIdEvento();
     }
-    if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
-      this.findEventoDetalheByIdEvento();
-    }
+    // console.log(this.lastButtonDetalhe);
+    // if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
+    //   this.findEventoDetalheByIdEvento();
+    // }
     if(this.lastButtonDetalhe == 'ANUNCIOLIST') {
       this.findAnuncioDetalheByIdEvento();
     }
@@ -129,7 +136,11 @@ export class DetalheEventoPage {
       this.eventoService.findEventoDetalheByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
-        this.listIngressoListEntity = this.eventoDetalheEntity.listLoteIngressoListEntity;
+        // if(this.lastButtonDetalhe != 'PAGAMENTO') {
+          this.listIngressoListEntity = this.eventoDetalheEntity.listLoteIngressoListEntity;
+          console.log(this.listIngressoListEntity);
+        // }
+
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
         this.showLoading = false;
 
@@ -220,7 +231,6 @@ export class DetalheEventoPage {
       this.eventoService.findAnuncioDetalheByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
-        console.log(this.eventoDetalheEntity);
         this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
@@ -239,16 +249,34 @@ export class DetalheEventoPage {
   }
 
   incrementaIngresso(ingresso) {
-    if(ingresso.qtdIngresso < ingresso.maxQtdIngressoCompra) {
-      ingresso.qtdIngresso += 1;
+    if(this.idUsuarioLogado) {
+      if(ingresso.qtdIngresso < ingresso.maxQtdIngressoCompra) {
+        ingresso.qtdIngresso += 1;
+      }
+      this.alteraCalculoLoteIngressoEvento(ingresso);
+    } else {
+      let alert = this.alertCtrl.create({
+        title: 'Usuário não autorizado',
+        subTitle: 'Faça login antes de executar esta ação',
+        buttons: [
+          {
+            text: 'OK',
+            handler: () => {
+              // se não fizer assim, a tela fica aberta sobre a tela de perfil
+              let currentIndex = this.navCtrl.getActive().index;
+              this.navCtrl.parent.select(4).then(() => {
+                  this.navCtrl.remove(currentIndex);
+              });
+            }
+          }
+        ]
+      });
+      alert.present();
     }
-    // this.qtdIngressoAdicionado = ingresso.qtdIngresso;
-    this.alteraCalculoLoteIngressoEvento(ingresso);
   }
 
   subtrairIngresso(ingresso) {
     ingresso.qtdIngresso -= 1;
-    // this.qtdIngressoAdicionado = ingresso.qtdIngresso;
     if (ingresso.qtdIngresso < 0) {
       ingresso.qtdIngresso = 0;
     } else {
@@ -264,9 +292,6 @@ export class DetalheEventoPage {
       });
       this.loading.present();
 
-      // for(let j =0; j<ingresso.length; j++){
-      //   this.habilitaBotao = ingresso.qtdIngresso > 0 ? true : false;
-      // }
       let qtdTotal = 0;
       
       for(let i =0;i<this.listIngressoListEntity.length;i++){
@@ -551,40 +576,63 @@ export class DetalheEventoPage {
 
   openPagamentoPage() {
     if(this.idUsuarioLogado) {
-      let idLoteIngresso = null;
-      let qtdIngresso = null;
-      let arrayLotePagamento = [];
-      let arrayLote = this.eventoDetalheEntity.listLoteIngressoListEntity;
+      if(this.eventoDetalheEntity.cartaoCredito) {
+
+        // let idLoteIngresso = null;
+        // let qtdIngresso = null;
+        let arrayLotePagamento = [];
+        let arrayLote = this.eventoDetalheEntity.listLoteIngressoListEntity;
 
 
-      // for(let i =0;i<this.listIngressoListEntity.length;i++){
-      //   if(this.listIngressoListEntity[i].itemChecked) {
-      //     this.listAnuncioIngressoListEntity[i] = {
-      //       idIngresso: this.listIngressoListEntity[i].idIngresso, 
-      //       valorAnuncio: this.listIngressoListEntity[i].valorAnuncio 
-      //     }
-      //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(".", "");
-      //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(",", ".");
-      //   }
-      // }
+        // for(let i =0;i<this.listIngressoListEntity.length;i++){
+        //   if(this.listIngressoListEntity[i].itemChecked) {
+        //     this.listAnuncioIngressoListEntity[i] = {
+        //       idIngresso: this.listIngressoListEntity[i].idIngresso, 
+        //       valorAnuncio: this.listIngressoListEntity[i].valorAnuncio 
+        //     }
+        //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(".", "");
+        //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(",", ".");
+        //   }
+        // }
 
-      for(let i = 0; i < arrayLote.length; i++){
-        if(arrayLote[i].qtdIngresso > 0) {
-          arrayLotePagamento[i] = {
-            idLoteIngresso: arrayLote[i].idLoteIngresso,
-            qtdIngresso: arrayLote[i].qtdIngresso
+        for(let i = 0; i < arrayLote.length; i++){
+          if(arrayLote[i].qtdIngresso > 0) {
+            arrayLotePagamento[i] = {
+              idLoteIngresso: arrayLote[i].idLoteIngresso,
+              qtdIngresso: arrayLote[i].qtdIngresso
+            }
           }
         }
+        this.navCtrl.push(PagamentoPage, {
+          arrayLotePagamento: arrayLotePagamento
+        });
+      } else {
+        this.verificaCadastroCartao();
       }
-      // console.log(arrayLotePagamento);
-      // console.log(qtdIngresso);
-      this.navCtrl.push(PagamentoPage, {
-        arrayLotePagamento: arrayLotePagamento
-        // qtdIngresso: qtdIngresso
-      })
+
     } else {
       this.openModalEntrarCadastrarPage();      
     }
+  }
+
+  verificaCadastroCartao() {
+    let alert = this.alertCtrl.create({
+      title: 'Cartão não cadastrado',
+      subTitle: 'Antes de prosseguir, cadastre um cartão de crédito',
+      buttons: [
+        {
+          text: 'CANCELAR',
+          role: 'cancel'
+        },
+        {
+          text: 'CADASTRAR',
+          handler: () => {
+            this.navCtrl.push(CadastroCartaoPage);
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   openModalEntrarCadastrarPage() {

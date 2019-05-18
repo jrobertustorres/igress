@@ -78,66 +78,75 @@ export class HomePage {
       this.findEventosDestaqueAndCidade(null);
     } else {
         // para testes no browser acesso direto o this.getLocationPosition()
-        // if (this.platform.is('cordova')) {
-        //   this.getGpsStatus();
-        // } else {
-        //   this.getLocationPosition();
-        // }
-        this.getLocationPosition();
+        if (this.platform.is('cordova')) {
+          this.getGpsStatus();
+        } else {
+          this.getLocationPosition();
+        }
+        // this.getLocationPosition();
     }
   }
 
   checkPlatform() {
     this.segment = "proximosList";
     // para testes no browser acesso direto o this.getLocationPosition()
-    // if (this.platform.is('cordova')) {
-    //   this.getGpsStatus();
-    // } else {
-    //   this.getLocationPosition();
-    // }
-    this.getLocationPosition();
+    if (this.platform.is('cordova')) {
+      this.getGpsStatus();
+    } else {
+      this.getLocationPosition();
+    }
+    // this.getLocationPosition();
   }
 
   getGpsStatus() {
-    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-      if(canRequest) {
-        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+    let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
+    let errorCallback = (e) => console.error(e);
+
+      this.diagnostic.isLocationEnabled().then(successCallback).catch(errorCallback);
+
+      // only android
+      this.diagnostic.isGpsLocationEnabled().then(successCallback, errorCallback);
+
+      this.diagnostic.isLocationEnabled()
+      .then((state) => {
+        console.log('dentro do then');
+        if (state == true) {
+          console.log('dentro state true');
+          this.getLocationPosition();
+        } else {
+          console.log('dentro accuracy');
+          this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+            console.log('dentro do then do accuracy');
+            if(canRequest) {
+              console.log('dentro do canRequest');
+              // the accuracy option will be ignored by iOS
+              this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
               .then(() => {
+                console.log('dentro do then do canRequest ===> ');
                 this.getLocationPosition();
               }).catch((error) => {
                 // this.showLocationText();
                });
-      }
-    });
+            }
 
-
-    // this.diagnostic.isLocationEnabled()
-    //   .then((state) => {
-    //     console.log('dentro do then');
-    //     if (state == true) {
-    //       console.log('dentro state true');
-    //       this.getLocationPosition();
-    //     } else {
-    //       console.log('dentro accuracy');
-    //       this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-    //         console.log('dentro do then do accuracy');
-    //         if(canRequest) {
-    //           console.log('dentro do canRequest');
-    //           // the accuracy option will be ignored by iOS
-    //           this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
-    //           .then(() => {
-    //             console.log('dentro do then do canRequest ===> ');
-    //             this.getLocationPosition();
-    //           }).catch((error) => {
-    //             this.showLocationText();
-    //            });
-    //         }
-
-    //       });
-    //     }
-    //   }).catch(e => console.error(e));
-
+          });
+        }
+      }).catch(e => console.error(e));
   }
+
+  // getGpsStatus() {
+  //   this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+  //     if(canRequest) {
+  //       this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+  //             .then(() => {
+  //               this.getLocationPosition();
+  //             }).catch((error) => {
+  //               // this.showLocationText();
+  //              });
+  //     }
+  //   });
+
+  // }
 
   showLocationText() {
     let prompt = this.alertCtrl.create({

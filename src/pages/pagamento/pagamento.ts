@@ -88,9 +88,11 @@ export class PagamentoPage {
 
       this.cartaoService.findCartaoCredito()
       .then((dadosCartaoResult: CartaoCreditoEntity) => {
-        this.consultaBandeira(dadosCartaoResult.tipoCartaoCreditoEnum);
         this.cartaoCreditoEntity = dadosCartaoResult;
-        this.cartaoCreditoEntity.numeroCartaoCredito = dadosCartaoResult.tipoCartaoCreditoEnum + ' .... ' + dadosCartaoResult.numeroCartaoCredito;
+        if(dadosCartaoResult.tipoCartaoCreditoEnum) {
+          this.consultaBandeira(dadosCartaoResult.tipoCartaoCreditoEnum);
+          this.cartaoCreditoEntity.numeroCartaoCredito = dadosCartaoResult.tipoCartaoCreditoEnum + ' .... ' + dadosCartaoResult.numeroCartaoCredito;
+        }
         this.callGetDadosUsuario();
         
       }, (err) => {

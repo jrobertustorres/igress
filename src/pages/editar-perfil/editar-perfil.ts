@@ -33,13 +33,17 @@ export class EditarPerfilPage {
 
     this.events.subscribe('atualizaNomeEvent:change', (nomePessoa) => {
       let names = nomePessoa.split(" ");
-      this.nomeUsuarioLogado = names[0] +' '+ names[1];
+      if(names[1]) {
+        this.nomeUsuarioLogado = names[0] +' '+ names[1];
+      } else {
+        this.nomeUsuarioLogado = names[0];
+      }
       localStorage.setItem(Constants.NOME_PESSOA, this.nomeUsuarioLogado);
     });
     this.idUsuarioLogado = localStorage.getItem(Constants.ID_USUARIO);
     this.nomeUsuarioLogado = localStorage.getItem(Constants.NOME_PESSOA);
     this.emailUsuario = localStorage.getItem(Constants.EMAIL_PESSOA);
-
+    
   }
 
   sendEmailBug() {

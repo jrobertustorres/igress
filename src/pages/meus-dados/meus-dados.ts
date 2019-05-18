@@ -75,9 +75,9 @@ export class MeusDadosPage implements OnInit {
 
   ngOnInit() {
     //para testes no browser
-    // if (!this.platform.is('cordova')) {
-    //   this.dataNascimento = new Date().toISOString();
-    // }
+    if (!this.platform.is('cordova')) {
+      this.dataNascimento = new Date().toISOString();
+    }
 
     this.dadosUsuarioForm = this.formBuilder.group({
       'nomePessoa': ['', [Validators.required, Validators.maxLength(100)]],
@@ -229,16 +229,24 @@ export class MeusDadosPage implements OnInit {
     this.dadosFormat = this.dadosUsuarioForm.value;
     this.dadosFormat.idCidade = this.idCidade;
 
+    let dataNascimento = new Date(this.dataNascimento);
+    this.dadosFormat.dataNascimento = dataNascimento;
+
+    console.log(this.dataNascimento);
+    console.log(this.dadosFormat);
+    console.log(JSON.stringify(this.dadosFormat));
+
     this.usuarioService
     .adicionaUsuario(this.dadosFormat)
     .then((usuarioEntityResult: UsuarioEntity) => {
 
       this.loading.dismiss();
       this.events.publish('usuarioLogadoEvent:change', true);
-      this.navCtrl.popToRoot().then(() => {
-        this.navCtrl.parent.select(0).then(() => {
-        });
-      });
+      this.events.publish('showButtonEvent:change', true);
+      // this.navCtrl.popToRoot().then(() => {
+      //   this.navCtrl.parent.select(0).then(() => {
+      //   });
+      // });
     }, (err) => {
       this.loading.dismiss();
       this.alertCtrl.create({
@@ -263,9 +271,9 @@ export class MeusDadosPage implements OnInit {
 
       this.loading.dismiss();
       this.presentToast();
-      setTimeout(() => {
-        this.navCtrl.setRoot(EditarPerfilPage);
-      }, 3000);
+      // setTimeout(() => {
+      //   this.navCtrl.setRoot(EditarPerfilPage);
+      // }, 3000);
     }, (err) => {
       this.loading.dismiss();
       this.alertCtrl.create({
@@ -288,6 +296,8 @@ export class MeusDadosPage implements OnInit {
         .then((dadosUsuarioDetalheResult) => {
           this.usuarioDetalheEntity = dadosUsuarioDetalheResult;
           this.dataNascimento = this.usuarioDetalheEntity.dataNascimento ? new Date(this.usuarioDetalheEntity.dataNascimento).toJSON().split('T')[0] : null;
+
+          console.log(this.usuarioDetalheEntity);
 
           if (this.usuarioDetalheEntity.telefonePessoa) {
             this.telefonePessoa = this.mask.maskPhoneConverter(this.usuarioDetalheEntity.telefonePessoa);

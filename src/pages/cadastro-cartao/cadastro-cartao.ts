@@ -164,11 +164,6 @@ export class CadastroCartaoPage {
 
   callGetDadosUsuario() {
     try {
-      // this.loading = this.loadingCtrl.create({
-      //   content: '',
-      // });
-      // this.loading.present();
-
       this.usuarioService
         .getDadosUsuario()
         .then((dadosUsuarioDetalheResult) => {
@@ -183,7 +178,6 @@ export class CadastroCartaoPage {
           this.cartaoCreditoEntity.numeroLogradouro = this.usuarioDetalheEntity.numeroLogradouro;
           this.cartaoCreditoEntity.idEstado = this.usuarioDetalheEntity.idEstado;
           this.idEstado = this.usuarioDetalheEntity.idEstado;
-          // this.cartaoCreditoEntity.dataNascimentoTitular = this.usuarioDetalheEntity.dataNascimento;
           this.dataNascimentoTitular = this.usuarioDetalheEntity.dataNascimento ? new Date(this.usuarioDetalheEntity.dataNascimento).toJSON().split('T')[0] : null;
           
           if (this.cartaoCreditoEntity.telefoneTitular) {
@@ -195,8 +189,6 @@ export class CadastroCartaoPage {
             this.loading.dismiss();
           }
 
-          // this.findCartaoCredito();
-          // this.loading.dismiss();
         })
         .catch(err => {
           this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
@@ -245,10 +237,12 @@ export class CadastroCartaoPage {
 
       this.cartaoService.findCartaoCredito()
       .then((dadosCartaoResult: CartaoCreditoEntity) => {
-        this.consultaBandeira(dadosCartaoResult.tipoCartaoCreditoEnum);
-        this.cartaoCreditoEntity.numeroCartaoCredito = dadosCartaoResult.tipoCartaoCreditoEnum + ' .... ' + dadosCartaoResult.numeroCartaoCredito;
-        this.cartaoCreditoEntity.mesExpiracao = dadosCartaoResult.mesExpiracao;
-        this.cartaoCreditoEntity.anoExpiracao = dadosCartaoResult.anoExpiracao;
+        if(dadosCartaoResult.tipoCartaoCreditoEnum) {
+          this.consultaBandeira(dadosCartaoResult.tipoCartaoCreditoEnum);
+          this.cartaoCreditoEntity.numeroCartaoCredito = dadosCartaoResult.tipoCartaoCreditoEnum + ' .... ' + dadosCartaoResult.numeroCartaoCredito;
+          this.cartaoCreditoEntity.mesExpiracao = dadosCartaoResult.mesExpiracao;
+          this.cartaoCreditoEntity.anoExpiracao = dadosCartaoResult.anoExpiracao;
+        }
         
         this.callGetDadosUsuario();
         
@@ -266,7 +260,7 @@ export class CadastroCartaoPage {
   }
 
   submeterCartao() {
-    if (this.cartaoForm.valid) {
+    // if (this.cartaoForm.valid) {
       let dataNascimentoTitular = new Date(this.dataNascimentoTitular);
       this.cartaoCreditoEntity.dataNascimentoTitular = dataNascimentoTitular;
       this.cartaoCreditoEntity.hashCartaoCredito = this.hashCartaoCredito;
@@ -284,9 +278,6 @@ export class CadastroCartaoPage {
         });
         this.loading.present();
 
-        // this.hashCartaoCredito
-        // Caso for o mesmo titular: Mandar somente o Hash, NumeroCartao(mandar 4 últimos dígitos), mesExpiracao, anoExpiracao, tipoCartaoCreditoEnum
-
         this.cartaoService
         .adicionaEditaCartaoCredito(this.cartaoCreditoEntity)
         .then((cartaoEntityResult: CartaoCreditoEntity) => {
@@ -294,7 +285,8 @@ export class CadastroCartaoPage {
           this.loading.dismiss();
           this.presentToast();
           setTimeout(() => {
-            this.navCtrl.setRoot(EditarPerfilPage);
+            this.navCtrl.pop();
+            // this.navCtrl.setRoot(EditarPerfilPage);
           }, 3000);
     
         }, (err) => {
@@ -319,17 +311,18 @@ export class CadastroCartaoPage {
         }
         console.log(err);
       }
-    } else {
-      Object.keys(this.cartaoForm.controls).forEach(campo => {
-        const controle = this.cartaoForm.get(campo);
-        controle.markAsTouched();
-      })
-    }
+    // } else {
+    //   Object.keys(this.cartaoForm.controls).forEach(campo => {
+    //     const controle = this.cartaoForm.get(campo);
+    //     controle.markAsTouched();
+    //   })
+    // }
   }
 
   consultaBandeira(tipoCartaoCreditoEnum) {
     let resposta;
-    if(!tipoCartaoCreditoEnum) {
+    // if(!tipoCartaoCreditoEnum) {
+    if(this.cartaoCreditoEntity.numeroCartaoCredito) {
       resposta = MoipValidator.cardType(this.cartaoCreditoEntity.numeroCartaoCredito);
       resposta = resposta.brand;
     } else {
@@ -337,7 +330,7 @@ export class CadastroCartaoPage {
     }
 
     switch(resposta) { 
-      case 'MASTERCARD': { 
+      case 'MASTERCARD': {
          this.bandeira = 'MASTERCARD';
          this.imgCartao = "assets/imgs/master.png";
          break; 
@@ -381,26 +374,35 @@ export class CadastroCartaoPage {
   }
 
   validaDadosCartao(cvc) {
-    if(MoipValidator.isValidNumber(this.cartaoCreditoEntity.numeroCartaoCredito)) {
-      this.numeroInvalido = false;      
-    } else {
-      this.numeroInvalido = true;      
-    }
-    
-    if(MoipValidator.isSecurityCodeValid(this.cartaoCreditoEntity.numeroCartaoCredito, cvc)) {
-      this.codigoSegurancaInvalido = false;      
-    } else {
-      this.codigoSegurancaInvalido = true;
-    }
-    
-    if(MoipValidator.isExpiryDateValid(this.cartaoCreditoEntity.mesExpiracao, this.cartaoCreditoEntity.anoExpiracao)) {
-      this.dataExpiracaoInvalida = false;
-    } else {
-      this.dataExpiracaoInvalida = true;
-    }
 
-    if(!this.numeroInvalido && !this.codigoSegurancaInvalido && !this.dataExpiracaoInvalida) {
-      this.geraHash(cvc);
+    if (this.cartaoForm.valid) {
+      if(MoipValidator.isValidNumber(this.cartaoCreditoEntity.numeroCartaoCredito)) {
+        this.numeroInvalido = false;      
+      } else {
+        this.numeroInvalido = true;      
+      }
+      
+      if(MoipValidator.isSecurityCodeValid(this.cartaoCreditoEntity.numeroCartaoCredito, cvc)) {
+        this.codigoSegurancaInvalido = false;      
+      } else {
+        this.codigoSegurancaInvalido = true;
+      }
+      
+      if(MoipValidator.isExpiryDateValid(this.cartaoCreditoEntity.mesExpiracao, this.cartaoCreditoEntity.anoExpiracao)) {
+        this.dataExpiracaoInvalida = false;
+      } else {
+        this.dataExpiracaoInvalida = true;
+      }
+  
+      if(!this.numeroInvalido && !this.codigoSegurancaInvalido && !this.dataExpiracaoInvalida) {
+        this.geraHash(cvc);
+      }
+
+    } else {
+      Object.keys(this.cartaoForm.controls).forEach(campo => {
+        const controle = this.cartaoForm.get(campo);
+        controle.markAsTouched();
+      })
     }
   }
 

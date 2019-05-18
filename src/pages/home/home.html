@@ -110,6 +110,13 @@
 
 <div [ngSwitch]="segment">
     <ion-list *ngSwitchCase="'destaquesList'">
+
+        <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="dadosEvento?.length == 0">
+            <div style="text-align: center;color: #484848;"><strong>Não encontramos nenhum evento em destaque</strong></div>
+            <div style="text-align: center;">
+                <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
+            </div>
+        </div>
         <ion-card (click)="openDetalheEventoPage(evento.idEvento, 'HOME')" *ngFor="let evento of dadosEvento">
             <ion-card-content style="padding: 3px 16px;">
             <ion-card-title style="line-height: 0.8;">
@@ -161,47 +168,6 @@
         </ion-card>
     </ion-list>
 </div>
-
-
-
-  <!-- <div [ngSwitch]="segment">
-        <ion-list *ngSwitchCase="'candidatosList'">
-
-            <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="vagas?.length == 0">
-                <div style="text-align: center;color: #484848;"><strong>{{ 'SEM_CANDIDATO' | translate }}</strong></div>
-                <div style="text-align: center;">
-                    <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
-                </div>
-            </div>
-
-            <div>
-                <button ion-item *ngFor="let vaga of vagas" text-wrap (click)="callDetalheCandidatoVaga(vaga.idVagaUsuario)">
-                    <span style="font-size: 15px;"><b>{{ vaga.nomePessoa }}</b></span>
-                    <p style="color: #999 ">
-                        <ion-icon ios="ios-calendar" md="md-calendar" class="margin-icon"></ion-icon>{{ 'DATA_CANDIDATURA' | translate }}: {{ vaga.dataCandidatadaFormat }}
-                    </p>
-                </button>
-            </div>
-        </ion-list>
-
-        <ion-list *ngSwitchCase="'finalistasList'">
-            <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" *ngIf="vagas?.length == 0">
-                <div style="text-align: center;color: #484848;"><strong>{{ 'SEM_VAGAS_ARQUIVADAS' | translate }}</strong></div>
-                <div style="text-align: center;">
-                    <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
-                </div>
-            </div>
-            <div>
-                <button ion-item *ngFor="let finalista of vagas" text-wrap (click)="callDetalheCandidatoVaga(finalista.idVagaUsuario)">
-                    <span style="font-size: 15px;"><b>{{ finalista.nomePessoa }}</b></span>
-                    <p style="color: #999 ">
-                        <ion-icon ios="ios-calendar" md="md-calendar" class="margin-icon"></ion-icon>{{ 'DATA_CANDIDATURA' | translate }}: {{ finalista.dataCandidatadaFormat }}
-                    </p>
-                </button>
-            </div>
-        </ion-list>
-
-    </div> -->
 
   <ion-infinite-scroll (ionInfinite)="loadMore($event)" *ngIf="canLoadMore">
       <ion-infinite-scroll-content></ion-infinite-scroll-content>
