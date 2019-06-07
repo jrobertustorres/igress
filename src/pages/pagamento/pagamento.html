@@ -16,7 +16,7 @@
       </p>
   </div>
 
-  <div *ngIf="!errorConnection" >
+  <div *ngIf="!errorConnection && vendaDetalheEntity.descricao" >
     <!-- <div padding style="text-align: center;">
         <img src="assets/imgs/amex.png" style="width: 13%;"/>
         <img src="assets/imgs/master.png" style="width: 13%;"/>
@@ -26,59 +26,94 @@
         <img src="assets/imgs/elo.png" style="width: 13%;"/>
     </div> -->
 
+    <div padding>
+      <ion-item-divider color="navBarColor">
+        <span style="color: #fff;">Ingressos</span>
+        <div item-content>
+            <span style="margin-right: 10px;" > {{ vendaDetalheEntity.valorTotalIngressoFormat }} </span>
+        </div>
+      </ion-item-divider>
 
-        <ion-row>
-          <ion-col col-9>
-            <ion-item>
-              <ion-label floating>Número do cartão</ion-label>
-              <ion-input [(ngModel)]="cartaoCreditoEntity.numeroCartaoCredito" type="text" 
-                spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col col-3>
-            <img src="{{ imgCartao }}" class="bandeira-style"/>
-          </ion-col>
-
-        </ion-row>
-
-      <ion-row>
-        <ion-col col-3>
-          <ion-item>
-            <ion-label floating>Mês</ion-label>
-            <ion-input [(ngModel)]="cartaoCreditoEntity.mesExpiracao" type="text" maxlength="2" spellcheck="false" autocapitalize="off" 
-              autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col col-3>
-          <ion-item class="padding-left-2px">
-            <ion-label floating>Ano</ion-label>
-            <ion-input [(ngModel)]="cartaoCreditoEntity.anoExpiracao" type="text" maxlength="4" spellcheck="false" autocapitalize="off" 
-              autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-
-      <p padding>
-        <span style="font-size: 17px;">
-          Dados do titular do cartão
-        </span>
-      </p>
-
-      <ion-item>
-        <ion-label floating>Nome do titular (impresso no cartão)</ion-label>
-        <ion-input [(ngModel)]="usuarioDetalheEntity.nomePessoa" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
-      </ion-item>
-        
-      <ion-item>
-          <ion-label floating>CPF titular</ion-label>
-          <ion-input [(ngModel)]="usuarioDetalheEntity.cpfPessoa" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+      <ion-item text-wrap *ngFor="let ingresso of vendaDetalheEntity.descricao; let i = index;">
+        <ion-label color="dark">
+            <span style="font-size: 11px;">
+              <strong>{{ ingresso }}</strong>
+            </span>
+        </ion-label>
       </ion-item>
 
-      <ion-item>
-          <ion-label floating>Email</ion-label>
-          <ion-input [(ngModel)]="usuarioDetalheEntity.emailUsuario" type="email" [readonly]="true"></ion-input>
-      </ion-item>
+      <div text-wrap class="aviso-calendar">
+        <p><span style="font-size: 24px;">{{ displayTime }}</span></p>
+        <p><span>Favor completar a compra no tempo máximo estabelecido acima</span></p>
+      </div>
+
+      <!-- <ion-item>
+          <h1 text-center>{{displayTime}}</h1>
+    </ion-item> -->
+
+    </div>
+
+    <ion-list>
+        <ion-item>
+            <ion-label floating>Quantidade de parcelas</ion-label>
+            <ion-select [(ngModel)]="vendaDetalheEntity.qtdParcela" cancelText="Cancelar">
+                <ion-option *ngFor="let parcelas of vendaDetalheEntity.listParcelaCartaoCreditoEntity" value="{{parcelas.qtdParcela}}">{{parcelas.dadosParcela}}</ion-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
+
+
+    <ion-row>
+      <ion-col col-9>
+        <ion-item>
+          <ion-label floating>Número do cartão</ion-label>
+          <ion-input [(ngModel)]="vendaDetalheEntity.numeroCartaoCredito" type="text" 
+            spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col col-3>
+        <img src="{{ imgCartao }}" class="bandeira-style"/>
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row>
+      <ion-col col-3>
+        <ion-item>
+          <ion-label floating>Mês</ion-label>
+          <ion-input [(ngModel)]="vendaDetalheEntity.mesExpiracao" type="text" maxlength="2" spellcheck="false" autocapitalize="off" 
+            autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col col-3>
+        <ion-item class="padding-left-2px">
+          <ion-label floating>Ano</ion-label>
+          <ion-input [(ngModel)]="vendaDetalheEntity.anoExpiracao" type="text" maxlength="4" spellcheck="false" autocapitalize="off" 
+            autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <p padding>
+      <span style="font-size: 17px;">
+        Dados do titular do cartão
+      </span>
+    </p>
+
+    <ion-item>
+      <ion-label floating>Nome do titular (impresso no cartão)</ion-label>
+      <ion-input [(ngModel)]="vendaDetalheEntity.nomeTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+    </ion-item>
       
+    <ion-item>
+        <ion-label floating>CPF titular</ion-label>
+        <ion-input [(ngModel)]="vendaDetalheEntity.cpfTitular" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" [readonly]="true"></ion-input>
+    </ion-item>
+
+      <!-- <ion-item>
+          <ion-label floating>Email</ion-label>
+          <ion-input [(ngModel)]="vendaDetalheEntity.emailUsuario" type="email" [readonly]="true"></ion-input>
+      </ion-item> -->      
         
       <div padding>
           <button ion-button block outline color="greenColor" (click)="comprarIngressos()">COMPRAR INGRESSOS</button>

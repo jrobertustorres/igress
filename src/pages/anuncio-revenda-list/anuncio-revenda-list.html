@@ -5,11 +5,6 @@
   </ion-navbar>
 </ion-header>
 
-<!-- <ion-header no-border>
-    <ion-navbar transparent>
-        <ion-title><span class="font-title">Ingressos para revenda</span></ion-title>
-    </ion-navbar> -->
-
 <ion-content class="content-stable">
   <!-- <div style="text-align:center">
     <span>Encontre aqui ingressos com lotes já fechados</span>
@@ -39,7 +34,7 @@
   </div>
 
   <ion-card *ngFor="let anuncio of anuncioList" (click)="openDetalheEventoPage(anuncio.idEvento, 'ANUNCIOLIST');">
-    <ion-card-content>
+    <ion-card-content style="padding: 3px 16px;">
       <ion-card-title>
         <span style="font-size: 16px;">{{ anuncio.nomeEvento }}</span>
       </ion-card-title>
@@ -48,22 +43,10 @@
       </p>
     </ion-card-content>
     <img [src]="sanitizer.bypassSecurityTrustUrl(anuncio.imagemEvento)"  />
-
-    <!-- <ion-row>
-        <ion-col>
-          <button ion-button icon-start clear small color="blueColor" style="float: left;" (click)="openDetalheEventoPage(anuncio.idEvento, 'DETALHE');">
-            <ion-icon name="qr-scanner"></ion-icon>
-            <div>VER DETALHES</div>
-          </button>
-        </ion-col>
-        <ion-col>
-          <button ion-button icon-start clear small color="greenColor" style="float: right;" (click)="openDetalheEventoPage(anuncio.idEvento, 'REVENDA');">
-            <ion-icon name="sync"></ion-icon>
-            <div>REVENDA</div>
-          </button>
-        </ion-col>
-      </ion-row> -->
-
   </ion-card>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

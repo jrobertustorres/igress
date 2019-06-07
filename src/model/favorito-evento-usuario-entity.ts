@@ -7,6 +7,7 @@ export class FavoritoEventoUsuarioEntity {
   public cidadeEstadoFormat: string;
   public dataEventoFormat: string;
   public imagemEvento: string;
+  public limiteDados: string;
 
   constructor(){
   }

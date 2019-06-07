@@ -40,7 +40,7 @@ export class AnuncioRevendaListPage {
     this.showLoading = true;
     this.anuncioList = null;
     this.idUsuario = localStorage.getItem(Constants.ID_USUARIO);
-    this.getListaAnuncioRevenda();
+    this.getListaAnuncioRevenda(null);
   }
 
   // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
@@ -51,12 +51,24 @@ export class AnuncioRevendaListPage {
     }
   }
 
-  getListaAnuncioRevenda() {
+  loadMore(infiniteScroll) {
+    setTimeout(() => {
+      this.getListaAnuncioRevenda(infiniteScroll);
+    }, 500);
+  }
+
+  getListaAnuncioRevenda(infiniteScroll: any) {
     try {
+      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.anuncioList.length : null;
 
       this.eventoService.findAnuncioRevenda()
       .then((ingressosListResult: EventoListEntity) => {
         this.anuncioList = ingressosListResult;
+        this.eventoListEntity.limiteDados = this.anuncioList.length;
+
+        if(infiniteScroll) {
+          infiniteScroll.complete();
+        }
         this.showLoading = false;
 
       }, (err) => {
@@ -74,8 +86,8 @@ export class AnuncioRevendaListPage {
 
   openDetalheEventoPage(idEvento: any, lastButtonDetalhe: string) {
     this.navCtrl.push(DetalheEventoPage, {
-      lastButtonDetalhe: lastButtonDetalhe,
-      idEvento: idEvento
+      idEvento: idEvento,
+      lastButtonDetalhe: lastButtonDetalhe
     })
   }
 

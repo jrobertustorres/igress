@@ -37,7 +37,8 @@ export class DetalheEventoPage {
   private lastButtonDetalhe: string;
   private toastMessage: string;
   public showIcon: boolean;
-  public valorAnuncio: any;
+  public valorAnuncio: any = null;
+  // public valorAnuncio: any;
   public listLoteIngressoListEntity = [];
   public listAnuncioIngressoListEntity = [];
   public listIngressoListEntity = [];
@@ -49,6 +50,8 @@ export class DetalheEventoPage {
   private qtdIngressoAdicionado: number = 0; 
   public listIngressoRevenda = [];
   private idUsuarioLogado: string;
+  private arrayLotePagamento = [];
+  // private arrayLote: [];
 
   public status: string;
   public statusEnum: string;
@@ -78,9 +81,9 @@ export class DetalheEventoPage {
 
   ngOnInit() {
     console.log(this.lastButtonDetalhe);
-    if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
-      this.findEventoDetalheByIdEvento();
-    }
+    // if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
+    //   this.findEventoDetalheByIdEvento();
+    // }
   }
 
   ionViewWillEnter() {
@@ -93,9 +96,9 @@ export class DetalheEventoPage {
       this.findIngressoDetalheByIdEvento();
     }
     // console.log(this.lastButtonDetalhe);
-    // if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
-    //   this.findEventoDetalheByIdEvento();
-    // }
+    if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
+      this.findEventoDetalheByIdEvento();
+    }
     if(this.lastButtonDetalhe == 'ANUNCIOLIST') {
       this.findAnuncioDetalheByIdEvento();
     }
@@ -133,13 +136,15 @@ export class DetalheEventoPage {
   findEventoDetalheByIdEvento() {
     try {
       this.eventoDetalheEntity.idEvento = this.idEvento;
+      console.log(JSON.stringify(this.eventoDetalheEntity));
       this.eventoService.findEventoDetalheByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
+        console.log(this.eventoDetalheEntity);
         // if(this.lastButtonDetalhe != 'PAGAMENTO') {
           this.listIngressoListEntity = this.eventoDetalheEntity.listLoteIngressoListEntity;
+          // }
           console.log(this.listIngressoListEntity);
-        // }
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
         this.showLoading = false;
@@ -185,6 +190,7 @@ export class DetalheEventoPage {
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
         this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
+        console.log(this.eventoDetalheEntity);
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
         this.showLoading = false;
@@ -207,6 +213,7 @@ export class DetalheEventoPage {
       this.eventoService.findIngressoDetalheRevendaByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
+        console.log(this.eventoDetalheEntity);
         this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
@@ -441,6 +448,7 @@ export class DetalheEventoPage {
   addCheckbox(event: any, idIngresso: number, statusIngressoEnum: string) {
     if ( event.checked ) {
       this.ingressosMarcados.push(idIngresso);
+      console.log(this.ingressosMarcados);
     } else {
       let index = this.removeCheckedFromArray(idIngresso);
       this.ingressosMarcados.splice(index,1);
@@ -463,7 +471,7 @@ export class DetalheEventoPage {
     if(this.ingressosMarcados.length == 0) {
       this.valorAnuncio = null;
     }
-    this.habilitaBotao = (this.ingressosMarcados.length > 0 && this.valorAnuncio != undefined) ? true : false;
+    this.habilitaBotao = (this.ingressosMarcados.length > 0) ? true : false;
   }
 
   //Removes checkbox from array when you uncheck it
@@ -577,34 +585,49 @@ export class DetalheEventoPage {
   openPagamentoPage() {
     if(this.idUsuarioLogado) {
       if(this.eventoDetalheEntity.cartaoCredito) {
+        
+        // let arrayLotePagamento = [];
+        let arrayLote = [];
+        let telaRevenda = false;
 
-        // let idLoteIngresso = null;
-        // let qtdIngresso = null;
-        let arrayLotePagamento = [];
-        let arrayLote = this.eventoDetalheEntity.listLoteIngressoListEntity;
+        // console.log(this.arrayLotePagamento);
+        
+        if(this.eventoDetalheEntity.listLoteIngressoListEntity) {
+          arrayLote = this.eventoDetalheEntity.listLoteIngressoListEntity;
+          for(let i = 0; i < arrayLote.length; i++){
+            if(arrayLote[i].qtdIngresso > 0) {
+              this.arrayLotePagamento[i] = {
+                idLoteIngresso: arrayLote[i].idLoteIngresso,
+                qtdIngresso: arrayLote[i].qtdIngresso
+              }
+            }
+          }
+        } else { // QUANDO É REVENDA
+          telaRevenda = true;
+          // this.arrayLotePagamento = {};
+          for(let j = 0; j < this.ingressosMarcados.length; j++){
+            arrayLote[j] = {
+              idIngresso: this.ingressosMarcados[j],
+              // qtdIngresso: 1
+            }
+          }
+          console.log(arrayLote);
+          console.log(this.arrayLotePagamento);
 
-
-        // for(let i =0;i<this.listIngressoListEntity.length;i++){
-        //   if(this.listIngressoListEntity[i].itemChecked) {
-        //     this.listAnuncioIngressoListEntity[i] = {
-        //       idIngresso: this.listIngressoListEntity[i].idIngresso, 
-        //       valorAnuncio: this.listIngressoListEntity[i].valorAnuncio 
-        //     }
-        //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(".", "");
-        //     this.listAnuncioIngressoListEntity[i].valorAnuncio = this.listAnuncioIngressoListEntity[i].valorAnuncio.replace(",", ".");
-        //   }
-        // }
-
-        for(let i = 0; i < arrayLote.length; i++){
-          if(arrayLote[i].qtdIngresso > 0) {
-            arrayLotePagamento[i] = {
-              idLoteIngresso: arrayLote[i].idLoteIngresso,
-              qtdIngresso: arrayLote[i].qtdIngresso
+          for(let i = 0; i < arrayLote.length; i++){
+            this.arrayLotePagamento[i] = {
+              idIngresso: arrayLote[i].idIngresso
             }
           }
         }
+        // console.log(arrayLote);
+        
+        console.log(this.arrayLotePagamento);
+
         this.navCtrl.push(PagamentoPage, {
-          arrayLotePagamento: arrayLotePagamento
+          arrayLotePagamento: this.arrayLotePagamento,
+          telaRevenda: telaRevenda,
+          idEvento: this.eventoDetalheEntity.idEvento
         });
       } else {
         this.verificaCadastroCartao();

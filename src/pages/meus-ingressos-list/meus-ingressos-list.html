@@ -5,57 +5,61 @@
   </ion-navbar>
 </ion-header>
 
-  <ion-content class="content-stable">
+<ion-content class="content-stable">
 
-      <div class="spinner-center" *ngIf="showLoading">
-          <ion-spinner name="crescent"></ion-spinner>
-          <!-- <ion-spinner name="dots"></ion-spinner> -->
-      </div>
-      
-      <div *ngIf="errorConnection" text-wrap>
-          <p style="text-align: center">
-              <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
-          </p>
-          
-          <p style="text-align: center;">
-              <span class="spam-error-connection">{{ errorConnection }}</span>
-          </p>
-      </div>
-  
-      <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" 
-        *ngIf="(!errorConnection && ingressosList?.length == 0) || !idUsuario">
-          <div style="text-align: center;color: #484848;"><strong>Você não possui nenhum ingresso</strong></div>
-          <div style="text-align: center;">
-              <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
-          </div>
-      </div>
+    <div class="spinner-center" *ngIf="showLoading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <!-- <ion-spinner name="dots"></ion-spinner> -->
+    </div>
+    
+    <div *ngIf="errorConnection" text-wrap>
+        <p style="text-align: center">
+            <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
+        </p>
+        
+        <p style="text-align: center;">
+            <span class="spam-error-connection">{{ errorConnection }}</span>
+        </p>
+    </div>
 
-      <ion-card *ngFor="let ingresso of ingressosList">
-        <ion-card-content>
-          <ion-card-title>
-            <span style="font-size: 16px;">{{ ingresso.nomeEvento }}</span>
-          </ion-card-title>
-          <p>
-            <span>{{ ingresso.cidadeEstadoFormat }}</span><span style="float: right;">{{ ingresso.dataEventoFormat }}</span>
-          </p>
-        </ion-card-content>
-        <img [src]="sanitizer.bypassSecurityTrustUrl(ingresso.imagemEvento)"  />
+    <div class="h2-color-cards" text-wrap padding style="margin-top: 50px;" 
+      *ngIf="(!errorConnection && ingressosList?.length == 0) || !idUsuario">
+        <div style="text-align: center;color: #484848;"><strong>Você não possui nenhum ingresso</strong></div>
+        <div style="text-align: center;">
+            <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
+        </div>
+    </div>
 
-        <ion-row>
-            <ion-col>
-              <button ion-button icon-start clear small color="blueColor" style="float: left;" (click)="openDetalheEventoPage(ingresso.idEvento, 'DETALHE');">
-                <ion-icon name="qr-scanner"></ion-icon>
-                <div>VER DETALHES</div>
-              </button>
-            </ion-col>
-            <ion-col>
-              <button ion-button icon-start clear small color="greenColor" style="float: right;" (click)="openDetalheEventoPage(ingresso.idEvento, 'REVENDA');">
-                <ion-icon name="sync"></ion-icon>
-                <div>REVENDER</div>
-              </button>
-            </ion-col>
-          </ion-row>
+    <ion-card *ngFor="let ingresso of ingressosList">
+      <ion-card-content style="padding: 3px 16px;">
+        <ion-card-title style="line-height: 0.8;">
+          <span style="font-size: 16px; font-weight: 500;">{{ ingresso.nomeEvento }}</span>
+        </ion-card-title>
+        <p>
+          <span>{{ ingresso.cidadeEstadoFormat }}</span><span style="float: right;">{{ ingresso.dataEventoFormat }}</span>
+        </p>
+      </ion-card-content>
+      <img [src]="sanitizer.bypassSecurityTrustUrl(ingresso.imagemEvento)"  />
 
-      </ion-card>
+      <ion-row>
+          <ion-col>
+            <button ion-button icon-start clear small color="blueColor" style="float: left;" (click)="openDetalheEventoPage(ingresso.idEvento, 'DETALHE');">
+              <ion-icon name="qr-scanner"></ion-icon>
+              <div>VER DETALHES</div>
+            </button>
+          </ion-col>
+          <ion-col>
+            <button ion-button icon-start clear small color="greenColor" style="float: right;" (click)="openDetalheEventoPage(ingresso.idEvento, 'REVENDA');">
+              <ion-icon name="sync"></ion-icon>
+              <div>REVENDER</div>
+            </button>
+          </ion-col>
+        </ion-row>
 
-    </ion-content>
+    </ion-card>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

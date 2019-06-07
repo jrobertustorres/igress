@@ -150,8 +150,14 @@
                 <p>
                   <span style="color: #999; font-size: 13px;"> {{ ingresso.vendaAteFormat }}</span>
                 </p>
-                <img src="assets/imgs/qrcode.png" *ngIf="lastButtonDetalhe == 'DETALHE'" 
-                  style="float: right; margin-top: -40px; width: 40px; height: auto;" (click)="openModalQrcode(ingresso.tokenIngresso)">
+                <p *ngIf="lastButtonDetalhe == 'DETALHE' && ingresso.statusIngressoEnum == 'ANDAMENTO' || ingresso.statusIngressoEnum == 'ANDAMENTO_REVENDA'" >
+                  <span class="style-status-andamento"> {{ ingresso.statusIngressoFormat }}</span>
+                </p>
+                <img src="assets/imgs/alert-icon.png" *ngIf="lastButtonDetalhe == 'DETALHE' && ingresso.statusIngressoEnum == 'ANDAMENTO' || ingresso.statusIngressoEnum == 'ANDAMENTO_REVENDA'" 
+                  class="style-icon-status-andamento">
+
+                <img src="assets/imgs/qrcode.png" *ngIf="lastButtonDetalhe == 'DETALHE' && ingresso.statusIngressoEnum == 'DISPONIVEL'" 
+                  class="style-status-disponivel" (click)="openModalQrcode(ingresso.tokenIngresso)">
               </div>
   
               <div class="raw-item" id="raw" style="text-align: right; width: 10rem;" 
@@ -169,7 +175,10 @@
 
     <div padding>
         <button ion-button block outline type="submit" color="greenColor" (click)="openPagamentoPage()"
-          *ngIf="lastButtonDetalhe == 'HOME' || lastButtonDetalhe == 'ANUNCIOLIST' || lastButtonDetalhe == 'FAVORITOLIST'" [disabled]="!habilitaBotao">CONTINUAR</button>
+          *ngIf="lastButtonDetalhe == 'HOME' || 
+                  lastButtonDetalhe == 'ANUNCIOLIST' || 
+                  lastButtonDetalhe == 'FAVORITOLIST'" [disabled]="!habilitaBotao">IR PARA PAGAMENTO</button>
+
         <button ion-button block outline type="submit" color="greenColor" 
           *ngIf="lastButtonDetalhe == 'REVENDA'" [disabled]="!habilitaBotao" (click)="adicionaIngressoRevenda()">REVENDER SELECIONADOS
         </button>

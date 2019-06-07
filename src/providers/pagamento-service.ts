@@ -2,6 +2,9 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Constants } from '../app/constants';
 
+//ENTITIES
+import { VendaEntity } from '../model/venda-entity';
+
 @Injectable()
 export class PagamentoService {
 
@@ -32,17 +35,62 @@ export class PagamentoService {
     }
   }
 
-  public compraLoteIngresso(vendaEntity) {
+  public compraIngresso(vendaEntity: VendaEntity, telaRevenda: boolean) {
     try {
 
+      let compraLoteIngresso: string;
+      let compraRevendaIngresso: string;
+      let servico = telaRevenda ? compraRevendaIngresso : compraLoteIngresso;
+
       return new Promise((resolve, reject) => {
-          this._http.post(Constants.API_URL + 'compraLoteIngresso/'
+          this._http.post(Constants.API_URL + servico
           + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(vendaEntity), this.options)
           .map(res=>res.json())
           .subscribe(data => {
             resolve(data);
           }, (err) => {
-            console.log(err);
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public compraRevendaIngresso(vendaEntity: VendaEntity) {
+    try {
+
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'compraRevendaIngresso/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(vendaEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
+            reject(err.json());
+          });
+      });
+
+    } catch (e){
+      if(e instanceof RangeError){
+        console.log('out of range');
+      }
+    }
+  }
+
+  public findVendaDetalheByLoteIngresso(vendaEntity: VendaEntity) {
+    try {
+
+      return new Promise((resolve, reject) => {
+          this._http.post(Constants.API_URL + 'findVendaDetalheByLoteIngresso/'
+          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(vendaEntity), this.options)
+          .map(res=>res.json())
+          .subscribe(data => {
+            resolve(data);
+          }, (err) => {
             reject(err.json());
           });
       });

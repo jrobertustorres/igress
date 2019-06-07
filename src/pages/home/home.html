@@ -34,8 +34,6 @@
       </ion-title>
     <ion-buttons end>
 
-      <!-- <button ion-button icon-only (click)="getLocationPosition()"> -->
-      <!-- <button ion-button icon-only (click)="getGpsStatus()"> -->
       <button ion-button icon-only (click)="checkPlatform()">
           <ion-icon ios="ios-locate" md="md-locate"></ion-icon>
       </button>
@@ -92,21 +90,20 @@
       </ion-slides> -->
 
 
-      <div class="spinner-center" *ngIf="showLoading">
+    <div class="spinner-center" *ngIf="showLoading">
         <ion-spinner name="crescent"></ion-spinner>
-        <!-- <ion-spinner name="dots"></ion-spinner> -->
-      </div>
+    <!-- <ion-spinner name="dots"></ion-spinner> -->
+    </div>
 
-      <div *ngIf="errorConnection" text-wrap>
+    <div *ngIf="errorConnection" text-wrap>
         <p style="text-align: center">
             <ion-icon ios="md-link" md="md-link" item-start color="navBarColor" style="font-size: 50px;"></ion-icon>
         </p>
-        
+
         <p style="text-align: center;">
             <span class="spam-error-connection">{{ errorConnection }}</span>
         </p>
-      </div>
-
+    </div>
 
 <div [ngSwitch]="segment">
     <ion-list *ngSwitchCase="'destaquesList'">
@@ -169,7 +166,8 @@
     </ion-list>
 </div>
 
-  <ion-infinite-scroll (ionInfinite)="loadMore($event)" *ngIf="canLoadMore">
+  <!-- <ion-infinite-scroll (ionInfinite)="loadMore($event)" *ngIf="canLoadMore"> -->
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
       <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 

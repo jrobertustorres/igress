@@ -35,7 +35,7 @@ export class MeusIngressosListPage {
 
   ngOnInit() {
     this.idUsuario = localStorage.getItem(Constants.ID_USUARIO);
-    this.getListaIngressos();
+    this.getListaIngressos(null);
   }
 
   // se o loading estiver ativo, permite fechar o loading e voltar à tela anterior
@@ -46,12 +46,24 @@ export class MeusIngressosListPage {
     }
   }
 
-  getListaIngressos() {
+  loadMore(infiniteScroll) {
+    setTimeout(() => {
+      this.getListaIngressos(infiniteScroll);
+    }, 500);
+  }
+
+  getListaIngressos(infiniteScroll: any) {
     try {
+      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.ingressosList.length : null;
 
       this.eventoService.findIngressosDisponivelByUsuario()
       .then((ingressosListResult: EventoListEntity) => {
         this.ingressosList = ingressosListResult;
+        this.eventoListEntity.limiteDados = this.ingressosList.length;
+
+        if(infiniteScroll) {
+          infiniteScroll.complete();
+        }
         this.showLoading = false;
 
       }, (err) => {

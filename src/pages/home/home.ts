@@ -109,20 +109,14 @@ export class HomePage {
 
       this.diagnostic.isLocationEnabled()
       .then((state) => {
-        console.log('dentro do then');
         if (state == true) {
-          console.log('dentro state true');
           this.getLocationPosition();
         } else {
-          console.log('dentro accuracy');
           this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-            console.log('dentro do then do accuracy');
             if(canRequest) {
-              console.log('dentro do canRequest');
               // the accuracy option will be ignored by iOS
               this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
               .then(() => {
-                console.log('dentro do then do canRequest ===> ');
                 this.getLocationPosition();
               }).catch((error) => {
                 // this.showLocationText();
@@ -133,20 +127,6 @@ export class HomePage {
         }
       }).catch(e => console.error(e));
   }
-
-  // getGpsStatus() {
-  //   this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-  //     if(canRequest) {
-  //       this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
-  //             .then(() => {
-  //               this.getLocationPosition();
-  //             }).catch((error) => {
-  //               // this.showLocationText();
-  //              });
-  //     }
-  //   });
-
-  // }
 
   showLocationText() {
     let prompt = this.alertCtrl.create({
@@ -191,13 +171,6 @@ export class HomePage {
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
         this.showLoading = false;
         this.errorConnection = null;
-        // this.dadosEvento = [];
-        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        // this.loading.dismiss();
-        // this.alertCtrl.create({
-        //   subTitle: err.message,
-        //   buttons: ['OK']
-        // }).present();
       });
 
     }catch (err){
@@ -225,16 +198,9 @@ export class HomePage {
       .then((loginResult: UsuarioEntity) => {
         this.dadosUsuario = loginResult;
         this.findEventosDestaqueAndCidade(null);
-        // this.loading.dismiss();
       }, (err) => {
         this.errorConnection = err.message ? err.message : 'Não foi possível conectar ao servidor';
         this.dadosEvento = [];
-        // this.loading.dismiss();
-        // err.message = err.message ? err.message : 'Não foi possível conectar ao servidor';
-        // this.alertCtrl.create({
-        //   subTitle: err.message,
-        //   buttons: ['OK']
-        // }).present();
       });
 
     }catch (err){
@@ -247,11 +213,12 @@ export class HomePage {
   findEventosDestaqueAndCidade(infiniteScroll: any) {
     try {
       this.showLoading = true;
-      // this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEvento.length : null;
+      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEvento.length : null;
 
       this.eventoService.findEventosDestaqueAndCidade()
       .then((eventoResult: EventoListEntity) => {
         this.dadosEvento = eventoResult;
+        this.eventoListEntity.limiteDados = this.dadosEvento.length;
 
         if(infiniteScroll) {
           infiniteScroll.complete();
@@ -361,8 +328,8 @@ export class HomePage {
   
   openDetalheEventoPage(idEvento: any, lastButtonDetalhe: string) {
     this.navCtrl.push(DetalheEventoPage, {
-      lastButtonDetalhe: lastButtonDetalhe,
-      idEvento: idEvento
+      idEvento: idEvento,
+      lastButtonDetalhe: lastButtonDetalhe
     })
   }
 

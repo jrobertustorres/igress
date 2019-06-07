@@ -46,7 +46,7 @@ export class FavoritosListPage {
     this.idUsuario = localStorage.getItem(Constants.ID_USUARIO);
     if (localStorage.getItem(Constants.ID_USUARIO)) {
       this.showLoading = true;
-      this.getListaFavoritos();
+      this.getListaFavoritos(null);
     } else {
       this.showLoading = false;
     }
@@ -74,12 +74,24 @@ export class FavoritosListPage {
     toast.present();
   }
 
-  getListaFavoritos() {
+  loadMore(infiniteScroll) {
+    setTimeout(() => {
+      this.getListaFavoritos(infiniteScroll);
+    }, 500);
+  }
+
+  getListaFavoritos(infiniteScroll: any) {
     try {
+      this.favoritoEventoUsuarioEntity.limiteDados = this.favoritoEventoUsuarioEntity.limiteDados ? this.favoritosList.length : null;
 
       this.favoritosService.findFavoritosByUsuario()
       .then((favoritosListResult: FavoritoEventoUsuarioEntity) => {
         this.favoritosList = favoritosListResult;
+        this.favoritoEventoUsuarioEntity.limiteDados = this.favoritosList.length;
+
+        if(infiniteScroll) {
+          infiniteScroll.complete();
+        }
         this.showLoading = false;
 
       }, (err) => {
@@ -123,7 +135,7 @@ export class FavoritosListPage {
       this.favoritoEventoUsuarioEntity.idFavoritoEventoUsuario = idFavoritoEventoUsuario;
       this.favoritosService.removeFavoritos(this.favoritoEventoUsuarioEntity)
       .then((favoritosListResult: FavoritoEventoUsuarioEntity) => {
-        this.getListaFavoritos();
+        this.getListaFavoritos(null);
         this.toastMessage = 'O evento foi removido dos seus favoritos!';
         this.presentToast();
       }, (err) => {

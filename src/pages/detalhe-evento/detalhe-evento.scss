@@ -33,4 +33,24 @@ page-detalhe-evento {
 	  color: #222!important;
   }
 
+  .style-status-andamento {
+    color: #1B7700; 
+    font-size: 13px; 
+    font-weight: 500;
+  }
+
+  .style-status-disponivel {
+    float: right; 
+    margin-top: -40px; 
+    width: 40px; 
+    height: auto;
+  }
+
+  .style-icon-status-andamento {
+    float: right; 
+    margin-top: -40px; 
+    width: 40px; 
+    height: auto;
+  }
+
 }

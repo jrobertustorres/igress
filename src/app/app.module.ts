@@ -61,6 +61,8 @@ import { IngressoListEntity } from '../model/ingresso-list-entity';
 import { AnuncioIngressoListEntity } from '../model/anuncio-ingresso-list-entity';
 import { CartaoCreditoEntity } from '../model/cartao-credito-entity';
 import { VendaEntity } from '../model/venda-entity';
+import { ParcelaCartaoCreditoEntity } from '../model/parcela-cartao-credito-entity';
+import { VendaDetalheEntity } from '../model/venda-detalhe-entity';
 
 //SERVICES
 import { FavoritosService } from '../providers/favoritos-service';
@@ -156,6 +158,8 @@ import { PagamentoService } from '../providers/pagamento-service';
     AnuncioIngressoListEntity,
     CartaoCreditoEntity,
     VendaEntity,
+    ParcelaCartaoCreditoEntity,
+    VendaDetalheEntity,
     FavoritosService,
     LoginService,
     UsuarioService,
