@@ -38,9 +38,7 @@ export class PagamentoService {
   public compraIngresso(vendaEntity: VendaEntity, telaRevenda: boolean) {
     try {
 
-      let compraLoteIngresso: string;
-      let compraRevendaIngresso: string;
-      let servico = telaRevenda ? compraRevendaIngresso : compraLoteIngresso;
+      let servico = telaRevenda ? 'compraRevendaIngresso/' : 'compraLoteIngresso/';
 
       return new Promise((resolve, reject) => {
           this._http.post(Constants.API_URL + servico
@@ -60,26 +58,26 @@ export class PagamentoService {
     }
   }
 
-  public compraRevendaIngresso(vendaEntity: VendaEntity) {
-    try {
+  // public compraRevendaIngresso(vendaEntity: VendaEntity) {
+  //   try {
 
-      return new Promise((resolve, reject) => {
-          this._http.post(Constants.API_URL + 'compraRevendaIngresso/'
-          + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(vendaEntity), this.options)
-          .map(res=>res.json())
-          .subscribe(data => {
-            resolve(data);
-          }, (err) => {
-            reject(err.json());
-          });
-      });
+  //     return new Promise((resolve, reject) => {
+  //         this._http.post(Constants.API_URL + 'compraRevendaIngresso/'
+  //         + localStorage.getItem(Constants.TOKEN_USUARIO), JSON.stringify(vendaEntity), this.options)
+  //         .map(res=>res.json())
+  //         .subscribe(data => {
+  //           resolve(data);
+  //         }, (err) => {
+  //           reject(err.json());
+  //         });
+  //     });
 
-    } catch (e){
-      if(e instanceof RangeError){
-        console.log('out of range');
-      }
-    }
-  }
+  //   } catch (e){
+  //     if(e instanceof RangeError){
+  //       console.log('out of range');
+  //     }
+  //   }
+  // }
 
   public findVendaDetalheByLoteIngresso(vendaEntity: VendaEntity) {
     try {

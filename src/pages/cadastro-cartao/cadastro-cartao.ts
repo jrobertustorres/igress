@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController, Platform, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController, Platform, ModalController, Events } from 'ionic-angular';
 import { FormBuilder,	FormGroup, Validators } from '@angular/forms';
 import { MaskUtil } from "../../utilitarios/mask";
 import { DatePicker } from '@ionic-native/date-picker';
@@ -50,6 +50,7 @@ export class CadastroCartaoPage {
   public dataNascimentoTitular: string;
   public bandeira: string;
   public imgCartao: string;
+  tabBarElement: any;
 
   constructor(public navCtrl: NavController,
               private formBuilder: FormBuilder,
@@ -64,9 +65,11 @@ export class CadastroCartaoPage {
               public modalCtrl: ModalController,
               private estadosService: EstadosService,
               private cidadesService: CidadesService,
+              public events: Events,
               public navParams: NavParams) {
     this.cartaoCreditoEntity = new CartaoCreditoEntity();
     this.usuarioDetalheEntity = new UsuarioDetalheEntity();
+    this.tabBarElement = document.querySelector('.tabbar.show-tabbar');
   }
 
   ngOnInit() {
@@ -101,6 +104,16 @@ export class CadastroCartaoPage {
       this.estados = dados;
     });
 
+  }
+
+  ionViewWillEnter() {
+    this.tabBarElement.style.display = 'none';
+    this.events.publish('showButtonEvent:change', false);
+  }
+    
+  ionViewWillLeave() {
+    this.tabBarElement.style.display = 'flex';
+    this.events.publish('showButtonEvent:change', true);
   }
 
   presentToast() {
@@ -179,7 +192,6 @@ export class CadastroCartaoPage {
           this.cartaoCreditoEntity.idEstado = this.usuarioDetalheEntity.idEstado;
           this.idEstado = this.usuarioDetalheEntity.idEstado;
           this.dataNascimentoTitular = this.usuarioDetalheEntity.dataNascimento ? new Date(this.usuarioDetalheEntity.dataNascimento).toJSON().split('T')[0] : null;
-          
           if (this.cartaoCreditoEntity.telefoneTitular) {
             this.telefoneTitular = this.mask.maskPhoneConverter(this.cartaoCreditoEntity.telefoneTitular);
           }
@@ -294,14 +306,6 @@ export class CadastroCartaoPage {
           this.alertCtrl.create({
             subTitle: err.message,
             buttons: ['OK']
-            // buttons: [
-            //   {
-            //     text: 'OK',
-            //     handler: () => {
-            //       this.loading.dismiss();
-            //     }
-            //   }
-            // ]
           }).present();
         });
       }
@@ -440,7 +444,48 @@ export class CadastroCartaoPage {
         // this.loading.dismiss();
       });
       // .then(hash => console.log('hash', hash));
+  }
 
+  buscaEnderecoPorCep(cep: any) {
+    try {
+
+      if(cep) {
+
+        this.loading = this.loadingCtrl.create({
+          content: '',
+        });
+        this.loading.present();
+
+        this.usuarioService
+          .buscaEnderecoPorCep(this.cartaoCreditoEntity.cep)
+          .then((enderecoEntityResult: UsuarioDetalheEntity) => {
+            this.cartaoCreditoEntity.bairro = enderecoEntityResult.bairro;
+            this.cartaoCreditoEntity.cep = enderecoEntityResult.cep;
+            this.cartaoCreditoEntity.endereco = enderecoEntityResult.endereco;
+
+            if(this.cartaoCreditoEntity.idEstado) {
+              this.getCidadesByEstadoUsuario(this.cartaoCreditoEntity.idEstado);
+              this.idEstado = this.cartaoCreditoEntity.idEstado; // setando o idEstado para habilitar o combo de cidades
+              this.idCidade = this.cartaoCreditoEntity.idCidade;
+            } else {
+              this.loading.dismiss();
+            }
+
+          })
+          .catch(err => {
+            this.loading.dismiss();
+            this.alertCtrl.create({
+              subTitle: err.message,
+              buttons: ['OK']
+            }).present();
+          });
+      }
+
+    }catch (err){
+      if(err instanceof RangeError){
+      }
+      console.log(err);
+    }
   }
 
 }

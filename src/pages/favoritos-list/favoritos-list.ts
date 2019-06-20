@@ -82,7 +82,9 @@ export class FavoritosListPage {
 
   getListaFavoritos(infiniteScroll: any) {
     try {
-      this.favoritoEventoUsuarioEntity.limiteDados = this.favoritoEventoUsuarioEntity.limiteDados ? this.favoritosList.length : null;
+      if(this.favoritosList) {
+        this.favoritoEventoUsuarioEntity.limiteDados = this.favoritoEventoUsuarioEntity.limiteDados ? this.favoritosList.length : null;
+      }
 
       this.favoritosService.findFavoritosByUsuario()
       .then((favoritosListResult: FavoritoEventoUsuarioEntity) => {

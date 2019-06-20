@@ -19,7 +19,6 @@ import { ModalEntrarCadastrarPage } from '../modal-entrar-cadastrar/modal-entrar
 import { PagamentoPage } from '../pagamento/pagamento';
 import { CadastroCartaoPage } from '../cadastro-cartao/cadastro-cartao';
 import { PerfilPage } from '../perfil/perfil';
-// import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
 
 @IonicPage()
 @Component({
@@ -80,10 +79,9 @@ export class DetalheEventoPage {
   }
 
   ngOnInit() {
-    console.log(this.lastButtonDetalhe);
-    // if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
-    //   this.findEventoDetalheByIdEvento();
-    // }
+    if(this.lastButtonDetalhe == 'ANUNCIOLIST') {
+      this.findAnuncioDetalheByIdEvento();
+    }
   }
 
   ionViewWillEnter() {
@@ -95,13 +93,13 @@ export class DetalheEventoPage {
     } else if(this.lastButtonDetalhe == 'DETALHE'){
       this.findIngressoDetalheByIdEvento();
     }
-    // console.log(this.lastButtonDetalhe);
     if(this.lastButtonDetalhe == 'HOME' || this.lastButtonDetalhe == 'FAVORITOLIST') {
       this.findEventoDetalheByIdEvento();
     }
-    if(this.lastButtonDetalhe == 'ANUNCIOLIST') {
-      this.findAnuncioDetalheByIdEvento();
-    }
+    // if(this.lastButtonDetalhe == 'ANUNCIOLIST') {
+    //   this.findAnuncioDetalheByIdEvento();
+    // }
+
   }
     
   ionViewWillLeave() {
@@ -136,15 +134,10 @@ export class DetalheEventoPage {
   findEventoDetalheByIdEvento() {
     try {
       this.eventoDetalheEntity.idEvento = this.idEvento;
-      console.log(JSON.stringify(this.eventoDetalheEntity));
       this.eventoService.findEventoDetalheByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
-        console.log(this.eventoDetalheEntity);
-        // if(this.lastButtonDetalhe != 'PAGAMENTO') {
-          this.listIngressoListEntity = this.eventoDetalheEntity.listLoteIngressoListEntity;
-          // }
-          console.log(this.listIngressoListEntity);
+        this.listIngressoListEntity = this.eventoDetalheEntity.listLoteIngressoListEntity;
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
         this.showLoading = false;
@@ -190,7 +183,6 @@ export class DetalheEventoPage {
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
         this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
-        console.log(this.eventoDetalheEntity);
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
         this.showLoading = false;
@@ -209,12 +201,14 @@ export class DetalheEventoPage {
 
   findIngressoDetalheRevendaByIdEvento() {
     try {
+      console.log('aaaaaaaaaaaaaaaaaaaaaaa');
       this.eventoDetalheEntity.idEvento = this.idEvento;
       this.eventoService.findIngressoDetalheRevendaByIdEvento(this.eventoDetalheEntity)
       .then((eventoDetalheResult: EventoDetalheEntity) => {
         this.eventoDetalheEntity = eventoDetalheResult;
-        console.log(this.eventoDetalheEntity);
         this.listIngressoListEntity = this.eventoDetalheEntity.listIngressoListEntity;
+
+        console.log(this.eventoDetalheEntity);
 
         this.showIcon = this.eventoDetalheEntity.favorito ? true : false;
         this.showLoading = false;
@@ -322,7 +316,6 @@ export class DetalheEventoPage {
         }
         this.habilitaBotao = qtdTotal > 0 ? true : false;
       }
-
 
       this.eventoDetalheEntity.listLoteIngressoListEntity = this.listLoteIngressoListEntity;
 
@@ -448,7 +441,6 @@ export class DetalheEventoPage {
   addCheckbox(event: any, idIngresso: number, statusIngressoEnum: string) {
     if ( event.checked ) {
       this.ingressosMarcados.push(idIngresso);
-      console.log(this.ingressosMarcados);
     } else {
       let index = this.removeCheckedFromArray(idIngresso);
       this.ingressosMarcados.splice(index,1);
@@ -586,12 +578,9 @@ export class DetalheEventoPage {
     if(this.idUsuarioLogado) {
       if(this.eventoDetalheEntity.cartaoCredito) {
         
-        // let arrayLotePagamento = [];
         let arrayLote = [];
         let telaRevenda = false;
 
-        // console.log(this.arrayLotePagamento);
-        
         if(this.eventoDetalheEntity.listLoteIngressoListEntity) {
           arrayLote = this.eventoDetalheEntity.listLoteIngressoListEntity;
           for(let i = 0; i < arrayLote.length; i++){
@@ -604,15 +593,11 @@ export class DetalheEventoPage {
           }
         } else { // QUANDO É REVENDA
           telaRevenda = true;
-          // this.arrayLotePagamento = {};
           for(let j = 0; j < this.ingressosMarcados.length; j++){
             arrayLote[j] = {
               idIngresso: this.ingressosMarcados[j],
-              // qtdIngresso: 1
             }
           }
-          console.log(arrayLote);
-          console.log(this.arrayLotePagamento);
 
           for(let i = 0; i < arrayLote.length; i++){
             this.arrayLotePagamento[i] = {
@@ -620,10 +605,7 @@ export class DetalheEventoPage {
             }
           }
         }
-        // console.log(arrayLote);
         
-        console.log(this.arrayLotePagamento);
-
         this.navCtrl.push(PagamentoPage, {
           arrayLotePagamento: this.arrayLotePagamento,
           telaRevenda: telaRevenda,

@@ -17,14 +17,6 @@
   </div>
 
   <div *ngIf="!errorConnection && vendaDetalheEntity.descricao" >
-    <!-- <div padding style="text-align: center;">
-        <img src="assets/imgs/amex.png" style="width: 13%;"/>
-        <img src="assets/imgs/master.png" style="width: 13%;"/>
-        <img src="assets/imgs/visa.png" style="width: 13%;"/>
-        <img src="assets/imgs/diners.png" style="width: 13%;"/>
-        <img src="assets/imgs/hipercard.png" style="width: 13%;"/>
-        <img src="assets/imgs/elo.png" style="width: 13%;"/>
-    </div> -->
 
     <div padding>
       <ion-item-divider color="navBarColor">
@@ -57,7 +49,7 @@
         <ion-item>
             <ion-label floating>Quantidade de parcelas</ion-label>
             <ion-select [(ngModel)]="vendaDetalheEntity.qtdParcela" cancelText="Cancelar">
-                <ion-option *ngFor="let parcelas of vendaDetalheEntity.listParcelaCartaoCreditoEntity" value="{{parcelas.qtdParcela}}">{{parcelas.dadosParcela}}</ion-option>
+                <ion-option *ngFor="let parcelas of vendaDetalheEntity.listParcelaCartaoCreditoEntity" value="{{parcelas.qtdParcela}}" [selected]="parcelas.qtdParcela == 1">{{parcelas.dadosParcela}}</ion-option>
             </ion-select>
         </ion-item>
     </ion-list>

@@ -59,7 +59,9 @@ export class AnuncioRevendaListPage {
 
   getListaAnuncioRevenda(infiniteScroll: any) {
     try {
-      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.anuncioList.length : null;
+      if(this.anuncioList) {
+        this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.anuncioList.length : null;
+      }
 
       this.eventoService.findAnuncioRevenda()
       .then((ingressosListResult: EventoListEntity) => {

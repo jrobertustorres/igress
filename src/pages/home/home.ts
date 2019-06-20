@@ -212,8 +212,10 @@ export class HomePage {
 
   findEventosDestaqueAndCidade(infiniteScroll: any) {
     try {
-      this.showLoading = true;
-      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEvento.length : null;
+      // this.showLoading = true;
+      if(this.dadosEvento) {
+        this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEvento.length : null;
+      }
 
       this.eventoService.findEventosDestaqueAndCidade()
       .then((eventoResult: EventoListEntity) => {
@@ -242,7 +244,9 @@ export class HomePage {
       // this.dadosEventosProximos = [];
       this.eventoListEntity.latitude = latitude;
       this.eventoListEntity.longitude = longitude;
-      this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEventosProximos.length : null;
+      if(this.dadosEventosProximos) {
+        this.eventoListEntity.limiteDados = this.eventoListEntity.limiteDados ? this.dadosEventosProximos.length : null;
+      }
 
       this.eventoService.findEventosDestaqueAndCidadeProximosaMim(this.eventoListEntity)
       .then((eventoResult: EventoListEntity) => {

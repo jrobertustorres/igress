@@ -32,7 +32,9 @@
       </div>
 
   <!-- <div *ngIf="eventoDetalheEntity.nomeEvento"> -->
-  <div *ngIf="listIngressoListEntity?.length > 0">
+
+  <!-- <div *ngIf="listIngressoListEntity?.length > 0"> -->
+  <div *ngIf="eventoDetalheEntity.nomeEvento">
 
     <ion-card>
       <img [src]="sanitizer.bypassSecurityTrustUrl(eventoDetalheEntity.imagemEvento)"  />
@@ -60,7 +62,7 @@
       </div>
     </div>
 
-    <ion-item-divider color="navBarColor" style="margin-top: 0px;">
+    <ion-item-divider color="navBarColor" style="margin-top: 0px;" *ngIf="listIngressoListEntity?.length > 0" >
         <span style="color: #fff;" *ngIf="lastButtonDetalhe != 'REVENDA'">Ingressos</span>
         <span style="color: #fff;" *ngIf="lastButtonDetalhe == 'REVENDA'">Seus lotes</span>
         <div item-content *ngIf="lastButtonDetalhe == 'HOME'">
@@ -142,6 +144,15 @@
       <!-- FIM ANUNCIOLIST -->
 
       <div *ngIf="lastButtonDetalhe != 'REVENDA' && lastButtonDetalhe != 'ANUNCIOLIST'">
+
+        <!-- <div text-wrap 
+          *ngIf="listIngressoListEntity?.length == 0">
+          <div style="text-align: center;color: #484848;"><strong>Nenhum lote para mostrar</strong></div>
+          <div style="text-align: center;">
+              <ion-icon style="font-size: 30px;color: #484848;" ios="md-sad" md="md-sad"></ion-icon>
+          </div>
+        </div> -->
+
         <ion-item text-wrap *ngFor="let ingresso of listIngressoListEntity">
           <div id="flex-container">
               <div class="flex-item" id="flex">

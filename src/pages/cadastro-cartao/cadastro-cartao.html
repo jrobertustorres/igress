@@ -1,8 +1,8 @@
 <ion-header no-border>
-    <ion-navbar transparent>
-      <ion-title><span class="font-title">Cartão de crédito</span></ion-title>
-    </ion-navbar>
-  </ion-header>
+  <ion-navbar transparent>
+    <ion-title><span class="font-title">Cartão de crédito</span></ion-title>
+  </ion-navbar>
+</ion-header>
 
 <ion-content>
 
@@ -117,6 +117,13 @@
         <div *ngIf="cartaoForm.get('telefoneTitular').hasError('maxlength')" [ngClass]="'class-error-form'">máximo 50 caracteres</div>
 
         <ion-item>
+          <ion-label floating>Cep</ion-label>
+          <ion-input formControlName="cep" [(ngModel)]="cartaoCreditoEntity.cep" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
+        </ion-item>
+        <div *ngIf="!cartaoForm.get('cep').valid && cartaoForm.get('cep').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
+        <button ion-button clear (click)="buscaEnderecoPorCep(cartaoCreditoEntity.cep)">Buscar por cep</button>
+
+        <ion-item>
             <ion-label floating>Rua</ion-label>
             <ion-input formControlName="endereco" [(ngModel)]="cartaoCreditoEntity.endereco" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
         </ion-item>
@@ -140,12 +147,6 @@
         </ion-item>
         <div *ngIf="!cartaoForm.get('complemento').valid && cartaoForm.get('complemento').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
         
-        <ion-item>
-            <ion-label floating>Cep</ion-label>
-            <ion-input formControlName="cep" [(ngModel)]="cartaoCreditoEntity.cep" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></ion-input>
-        </ion-item>
-        <div *ngIf="!cartaoForm.get('cep').valid && cartaoForm.get('cep').touched" [ngClass]="'class-error-form'">campo obrigatório</div>
-
         <ion-list>
           <ion-item>
               <ion-label class="my-label">Estado</ion-label>

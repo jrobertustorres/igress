@@ -15,6 +15,7 @@ import { VendaDetalheEntity } from '../../model/venda-detalhe-entity';
 
 //PAGES
 import { DetalheEventoPage } from '../detalhe-evento/detalhe-evento';
+import { MeusIngressosListPage } from '../meus-ingressos-list/meus-ingressos-list';
 
 @IonicPage()
 @Component({
@@ -117,9 +118,6 @@ export class PagamentoPage {
       });
       this.loading.present();
 
-      console.log(this.arrayLotePagamento);
-      console.log(this.vendaEntity);
-      
       if(this.telaRevenda) {
         this.vendaEntity.listLoteIngressoListEntity = null;
         this.vendaEntity.listIngressoListEntity = this.arrayLotePagamento;
@@ -127,8 +125,7 @@ export class PagamentoPage {
         this.vendaEntity.listIngressoListEntity = null;
         this.vendaEntity.listLoteIngressoListEntity = this.arrayLotePagamento;
       }
-      // console.log(this.vendaEntity);
-      console.log(JSON.stringify(this.vendaEntity));
+
       this.pagamentoService.findVendaDetalheByLoteIngresso(this.vendaEntity)
       .then((dadosResult: VendaDetalheEntity) => {
         this.vendaDetalheEntity = dadosResult;
@@ -162,22 +159,30 @@ export class PagamentoPage {
       });
       this.loading.present();
 
-      this.vendaEntity.qtdParcelas = this.vendaDetalheEntity.qtdParcela;
+      this.vendaEntity.qtdParcelas = this.vendaDetalheEntity.qtdParcela ? this.vendaDetalheEntity.qtdParcela : 1;
+
       if(this.telaRevenda) {
         this.vendaEntity.listIngressoListEntity = this.arrayLotePagamento;
       } else {
         this.vendaEntity.listLoteIngressoListEntity = this.arrayLotePagamento;
       }
-      
+
+      console.log(this.vendaEntity);
+
       this.pagamentoService.compraIngresso(this.vendaEntity, this.telaRevenda)
       .then((vendaResult: VendaEntity) => {
         this.loading.dismiss();
         this.presentToast();
 
-        this.navCtrl.push(DetalheEventoPage, {
-          lastButtonDetalhe: 'DETALHE',
-          idEvento: this.idEvento
-        })
+        this.navCtrl.popToRoot().then(() => {
+          // this.navCtrl.parent.select(0).then(() => {
+          // });
+        });
+
+        // this.navCtrl.push(DetalheEventoPage, {
+        //   lastButtonDetalhe: 'DETALHE',
+        //   idEvento: this.idEvento
+        // })
 
       }, (err) => {
         this.loading.dismiss();
