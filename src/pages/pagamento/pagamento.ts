@@ -174,15 +174,13 @@ export class PagamentoPage {
         this.loading.dismiss();
         this.presentToast();
 
-        this.navCtrl.popToRoot().then(() => {
-          // this.navCtrl.parent.select(0).then(() => {
-          // });
+        this.navCtrl.push(DetalheEventoPage, {
+          lastButtonDetalhe: 'DETALHE',
+          idEvento: this.idEvento})
+        .then(() => {
+          const startIndex = this.navCtrl.getActive().index - 2;
+          this.navCtrl.remove(startIndex, 2);
         });
-
-        // this.navCtrl.push(DetalheEventoPage, {
-        //   lastButtonDetalhe: 'DETALHE',
-        //   idEvento: this.idEvento
-        // })
 
       }, (err) => {
         this.loading.dismiss();
